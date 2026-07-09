@@ -14,8 +14,7 @@ export type SiteConfig = {
   links: {
     github: SocialLink;
     linkedin: SocialLink;
-    leetcode: SocialLink;
-    codeforces: SocialLink;
+    discord: SocialLink;
     email: SocialLink;
     resume: SocialLink;
   };
@@ -29,7 +28,7 @@ export const siteConfig: SiteConfig = {
   location: "IIT Jodhpur CSE",
   email: "suhanramani09@gmail.com",
   resumePath: "/Resume_BNY.pdf",
-  discordUserId: "DISCORD_USER_ID",
+  discordUserId: "s_builds",
   links: {
     github: {
       label: "GitHub",
@@ -39,13 +38,9 @@ export const siteConfig: SiteConfig = {
       label: "LinkedIn",
       href: "https://www.linkedin.com/in/suhan-ramani-b82291323/",
     },
-    leetcode: {
-      label: "LeetCode",
-      href: "https://leetcode.com/u/suhanramani/",
-    },
-    codeforces: {
-      label: "Codeforces",
-      href: "https://codeforces.com/profile/suhanramani",
+    discord: {
+      label: "Discord",
+      href: "https://discord.com/users/s_builds",
     },
     email: {
       label: "Email",

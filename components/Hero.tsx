@@ -1,6 +1,6 @@
 "use client";
 
-import { Braces, FileText, Github, Linkedin, Mail, Terminal } from "lucide-react";
+import { FileText, Github, Linkedin, Mail, MessageCircle } from "lucide-react";
 import type { ComponentType } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -26,8 +26,7 @@ const statusMessages = ["rag index warm", "inference path live", "latency budget
 const ctaLinks: Array<SocialLink & { icon: ComponentType<{ size?: number }> }> = [
   { ...siteConfig.links.github, icon: Github },
   { ...siteConfig.links.linkedin, icon: Linkedin },
-  { ...siteConfig.links.leetcode, icon: Braces },
-  { ...siteConfig.links.codeforces, icon: Terminal },
+  { ...siteConfig.links.discord, icon: MessageCircle },
   { ...siteConfig.links.email, icon: Mail },
   { ...siteConfig.links.resume, icon: FileText },
 ];
