@@ -27,7 +27,7 @@ export const siteConfig: SiteConfig = {
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani09@gmail.com",
-  resumePath: "/Resume_BNY.pdf",
+  resumePath: "/Resume.pdf",
   discordUserId: "s_builds",
   links: {
     github: {
@@ -48,7 +48,7 @@ export const siteConfig: SiteConfig = {
     },
     resume: {
       label: "Resume",
-      href: "/Resume_BNY.pdf",
+      href: "/Resume.pdf",
     },
   },
   proof: [
