@@ -30,10 +30,9 @@ export const siteConfig: SiteConfig = {
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
-  profileImage: null,
+  profileImage: "/pfp.jpg",
   resumePath: "/Resume.pdf",
-  // Replace with your numeric Discord user ID after joining lanyard.rest.
-  discordUserId: "s_builds",
+  discordUserId: "1369332498042982564",
   links: {
     github: {
       label: "GitHub",

@@ -14,7 +14,7 @@ export const projects: Project[] = [
     summary:
       "I built transformer-based ASL recognition across 26 gesture classes, with 96%+ accuracy and sub-100ms WebSocket inference so the feedback still feels live.",
     github: "https://github.com/Elarionitis/SignEase",
-    live: null,
+    live: "https://sign-ease-eight.vercel.app",
   },
   {
     title: "Spendly — Expense Ledger",

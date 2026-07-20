@@ -43,7 +43,7 @@ export function Hero() {
 
   return (
     <section className="grid min-h-[calc(100vh-4rem)] content-center gap-10 py-20 sm:py-24">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-center">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="max-w-3xl">
           <p className="eyebrow text-accent">CS undergrad · systems and real-time AI</p>
           <h1 className="mt-4 font-display text-5xl font-semibold tracking-normal text-foreground sm:text-6xl">
@@ -64,17 +64,17 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="order-first size-32 overflow-hidden rounded-full border border-line bg-panel p-1 ring-8 ring-panel/40 lg:order-none lg:ml-auto lg:size-44">
+        <div className="order-first size-40 overflow-hidden rounded-full border border-line bg-panel p-1.5 ring-8 ring-panel/40 sm:size-48 lg:order-none lg:ml-auto lg:size-72 xl:size-80">
           {siteConfig.profileImage ? (
             <Image
               alt={`${siteConfig.name} profile`}
               className="size-full rounded-full object-cover"
-              height={176}
+              height={320}
               src={siteConfig.profileImage}
-              width={176}
+              width={320}
             />
           ) : (
-            <div className="grid size-full place-items-center rounded-full bg-surface font-display text-4xl font-semibold text-accent lg:text-5xl">
+            <div className="grid size-full place-items-center rounded-full bg-surface font-display text-5xl font-semibold text-accent lg:text-7xl">
               {initials}
             </div>
           )}
