@@ -45,7 +45,7 @@ export function Hero() {
     <section className="grid min-h-[calc(100vh-4rem)] content-center gap-10 py-20 sm:py-24">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="max-w-3xl">
-          <p className="eyebrow text-accent">CS undergrad · systems and real-time AI</p>
+          <p className="eyebrow text-accent">FULL STACK DEVELOPER · systems and real-time AI</p>
           <h1 className="mt-4 font-display text-5xl font-semibold tracking-normal text-foreground sm:text-6xl">
             {siteConfig.name}
           </h1>
