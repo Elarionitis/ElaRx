@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
-
 import { projects, type Project } from "@/lib/data/projects";
 
 function hasProjectLink(value: string | null) {
@@ -9,145 +5,73 @@ function hasProjectLink(value: string | null) {
 }
 
 function ProjectLinks({ project }: { project: Project }) {
+  const links = [
+    { label: "repo", url: project.github },
+    { label: "live", url: project.live },
+  ].filter((link): link is { label: string; url: string } => hasProjectLink(link.url));
+
+  if (links.length === 0) return null;
+
   return (
     <div className="flex flex-wrap gap-3 font-mono text-xs">
-      {hasProjectLink(project.github) ? (
+      {links.map((link) => (
         <a
-          className="focus-ring rounded-full px-2 py-1 text-foreground transition-colors hover:bg-panel hover:text-accent motion-reduce:transition-none"
-          href={project.github}
+          className="focus-ring rounded-full bg-surface px-3 py-2 text-foreground transition-colors hover:bg-accent hover:text-white motion-reduce:transition-none"
+          href={link.url}
+          key={link.url}
           rel="noreferrer"
           target="_blank"
         >
-          repo
+          {link.label}
         </a>
-      ) : null}
-      {hasProjectLink(project.live) ? (
-        <a
-          className="focus-ring rounded-full px-2 py-1 text-foreground transition-colors hover:bg-panel hover:text-accent motion-reduce:transition-none"
-          href={project.live ?? undefined}
-          rel="noreferrer"
-          target="_blank"
-        >
-          live
-        </a>
-      ) : null}
+      ))}
     </div>
   );
 }
 
-function projectInterestingBit(project: Project) {
-  if (project.title === "Real-Time Sign Language Detection") {
-    return "The tricky part was making recognition feel immediate, so the WebSocket path matters as much as the model score.";
-  }
-
-  return "The interesting bit is the ledger shape: keeping events auditable while minimizing the actual settlement payments.";
-}
-
 export function Projects() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const selectedProject = projects[activeIndex];
-  const selectedStack = useMemo(() => selectedProject.stack.join(" / "), [selectedProject]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updatePreference = () => setPrefersReducedMotion(media.matches);
-
-    updatePreference();
-    media.addEventListener("change", updatePreference);
-
-    return () => media.removeEventListener("change", updatePreference);
-  }, []);
-
-  const motionClass = prefersReducedMotion
-    ? "motion-reduce:transition-none motion-reduce:transform-none"
-    : "transition duration-200 ease-out motion-reduce:transition-none motion-reduce:transform-none";
-
   return (
     <section id="projects" className="scroll-mt-24 border-t border-line/70 py-14">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="eyebrow text-accent">projects</p>
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-            Two project notes for now: each one gets room to explain what mattered, without pretending this is a
-            gallery.
-          </p>
-        </div>
-        <p className="font-mono text-xs text-accent-alt">{projects.length} shipped notes</p>
-      </div>
+      <p className="eyebrow text-accent">projects</p>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.06fr)_minmax(320px,0.94fr)]">
-        <div className="divide-y divide-line/70 border-y border-line/70">
-          {projects.map((project, index) => (
+      <div className="mt-8 space-y-6">
+        {projects.map((project, index) => {
+          const isEven = index % 2 === 0;
+
+          return (
             <article
-              className={`focus-ring grid cursor-default gap-4 py-8 sm:grid-cols-[2rem_1fr] ${motionClass} ${
-                activeIndex === index ? "bg-panel/45" : ""
+              className={`group border-y border-line/70 px-0 py-8 transition-colors hover:bg-panel/55 motion-reduce:transition-none sm:px-6 sm:py-10 ${
+                isEven ? "bg-surface/70" : "bg-panel/35"
               }`}
               key={project.title}
-              onFocus={() => setActiveIndex(index)}
-              onMouseEnter={() => setActiveIndex(index)}
-              tabIndex={0}
             >
-              <p
-                className={`font-mono text-sm ${motionClass} ${
-                  activeIndex === index ? "text-accent-alt" : "text-accent"
-                }`}
-              >
-                {activeIndex === index ? ">" : `0${index + 1}`}
-              </p>
-              <div>
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <h2 className={`font-display text-2xl font-semibold text-foreground ${motionClass}`}>
-                    {project.title}
-                  </h2>
-                  <ProjectLinks project={project} />
-                </div>
-                <p className="mt-3 max-w-2xl leading-7 text-muted">{project.summary}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.stack.map((item) => (
-                    <span className="chip" key={item}>
-                      {item}
+              <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] lg:items-start">
+                <div className={isEven ? "" : "lg:order-2"}>
+                  <p className="font-mono text-xs text-accent-alt">{`0${index + 1}`}</p>
+                  <h2 className="mt-3 font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+                    <span className="border-b-2 border-transparent transition-colors group-hover:border-accent motion-reduce:transition-none">
+                      {project.title}
                     </span>
-                  ))}
+                  </h2>
+                  <div className="mt-5">
+                    <ProjectLinks project={project} />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="max-w-3xl text-lg leading-8 text-muted">{project.summary}</p>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.stack.map((item) => (
+                      <span className="chip transition-opacity group-hover:opacity-100 motion-reduce:transition-none" key={item}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </article>
-          ))}
-        </div>
-
-        <aside className="status-strip min-h-80 p-5 font-mono text-xs text-muted lg:sticky lg:top-24 lg:self-start">
-          <div className="flex items-center justify-between gap-4 border-b border-line/70 pb-3">
-            <p className="text-accent">$ inspect project</p>
-            <p className="text-accent-alt">{`active=0${activeIndex + 1}`}</p>
-          </div>
-          <div className={`mt-5 space-y-4 ${motionClass}`}>
-            <div>
-              <p className="text-accent-alt">title</p>
-              <p className="mt-1 text-sm text-foreground">{selectedProject.title}</p>
-            </div>
-            <div>
-              <p className="text-accent-alt">why</p>
-              <p className="mt-1 leading-6">{selectedProject.summary}</p>
-            </div>
-            <div>
-              <p className="text-accent-alt">interesting bit</p>
-              <p className="mt-1 leading-6">{projectInterestingBit(selectedProject)}</p>
-            </div>
-            <div>
-              <p className="text-accent-alt">stack</p>
-              <p className="mt-1 leading-6">{selectedStack}</p>
-            </div>
-            <div>
-              <p className="text-accent-alt">links</p>
-              <div className="mt-2">
-                <ProjectLinks project={selectedProject} />
-                {!hasProjectLink(selectedProject.github) && !hasProjectLink(selectedProject.live) ? (
-                  <p className="leading-6">repo link pending</p>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        </aside>
+          );
+        })}
       </div>
     </section>
   );
