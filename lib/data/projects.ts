@@ -13,7 +13,7 @@ export const projects: Project[] = [
     stack: ["Python", "TensorFlow", "FastAPI", "React.js", "MediaPipe"],
     summary:
       "I built transformer-based ASL recognition across 26 gesture classes, with 96%+ accuracy and sub-100ms WebSocket inference so the feedback still feels live.",
-    github: "[ADD_LINK]",
+    github: "https://github.com/Elarionitis/SignEase",
     live: null,
   },
   {
@@ -21,7 +21,7 @@ export const projects: Project[] = [
     stack: ["Flutter", "Dart", "Riverpod", "Cloud Firestore"],
     summary:
       "I built Spendly as an event-sourced group expense ledger with real-time sync for 5+ users and an O(n log n) settlement-minimization path for cleaner final payments.",
-    github: "[ADD_LINK]",
+    github: "https://github.com/Elarionitis/Spendly",
     live: null,
   },
 ];
