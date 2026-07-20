@@ -1,30 +1,16 @@
+import { About } from "@/components/About";
+import { Experience } from "@/components/Experience";
 import { Hero } from "@/components/Hero";
+import { Skills } from "@/components/Skills";
 import { siteConfig } from "@/lib/data/site";
-
-const stackTags = ["distributed systems", "RAG pipelines", "real-time inference"];
 
 export default function Home() {
   return (
     <div id="top" className="shell">
       <Hero />
-
-      <section id="about" className="scroll-mt-24 border-t border-line/70 py-14">
-        <p className="eyebrow text-accent">about</p>
-        <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-          I like building software where the interface is simple and the internals have to be careful: retrieval that stays relevant, inference that stays responsive, and systems that stay understandable.
-        </p>
-      </section>
-
-      <section id="experience" className="scroll-mt-24 border-t border-line/70 py-14">
-        <p className="eyebrow text-accent">experience</p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {stackTags.map((tag) => (
-            <span className="chip" key={tag}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      </section>
+      <About />
+      <Experience />
+      <Skills />
 
       <section id="projects" className="scroll-mt-24 border-t border-line/70 py-14">
         <p className="eyebrow text-accent">projects</p>
