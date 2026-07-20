@@ -7,8 +7,31 @@ import { siteConfig } from "@/lib/data/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://suhan.dev"),
   title: `${siteConfig.name} | Systems and AI Engineer`,
   description: siteConfig.tagline,
+  openGraph: {
+    title: `${siteConfig.name} | Systems and AI Engineer`,
+    description: siteConfig.tagline,
+    type: "website",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} portfolio preview`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} | Systems and AI Engineer`,
+    description: siteConfig.tagline,
+    images: ["/og-image.svg"],
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
