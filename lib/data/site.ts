@@ -26,7 +26,7 @@ export type SiteConfig = {
 
 export const siteConfig: SiteConfig = {
   name: "Suhan Ramani",
-  handle: "suhan.dev",
+  handle: "Elarx.dev",
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
