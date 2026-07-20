@@ -1,4 +1,4 @@
-# Suhan Ramani Portfolio
+# My Portfolio
 
 Personal portfolio for Suhan Ramani, focused on systems work, AI-integrated software, and real-time inference projects.
 
