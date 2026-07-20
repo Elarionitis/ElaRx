@@ -18,11 +18,11 @@
 
 .dark {
   color-scheme: dark;
-  --background: #0d1418;
+  --background: #0a1114;
   --foreground: #edf2f4;
   --muted: #a6b1b9;
-  --surface: #121c22;
-  --panel: #1b2930;
+  --surface: #10191e;
+  --panel: #16242b;
   --line: #31424b;
   --accent: #38b7aa;
   --accent-strong: #58d0c3;
@@ -50,12 +50,23 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--background);
+  overflow-x: hidden;
+  background-color: var(--background);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.035'/%3E%3C/svg%3E"),
+    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, var(--cursor-opacity, 0)) 0%, transparent 48%),
+    radial-gradient(ellipse 72% 52% at 92% 12%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 68%),
+    radial-gradient(ellipse 64% 48% at 4% 72%, color-mix(in srgb, var(--accent-alt) 3%, transparent), transparent 70%);
+  background-attachment: fixed;
+  background-position: 0 0, center, center, center;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 180px 180px, auto, auto, auto;
   color: var(--foreground);
   font-family: var(--font-body);
   letter-spacing: 0;
@@ -111,5 +122,14 @@ a {
     border: 1px solid var(--line);
     border-radius: 0.75rem;
     background: var(--surface);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    --mx: 50%;
+    --my: 50%;
+    --cursor-opacity: 0;
   }
 }

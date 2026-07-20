@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { LanyardStatus } from "@/components/LanyardStatus";
 import { siteConfig, type SiteLink } from "@/lib/data/site";
@@ -40,6 +40,61 @@ export function Hero() {
     .split(" ")
     .map((part) => part[0])
     .join("");
+
+  useEffect(() => {
+    const pageBackground = document.body;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frameId = 0;
+
+    function updateMotionPreference() {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      frameId = 0;
+      pageBackground.style.setProperty("--mx", "50%");
+      pageBackground.style.setProperty("--my", "50%");
+      pageBackground.style.setProperty("--cursor-opacity", "0");
+
+      if (reducedMotion.matches) return () => {};
+
+      function updatePosition(event: PointerEvent) {
+        if (event.pointerType !== "mouse" || frameId) return;
+
+        frameId = window.requestAnimationFrame(() => {
+          const x = (event.clientX / window.innerWidth) * 100;
+          const y = (event.clientY / window.innerHeight) * 100;
+
+          pageBackground.style.setProperty("--mx", `${Math.min(100, Math.max(0, x))}%`);
+          pageBackground.style.setProperty("--my", `${Math.min(100, Math.max(0, y))}%`);
+          pageBackground.style.setProperty("--cursor-opacity", "0.05");
+          frameId = 0;
+        });
+      }
+
+      function hideGlow() {
+        pageBackground.style.setProperty("--cursor-opacity", "0");
+      }
+
+      window.addEventListener("pointermove", updatePosition, { passive: true });
+      window.addEventListener("blur", hideGlow);
+      return () => {
+        window.removeEventListener("pointermove", updatePosition);
+        window.removeEventListener("blur", hideGlow);
+      };
+    }
+
+    let removePointerListener = updateMotionPreference();
+    function handleMotionChange() {
+      removePointerListener();
+      removePointerListener = updateMotionPreference();
+    }
+
+    reducedMotion.addEventListener("change", handleMotionChange);
+    return () => {
+      removePointerListener();
+      if (frameId) window.cancelAnimationFrame(frameId);
+      reducedMotion.removeEventListener("change", handleMotionChange);
+    };
+  }, []);
 
   return (
     <section className="grid min-h-[calc(100vh-4rem)] content-center gap-10 py-20 sm:py-24">

@@ -7,13 +7,15 @@ import { siteConfig } from "@/lib/data/site";
 
 type DiscordStatus = "online" | "idle" | "dnd" | "offline";
 
+type SpotifyPresence = {
+  song: string;
+  artist: string;
+  album_art_url?: string;
+};
+
 type LanyardData = {
   discord_status: DiscordStatus;
-  spotify?: {
-    song: string;
-    artist: string;
-    album_art_url?: string;
-  } | null;
+  spotify?: SpotifyPresence | null;
 };
 
 type LanyardResponse = {
@@ -28,12 +30,29 @@ const statusClass: Record<DiscordStatus, string> = {
   offline: "bg-muted",
 };
 
+const lastSpotifyStorageKey = "elarx:last-spotify";
+
 function hasUsableDiscordId(id: string) {
   return /^\d{15,22}$/.test(id);
 }
 
+function readLastSpotify() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const storedTrack = window.localStorage.getItem(lastSpotifyStorageKey);
+    if (!storedTrack) return null;
+
+    const parsedTrack = JSON.parse(storedTrack) as SpotifyPresence;
+    return parsedTrack.song && parsedTrack.artist ? parsedTrack : null;
+  } catch {
+    return null;
+  }
+}
+
 export function LanyardStatus() {
   const [data, setData] = useState<LanyardData | null>(null);
+  const [lastSpotify, setLastSpotify] = useState<SpotifyPresence | null>(readLastSpotify);
 
   useEffect(() => {
     if (!hasUsableDiscordId(siteConfig.discordUserId)) return;
@@ -49,6 +68,10 @@ export function LanyardStatus() {
 
         if (!cancelled && payload.success && payload.data) {
           setData(payload.data);
+          if (payload.data.spotify) {
+            setLastSpotify(payload.data.spotify);
+            window.localStorage.setItem(lastSpotifyStorageKey, JSON.stringify(payload.data.spotify));
+          }
         }
       } catch {
         if (!cancelled) setData(null);
@@ -66,37 +89,40 @@ export function LanyardStatus() {
 
   if (!data) return null;
 
-  const spotifySearchUrl = data.spotify
-    ? `https://open.spotify.com/search/${encodeURIComponent(`${data.spotify.song} ${data.spotify.artist}`)}`
+  const spotify = data.spotify ?? lastSpotify;
+  const spotifySearchUrl = spotify
+    ? `https://open.spotify.com/search/${encodeURIComponent(`${spotify.song} ${spotify.artist}`)}`
     : null;
 
   return (
     <div className="status-strip grid min-h-20 gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4">
       <div className="flex min-w-0 items-center gap-3 font-mono text-xs text-muted" aria-live="polite">
         <span className={`size-2 shrink-0 rounded-full ${statusClass[data.discord_status]}`} />
-        <span>Discord · {data.discord_status}</span>
+        <span>{data.discord_status}</span>
       </div>
 
-      {data.spotify && spotifySearchUrl ? (
+      {spotify && spotifySearchUrl ? (
         <a
           className="focus-ring group flex min-w-0 items-center gap-3 rounded-lg p-1 transition-colors hover:bg-panel motion-reduce:transition-none"
           href={spotifySearchUrl}
           rel="noreferrer"
           target="_blank"
         >
-          {data.spotify.album_art_url ? (
+          {spotify.album_art_url ? (
             <Image
               alt=""
               className="size-11 shrink-0 rounded-md border border-line object-cover"
               height={44}
-              src={data.spotify.album_art_url}
+              src={spotify.album_art_url}
               width={44}
             />
           ) : null}
           <span className="min-w-0">
-            <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-wide text-[#1db954]">Spotify</span>
-            <span className="block truncate text-sm font-medium text-foreground">{data.spotify.song}</span>
-            <span className="block truncate font-mono text-xs text-muted">{data.spotify.artist}</span>
+            <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-wide text-[#1db954]">
+              {data.spotify ? "Spotify" : "Last played"}
+            </span>
+            <span className="block truncate text-sm font-medium text-foreground">{spotify.song}</span>
+            <span className="block truncate font-mono text-xs text-muted">{spotify.artist}</span>
           </span>
           <span className="shrink-0 font-mono text-xs text-muted transition-colors group-hover:text-accent motion-reduce:transition-none">
             Open ↗
