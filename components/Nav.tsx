@@ -12,8 +12,7 @@ const navItems = [
 ];
 
 export function Nav() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const { setTheme, theme } = useTheme();
 
   return (
     <header className="sticky top-0 z-20 border-b border-line/70 bg-background/90 backdrop-blur">
@@ -35,10 +34,10 @@ export function Nav() {
           <button
             aria-label="Toggle theme"
             className="focus-ring inline-flex h-9 min-w-16 items-center justify-center rounded-full border border-line bg-surface px-3 font-mono text-xs text-foreground transition-colors hover:border-accent hover:text-accent"
-            onClick={() => setTheme(isDark ? "light" : "dark")}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             type="button"
           >
-            {isDark ? "light" : "dark"}
+            theme
           </button>
         </div>
       </nav>
