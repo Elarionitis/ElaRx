@@ -16,7 +16,7 @@ export default function Home() {
 
       <section id="contact" className="scroll-mt-24 border-t border-line/70 py-14">
         <p className="eyebrow text-accent">contact</p>
-        <a className="focus-ring mt-4 inline-block text-lg text-foreground" href={siteConfig.links.email.href}>
+        <a className="focus-ring mt-4 inline-block text-lg text-foreground" href={siteConfig.links.email.url}>
           {siteConfig.email}
         </a>
       </section>

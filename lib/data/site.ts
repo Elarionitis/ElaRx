@@ -1,6 +1,7 @@
 export type SiteLink = {
   label: string;
-  href: string;
+  url: string;
+  visible: boolean;
 };
 
 export type SiteConfig = {
@@ -32,27 +33,33 @@ export const siteConfig: SiteConfig = {
   links: {
     github: {
       label: "GitHub",
-      href: "https://github.com/suhanramani",
+      url: "https://github.com/suhanramani",
+      visible: true,
     },
     linkedin: {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/suhan-ramani-b82291323/",
+      url: "https://www.linkedin.com/in/suhan-ramani-b82291323/",
+      visible: true,
     },
     leetcode: {
       label: "LeetCode",
-      href: "https://leetcode.com/suhanramani/",
+      url: "https://leetcode.com/suhanramani/",
+      visible: false,
     },
     codeforces: {
       label: "Codeforces",
-      href: "https://codeforces.com/profile/suhanramani",
+      url: "https://codeforces.com/profile/suhanramani",
+      visible: false,
     },
     email: {
       label: "Email",
-      href: "mailto:suhanramani09@gmail.com",
+      url: "mailto:suhanramani09@gmail.com",
+      visible: true,
     },
     resume: {
       label: "Resume",
-      href: "/Resume.pdf",
+      url: "/Resume.pdf",
+      visible: true,
     },
   },
 };

@@ -16,7 +16,7 @@ const ctaKeys: Array<keyof typeof siteConfig.links> = [
 ];
 
 function HeroLink({ link, primary = false }: { link: SiteLink; primary?: boolean }) {
-  const isExternal = link.href.startsWith("http");
+  const isExternal = link.url.startsWith("http");
 
   return (
     <a
@@ -25,7 +25,7 @@ function HeroLink({ link, primary = false }: { link: SiteLink; primary?: boolean
           ? "focus-ring inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-mono text-sm font-semibold text-white transition-colors hover:bg-accent-strong motion-reduce:transition-none"
           : "focus-ring inline-flex min-h-11 items-center rounded-full border border-line bg-surface px-5 font-mono text-sm text-foreground transition-colors hover:border-accent hover:text-accent motion-reduce:transition-none"
       }
-      href={link.href}
+      href={link.url}
       rel={isExternal ? "noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
     >
@@ -36,7 +36,7 @@ function HeroLink({ link, primary = false }: { link: SiteLink; primary?: boolean
 
 export function Hero() {
   const [activeStatus, setActiveStatus] = useState(0);
-  const ctaLinks = useMemo(() => ctaKeys.map((key) => siteConfig.links[key]), []);
+  const ctaLinks = useMemo(() => ctaKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible), []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -69,7 +69,7 @@ export function Hero() {
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           {ctaLinks.map((link, index) => (
-            <HeroLink key={link.href} link={link} primary={index === 0} />
+            <HeroLink key={link.url} link={link} primary={index === 0} />
           ))}
         </div>
       </div>

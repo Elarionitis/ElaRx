@@ -4,7 +4,7 @@ const footerLinks = [
   siteConfig.links.github,
   siteConfig.links.linkedin,
   siteConfig.links.email,
-];
+].filter((link) => link.visible);
 
 export function Footer() {
   return (
@@ -15,10 +15,10 @@ export function Footer() {
           {footerLinks.map((link) => (
             <a
               className="focus-ring rounded-full px-2 py-1 transition-colors hover:bg-panel hover:text-foreground"
-              href={link.href}
-              key={link.href}
-              rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-              target={link.href.startsWith("http") ? "_blank" : undefined}
+              href={link.url}
+              key={link.url}
+              rel={link.url.startsWith("http") ? "noreferrer" : undefined}
+              target={link.url.startsWith("http") ? "_blank" : undefined}
             >
               {link.label}
             </a>
