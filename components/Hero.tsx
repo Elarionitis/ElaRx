@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useMemo } from "react";
 
 import { LanyardStatus } from "@/components/LanyardStatus";
-import { SpotifyStatus } from "@/components/SpotifyStatus";
 import { siteConfig, type SiteLink } from "@/lib/data/site";
 
 const ctaKeys: Array<keyof typeof siteConfig.links> = [
@@ -82,10 +81,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="grid gap-3">
-        <LanyardStatus />
-        <SpotifyStatus />
-      </div>
+      <LanyardStatus />
     </section>
   );
 }
