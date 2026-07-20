@@ -8,8 +8,9 @@ export type SiteConfig = {
   name: string;
   handle: string;
   tagline: string;
-  bio: string;
+  location: string;
   email: string;
+  profileImage: string | null;
   resumePath: string;
   discordUserId: string;
   links: {
@@ -20,20 +21,23 @@ export type SiteConfig = {
     email: SiteLink;
     resume: SiteLink;
   };
+  proof: string[];
 };
 
 export const siteConfig: SiteConfig = {
   name: "Suhan Ramani",
   handle: "suhan.dev",
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
-  bio: "I am an undergrad engineer who likes the parts of software where clean interfaces meet messy reality: distributed systems, RAG pipelines, and real-time ML inference that has to feel instant.",
-  email: "suhanramani09@gmail.com",
+  location: "IIT Jodhpur CSE",
+  email: "suhanramani@gmail.com",
+  profileImage: null,
   resumePath: "/Resume.pdf",
-  discordUserId: "DISCORD_USER_ID",
+  // Replace with your numeric Discord user ID after joining lanyard.rest.
+  discordUserId: "s_builds",
   links: {
     github: {
       label: "GitHub",
-      url: "https://github.com/suhanramani",
+      url: "https://github.com/Elarionitis",
       visible: true,
     },
     linkedin: {
@@ -43,7 +47,7 @@ export const siteConfig: SiteConfig = {
     },
     leetcode: {
       label: "LeetCode",
-      url: "https://leetcode.com/suhanramani/",
+      url: "https://leetcode.com/u/suhanramani/",
       visible: false,
     },
     codeforces: {
@@ -53,7 +57,7 @@ export const siteConfig: SiteConfig = {
     },
     email: {
       label: "Email",
-      url: "mailto:suhanramani09@gmail.com",
+      url: "mailto:suhanramani@gmail.com",
       visible: true,
     },
     resume: {
@@ -62,4 +66,9 @@ export const siteConfig: SiteConfig = {
       visible: true,
     },
   },
+  proof: [
+    "JEE Advanced 2024 AIR 397 (General-EWS)",
+    "JEE Main 2024 99.55 percentile",
+    "GUJCET 2024 Gujarat State Rank 3",
+  ],
 };
