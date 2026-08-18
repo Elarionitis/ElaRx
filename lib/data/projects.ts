@@ -40,4 +40,12 @@ export const projects: Project[] = [
     github: "https://github.com/Elarionitis/repo-context-mcp",
     live: null,
   },
+  {
+    title: "Orbit — Multi-Client TCP Chat",
+    stack: ["C++17", "POSIX Sockets", "Multithreading", "CMake"],
+    summary:
+      "Local multi-client TCP chat system with a threaded server and terminal client, featuring username-based messaging, server-side timestamps, and graceful connection handling.",
+    github: "https://github.com/Elarionitis/Orbit",
+    live: null,
+  },
 ];
