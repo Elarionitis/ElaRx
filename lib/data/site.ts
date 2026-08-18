@@ -16,6 +16,7 @@ export type SiteConfig = {
   links: {
     github: SiteLink;
     linkedin: SiteLink;
+    x: SiteLink;
     leetcode: SiteLink;
     codeforces: SiteLink;
     email: SiteLink;
@@ -42,6 +43,11 @@ export const siteConfig: SiteConfig = {
     linkedin: {
       label: "LinkedIn",
       url: "https://www.linkedin.com/in/suhan-ramani-b82291323/",
+      visible: true,
+    },
+    x: {
+      label: "X",
+      url: "https://x.com/SuhanRamani09",
       visible: true,
     },
     leetcode: {

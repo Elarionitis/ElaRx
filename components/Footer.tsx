@@ -3,6 +3,7 @@ import { siteConfig } from "@/lib/data/site";
 const footerLinks = [
   siteConfig.links.github,
   siteConfig.links.linkedin,
+  siteConfig.links.x,
   siteConfig.links.email,
 ].filter((link) => link.visible);
 

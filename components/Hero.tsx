@@ -9,6 +9,7 @@ import { siteConfig, type SiteLink } from "@/lib/data/site";
 const ctaKeys: Array<keyof typeof siteConfig.links> = [
   "github",
   "linkedin",
+  "x",
   "leetcode",
   "codeforces",
   "email",
