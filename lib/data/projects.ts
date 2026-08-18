@@ -32,4 +32,12 @@ export const projects: Project[] = [
     github: "https://github.com/Elarionitis/Spendly",
     live: null,
   },
+  {
+    title: "Repo Context MCP",
+    stack: ["TypeScript", "Node.js", "MCP SDK", "GitHub REST API"],
+    summary:
+      "Lightweight MCP server that fetches GitHub repository metadata and README content, detects basic stack signals, and returns structured repository context for AI coding assistants.",
+    github: "https://github.com/Elarionitis/repo-context-mcp",
+    live: null,
+  },
 ];
