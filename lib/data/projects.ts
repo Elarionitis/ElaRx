@@ -9,18 +9,26 @@ export type Project = {
 // Add more projects by appending another object in this exact shape — no other file needs to change.
 export const projects: Project[] = [
   {
-    title: "Real-Time Sign Language Detection",
-    stack: ["Python", "TensorFlow", "FastAPI", "React.js", "MediaPipe"],
+    title: "Aeris — Air-Quality Intelligence Platform",
+    stack: ["Python", "FastAPI", "React", "XGBoost", "Docker"],
     summary:
-      "I built transformer-based ASL recognition across 26 gesture classes, with 96%+ accuracy and sub-100ms WebSocket inference so the feedback still feels live.",
+      "Full-stack decision-support platform for air quality that combines ward-level AQI forecasting, source-attribution signals, inspection prioritization, and citizen advisories through a FastAPI backend and interactive React dashboard.",
+    github: "https://github.com/Elarionitis/aeris",
+    live: null,
+  },
+  {
+    title: "Real-Time Sign Language Detection",
+    stack: ["Next.js", "TypeScript", "Flask", "TensorFlow Lite", "MediaPipe"],
+    summary:
+      "Web application for webcam-based sign recording and AI-assisted prediction, using a Next.js frontend with a Flask backend that extracts MediaPipe landmarks and runs TensorFlow Lite inference for ASL recognition.",
     github: "https://github.com/Elarionitis/SignEase",
     live: "https://sign-ease-eight.vercel.app",
   },
   {
     title: "Spendly — Expense Ledger",
-    stack: ["Flutter", "Dart", "Riverpod", "Cloud Firestore"],
+    stack: ["Flutter", "Dart", "Riverpod", "Firebase", "Cloud Firestore"],
     summary:
-      "I built Spendly as an event-sourced group expense ledger with real-time sync for 5+ users and an O(n log n) settlement-minimization path for cleaner final payments.",
+      "Feature-first Flutter expense management app with Firebase-backed authentication and real-time sync, focused on shared group ledgers, debt settlement flows, analytics, and cross-platform delivery.",
     github: "https://github.com/Elarionitis/Spendly",
     live: null,
   },
