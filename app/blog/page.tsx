@@ -14,7 +14,7 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <div className="shell pb-16 pt-14 sm:pt-20">
+    <div className="shell max-w-[48rem] pb-16 pt-14 sm:pt-20">
       <header className="max-w-[34rem]">
         <h1 className="font-display text-[clamp(2.5rem,8vw,3.5rem)] font-semibold leading-[1] tracking-[-0.035em] text-foreground">
           Writing

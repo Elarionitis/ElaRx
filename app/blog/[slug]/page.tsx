@@ -42,7 +42,7 @@ export default async function PostPage({ params }: PageProps) {
   if (!post) notFound();
 
   return (
-    <article className="shell pb-16 pt-14 sm:pt-20">
+    <article className="shell max-w-[44rem] pb-16 pt-14 sm:pt-20">
       <Link className="focus-ring eyebrow inline-block transition-colors hover:text-foreground" href="/blog">
         &larr; Writing
       </Link>
