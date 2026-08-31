@@ -10,6 +10,7 @@ const statusLabel: Record<Project["status"], string> = {
   live: "Live",
   source: "Source",
   research: "In progress",
+  prototype: "Prototype",
 };
 
 /*

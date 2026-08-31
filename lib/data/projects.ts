@@ -11,7 +11,7 @@
 import type { Decision } from "@/lib/data/decisions";
 
 export type ProjectCategory = "featured" | "work" | "experiment";
-export type ProjectStatus = "live" | "source" | "research";
+export type ProjectStatus = "live" | "source" | "research" | "prototype";
 
 export type Detail = {
   title: string;
@@ -49,6 +49,27 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "carequeue",
+    name: "CareQueue",
+    tagline: "Continuous triage and queue surveillance for emergency departments",
+    summary:
+      "A triage assistant built around the patients who are missed rather than the ones who are obvious: it scores risk from outcomes instead of from assigned levels, and keeps watching everyone in the waiting room for deterioration.",
+    category: "featured",
+    status: "prototype",
+    domain: "Risk modelling",
+    role: "Team lead, Team InnovX",
+    timeframe: "Accenture Innovation Challenge, round 2",
+    stack: ["TypeScript", "Next.js", "React", "NHAMCS 2022"],
+    links: {},
+    problem:
+      "Triage is usually built as classification — a nurse assigns a severity level and the model learns to agree. But in the 2022 NHAMCS data, 45.8% of critical-care outcomes came from patients triaged level 3, 4 or 5. They were correctly processed, and then they waited. A model that agrees with the nurse learns to miss exactly the same people.",
+    results: [
+      { value: "56.7%", label: "Critical outcomes caught, vs 39.0%" },
+      { value: "50.6%", label: "Under-triage rescued" },
+      { value: "6,410", label: "Held-out visits evaluated" },
+    ],
+  },
   {
     slug: "signease",
     name: "SignEase",
