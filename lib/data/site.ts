@@ -27,6 +27,16 @@ export type Achievement = {
 */
 const CANONICAL_URL = "https://elarx.dev";
 
+/*
+  The contact address, declared once. The mailto link, the JSON-LD, the footer
+  and the palette's copy action all derive from this, so changing it here
+  changes it everywhere.
+
+  Note: Resume.pdf currently prints suhanramani09@gmail.com. That is the only
+  place the two disagree, and it has to be fixed in the resume source.
+*/
+const EMAIL = "suhanramani@gmail.com";
+
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
   if (explicit) return explicit.replace(/\/$/, "");
@@ -48,7 +58,7 @@ export const siteConfig = {
   role: "Backend and distributed systems",
   location: "IIT Jodhpur",
   hometown: "Surat, Gujarat",
-  email: "suhanramani@gmail.com",
+  email: EMAIL,
   profileImage: "/pfp.jpg",
   resumePath: "/Resume.pdf",
   discordUserId: "1369332498042982564",
@@ -136,7 +146,7 @@ export const siteConfig = {
     x: { label: "X", url: "https://x.com/SuhanRamani09", visible: true },
     leetcode: { label: "LeetCode", url: "https://leetcode.com/u/nA5jvAJ1P6/", visible: true },
     codeforces: { label: "Codeforces", url: "https://codeforces.com/profile/Suhan_Ramani", visible: true },
-    email: { label: "Email", url: "mailto:suhanramani@gmail.com", visible: true },
+    email: { label: "Email", url: `mailto:${EMAIL}`, visible: true },
     resume: { label: "Resume", url: "/resume", visible: true },
   } satisfies Record<string, SiteLink>,
 };
