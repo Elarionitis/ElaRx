@@ -1,12 +1,21 @@
+import { Section } from "@/components/Section";
+import { siteConfig } from "@/lib/data/site";
+
 export function About() {
   return (
-    <section id="about" className="scroll-mt-24 border-t border-line/70 py-14">
-      <p className="eyebrow text-accent">about</p>
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">
-        I am studying B.Tech Computer Science at IIT Jodhpur, class of 2028. I like building end-to-end software
-        where the backend has real constraints: distributed systems, AI-integrated workflows, and features that need
-        to feel fast without turning into a black box.
-      </p>
-    </section>
+    <Section id="about" label="About">
+      <p className="text-lg leading-[1.7] text-foreground">{siteConfig.about}</p>
+
+      {siteConfig.proof.length > 0 ? (
+        <dl className="mt-8 space-y-2 border-t border-line pt-6 font-mono text-xs text-muted">
+          {siteConfig.proof.map((item) => (
+            <div className="flex gap-3" key={item.label}>
+              <dt className="w-[7.5rem] shrink-0 text-faint">{item.label}</dt>
+              <dd className="min-w-0">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+    </Section>
   );
 }

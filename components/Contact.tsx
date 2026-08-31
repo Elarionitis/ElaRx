@@ -1,27 +1,33 @@
+import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/data/site";
 
-const contactLinks = [siteConfig.links.email, siteConfig.links.linkedin, siteConfig.links.x, siteConfig.links.github].filter(
-  (link) => link.visible,
-);
+const contactKeys = ["github", "linkedin", "x"] as const;
 
 export function Contact() {
+  const elsewhere = contactKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
+
   return (
-    <section id="contact" className="scroll-mt-24 border-t border-line/70 py-14">
-      <p className="eyebrow text-accent">contact</p>
-      <p className="mt-4 max-w-2xl text-lg leading-8 text-muted">Open to SDE/AI-ML Engineer internship opportunities — reach out.</p>
-      <div className="mt-5 flex flex-wrap gap-3 font-mono text-sm">
-        {contactLinks.map((link) => (
+    <Section id="contact" label="Contact">
+      <p className="text-lg leading-[1.7] text-foreground">{siteConfig.contact}</p>
+
+      <a className="link mt-6 inline-block font-display text-3xl text-foreground sm:text-4xl" href={`mailto:${siteConfig.email}`}>
+        {siteConfig.email}
+      </a>
+
+      <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
+        {elsewhere.map((link) => (
           <a
-            className="focus-ring rounded-full bg-surface px-4 py-2 text-foreground transition-colors hover:bg-accent hover:text-white motion-reduce:transition-none"
+            className="focus-ring inline-flex items-baseline gap-1 transition-colors hover:text-foreground"
             href={link.url}
             key={link.url}
-            rel={link.url.startsWith("http") ? "noreferrer" : undefined}
-            target={link.url.startsWith("http") ? "_blank" : undefined}
+            rel="noreferrer"
+            target="_blank"
           >
-            {link.label}
+            <span className="border-b border-transparent hover:border-current">{link.label}</span>
+            <span aria-hidden="true" className="text-[0.7em] text-faint">&#8599;</span>
           </a>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

@@ -1,3 +1,8 @@
+export type Credential = {
+  label: string;
+  value: string;
+};
+
 export type SiteLink = {
   label: string;
   url: string;
@@ -10,6 +15,8 @@ export type SiteConfig = {
   tagline: string;
   lead: string;
   intro: string;
+  about: string;
+  contact: string;
   location: string;
   email: string;
   profileImage: string | null;
@@ -24,7 +31,7 @@ export type SiteConfig = {
     email: SiteLink;
     resume: SiteLink;
   };
-  proof: string[];
+  proof: Credential[];
 };
 
 export const siteConfig: SiteConfig = {
@@ -34,6 +41,9 @@ export const siteConfig: SiteConfig = {
   lead: "I am a CS undergrad at IIT Jodhpur, into distributed systems and building things that talk to models in real time.",
   intro:
     "I like the parts where clean interfaces meet messy reality: retrieval that stays relevant, inference that stays responsive, and systems you can still reason about after they start growing.",
+  about:
+    "I am studying B.Tech Computer Science at IIT Jodhpur, class of 2028. I like building end-to-end software where the backend has real constraints: distributed systems, AI-integrated workflows, and features that need to feel fast without turning into a black box.",
+  contact: "Open to SDE and AI/ML engineering internships. Email is the fastest way to reach me.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
   profileImage: "/pfp.jpg",
@@ -77,8 +87,8 @@ export const siteConfig: SiteConfig = {
     },
   },
   proof: [
-    "JEE Advanced 2024 AIR 397 (General-EWS)",
-    "JEE Main 2024 99.55 percentile",
-    "GUJCET 2024 Gujarat State Rank 3",
+    { label: "JEE Advanced 2024", value: "AIR 397 (General-EWS)" },
+    { label: "JEE Main 2024", value: "99.55 percentile" },
+    { label: "GUJCET 2024", value: "Gujarat state rank 3" },
   ],
 };
