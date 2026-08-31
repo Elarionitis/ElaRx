@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { DecisionIndex } from "@/components/DecisionIndex";
 import { DecisionList } from "@/components/DecisionList";
+import { NowPlaying } from "@/components/NowPlaying";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
@@ -68,6 +70,27 @@ export default function Home() {
             turned out to be concurrency rather than arithmetic, and a lot of time spent on why a query
             stopped being fast.
           </p>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            <Link className="focus-ring btn btn-solid" href="/resume">
+              Resume
+            </Link>
+            <a className="focus-ring btn btn-line" href={`mailto:${siteConfig.email}`}>
+              Email
+            </a>
+            <a
+              className="focus-ring btn btn-line"
+              href={siteConfig.links.github.url}
+              rel="noreferrer"
+              target="_blank"
+            >
+              GitHub
+            </a>
+          </div>
+
+          <div className="measure mt-12">
+            <DecisionIndex decisions={decisions} />
+          </div>
         </div>
 
         <aside className="lg:pt-2">
@@ -96,6 +119,7 @@ export default function Home() {
                 <span className="label block">Away</span>
                 <span className="mt-1 block">Badminton, cycling, and setting contest problems</span>
               </li>
+              <NowPlaying />
             </ul>
           </div>
         </aside>
