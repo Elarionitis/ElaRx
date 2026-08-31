@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome } from "@/components/Chrome";
 import { Colophon } from "@/components/Colophon";
+import { CursorHalo } from "@/components/CursorHalo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           >
             Skip to content
           </a>
+          <CursorHalo />
           <CommandPalette email={siteConfig.email} items={buildCommandItems()} />
           <div className="relative z-10 flex min-h-screen flex-col">
             <Chrome />
