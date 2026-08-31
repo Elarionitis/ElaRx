@@ -2,7 +2,7 @@ export type ExperienceItem = {
   role: string;
   org: string;
   dates: string;
-  summary: string;
+  highlights: string[];
 };
 
 export const experience: ExperienceItem[] = [
@@ -10,14 +10,20 @@ export const experience: ExperienceItem[] = [
     role: "Software Development Engineer Intern",
     org: "Webify Design",
     dates: "May–Jun 2026",
-    summary:
-      "I shipped full-stack features across 5+ production web applications using PHP, JavaScript, and HTML5/CSS3 for desktop and mobile, reusing existing modules and components where possible to improve release-cycle speed by over 30%. I optimized MySQL schemas and queries by restructuring indexes and eliminating N+1 patterns on high-traffic endpoints, reducing data-retrieval latency by around 35%. I also partnered with cross-functional teams on root-cause analysis for production incidents to improve observability, availability, and infrastructure reliability across deployed systems.",
+    highlights: [
+      "Shipped full-stack features across 5+ production web applications in PHP, JavaScript and HTML5/CSS3, reusing existing modules where I could and cutting release-cycle time by over 30%.",
+      "Restructured MySQL indexes and removed N+1 queries on the highest-traffic endpoints, which took roughly 35% off data-retrieval latency.",
+      "Sat in on root-cause analysis for production incidents with the wider team and helped tighten observability across deployed systems.",
+    ],
   },
   {
     role: "Student Developer",
     org: "SQORA — AI-Powered Learning Platform (Winter of Code)",
     dates: "Dec 2025–Apr 2026",
-    summary:
-      "I architected a production-grade RAG pipeline integrating the Gemini API with Qdrant vector DB, indexing 500+ documents at under 500ms end-to-end latency and serving 3 engineering workflows with consistently relevant retrieval results. I built concurrent RESTful APIs in FastAPI with async I/O, removing bottlenecks across 4 parallel ingestion streams, and added validation and monitoring checks to support product quality, observability, and high availability at scale.",
+    highlights: [
+      "Built a production RAG pipeline on the Gemini API and Qdrant, indexing 500+ documents and keeping end-to-end retrieval under 500ms across three engineering workflows.",
+      "Wrote the FastAPI layer with async I/O so four ingestion streams could run in parallel without blocking each other.",
+      "Added validation and monitoring around ingestion so bad documents failed loudly instead of quietly degrading retrieval.",
+    ],
   },
 ];
