@@ -64,16 +64,12 @@ export const siteConfig = {
   stats: [
     { value: "<500ms", label: "RAG retrieval" },
     { value: "96%+", label: "ASL model accuracy" },
-    { value: "400+", label: "CP problems solved" },
+    { value: "500+", label: "CP problems solved" },
     { value: "AIR 397", label: "JEE Advanced 2024" },
   ] satisfies Stat[],
 
   /** Longer form, /about only. */
-  bio: [
-    "I am a Computer Science undergraduate at IIT Jodhpur, class of 2028. I came in expecting to like the theory and ended up liking the failure modes more — what happens to a system when the network partitions, when four writers hit the same record, when a query that was fine at a thousand rows stops being fine at a million.",
-    "That is most of what I work on now. A Byzantine consensus framework with a professor here, a RAG pipeline that had to answer in under half a second, an expense ledger where the interesting problem turned out to be concurrency rather than arithmetic. The through line is that they all get slower or wronger under load, and finding out exactly where is the part I enjoy.",
-    "Away from the terminal I play badminton, cycle, and set algorithmic contest problems for the programming society here, which is a good reminder that a problem is only as good as its edge cases.",
-  ],
+  bio: [],
 
   education: [
     {
@@ -94,10 +90,18 @@ export const siteConfig = {
 
   positions: [
     {
+      role: "Overall Coordinator",
+      org: "Anand Rathi Tinkerers' Lab, IIT Jodhpur",
+      dates: "Aug 2026 – Present",
+      detail:
+        "Lead the student body running the institute's 3,000+ sq. ft. makerspace — campus access, equipment, and project support for anyone who wants to build something physical.",
+    },
+    {
       role: "Core Team Member",
       org: "Programming Society (P-Club), IIT Jodhpur",
       dates: "Aug 2025 – Present",
-      detail: "Set 10+ algorithmic contest problems and mentor juniors on competitive programming.",
+      detail:
+        "Set 10+ algorithmic contest problems in Codeforces Polygon, including test data generation and validation, and mentor juniors on competitive programming.",
     },
     {
       role: "Core Team Member",
@@ -119,7 +123,7 @@ export const siteConfig = {
     { title: "GUJCET 2024", detail: "State rank 3 in Gujarat" },
     {
       title: "Competitive programming",
-      detail: "400+ problems across LeetCode, GeeksforGeeks and Codeforces. Codeforces max rating 1319.",
+      detail: "500+ problems across LeetCode, GeeksforGeeks and Codeforces. Codeforces max rating 1319.",
     },
     { title: "Vandre Entrepreneurship Fest", detail: "Best Pitch and 2nd Runner-Up" },
     { title: "FLY-Scholar", detail: "Certified by the Competitiveness Mindset Institute, USA" },

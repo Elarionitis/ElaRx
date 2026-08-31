@@ -1,9 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
+import { siteConfig } from "@/lib/data/site";
 
 /* The homepage is a document. Each clause opens with a rule and a label. */
 function Clause({
@@ -39,33 +41,43 @@ export default function Home() {
   return (
     <div className="sheet pb-4">
       {/* Identity. A statement, not a hero. */}
-      <section className="grid gap-8 pt-16 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] lg:gap-16">
+      <section className="grid gap-10 pt-16 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] lg:gap-16">
         <div className="min-w-0">
           <h1 className="max-w-[22ch] text-[clamp(1.85rem,4.4vw,3rem)] font-medium leading-[1.15] tracking-[-0.035em] text-ink">
             I build backend systems, and I am mostly interested in the point where they stop being
             correct under load.
           </h1>
           <p className="measure mt-7 text-[1.05rem] leading-[1.65] text-ink-2">
-            Computer science undergraduate at IIT Jodhpur. Right now that means Byzantine consensus with a
-            professor here, retrieval that has to answer in under half a second, and a ledger where the hard
-            part turned out to be concurrency rather than arithmetic.
+            Computer science undergraduate at IIT Jodhpur. So far that has meant retrieval that had half a
+            second to answer, a ledger where the hard part turned out to be concurrency rather than
+            arithmetic, and a lot of time spent on why a query stopped being fast.
           </p>
         </div>
 
         <aside className="lg:pt-2">
-          <p className="label">Currently</p>
-          <ul className="mt-4 grid gap-3 text-sm text-ink-2">
-            <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3">
-              <span className="label pt-0.5">Research</span>
-              <span>Leader election in Byzantine networks, under Prof. Nitin Awathare</span>
+          <Image
+            alt={siteConfig.name}
+            className="w-full max-w-[13rem] border border-rule"
+            height={416}
+            priority
+            sizes="13rem"
+            src={siteConfig.profileImage}
+            style={{ borderRadius: "var(--radius-sheet)" }}
+            width={416}
+          />
+          <p className="label mt-4">Currently</p>
+          <ul className="mt-3 grid gap-2.5 text-sm text-ink-2">
+            <li>
+              <span className="label block">Leading</span>
+              <span className="mt-0.5 block">Anand Rathi Tinkerers&rsquo; Lab, the student-run makerspace here</span>
             </li>
-            <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3">
-              <span className="label pt-0.5">Reading</span>
-              <span>Consensus protocols, and how much of them survive contact with a real network</span>
+            <li>
+              <span className="label block">Reading</span>
+              <span className="mt-0.5 block">Consensus protocols, and how much of them survives a real network</span>
             </li>
-            <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-3">
-              <span className="label pt-0.5">Away</span>
-              <span>Badminton, cycling, and setting contest problems for the programming society</span>
+            <li>
+              <span className="label block">Away</span>
+              <span className="mt-0.5 block">Badminton, cycling, and setting contest problems</span>
             </li>
           </ul>
         </aside>
@@ -142,7 +154,8 @@ export default function Home() {
           <p>
             Two internships so far: a web agency where I spent most of my time on query shapes and
             production incidents, and an AI learning platform where I built the retrieval pipeline. On
-            campus I set problems for the programming society and help run placement outreach.
+            campus I coordinate the Tinkerers&rsquo; Lab, set problems for the programming society, and help
+            run placement outreach.
           </p>
         </div>
       </Clause>

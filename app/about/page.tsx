@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 };
 
 /* Selected, not exhaustive. The resume is the complete record. */
-const selectedPositions = siteConfig.positions.slice(0, 2);
+const selectedPositions = siteConfig.positions.slice(0, 3);
 
 export default function AboutPage() {
   return (
     <div className="sheet pb-4">
-      <header className="grid gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-16">
+      <header className="grid max-w-[52rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-12">
         <div className="min-w-0">
           <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
             About
@@ -33,16 +33,14 @@ export default function AboutPage() {
               about coordination rather than features.
             </p>
             <p>
-              Right now that is a Byzantine consensus framework with a professor at IIT Jodhpur, where the
-              interesting result was that you can skip an entire round of communication if every node can
-              derive the same answer independently. Before that it was a retrieval pipeline that had half a
-              second to respond, and an expense ledger where the real problem turned out to be concurrency
-              wearing a consumer-app costume.
+              In practice that has been a retrieval pipeline with half a second to respond, an expense
+              ledger where the real problem turned out to be concurrency wearing a consumer-app costume, and
+              an internship where the fix for a slow page was almost never the thing anyone suggested first.
             </p>
             <p>
-              Away from all of it I play badminton, cycle, and set contest problems for the programming
-              society here — which is a good weekly reminder that a problem is only as good as its edge
-              cases.
+              Away from all of it I coordinate the Tinkerers&rsquo; Lab, the 3,000 sq. ft. makerspace on
+              campus, play badminton, cycle, and set contest problems for the programming society — which is
+              a good weekly reminder that a problem is only as good as its edge cases.
             </p>
           </div>
         </div>

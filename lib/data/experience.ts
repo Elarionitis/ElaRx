@@ -16,7 +16,7 @@ export const experience: ExperienceItem[] = [
     dates: "May – Jun 2026",
     stack: ["PHP", "MySQL", "JavaScript", "HTML5/CSS3", "Shopify"],
     highlights: [
-      "Shipped features across 5+ production web apps in PHP and JavaScript. Reusing existing modules cut release cycles by over 30%.",
+      "Shipped features across 5+ production web apps in PHP and JavaScript, reusing existing modules across similar client requirements rather than rebuilding cart and checkout flows from scratch.",
       "Reindexed MySQL and cleared N+1 queries from the hot endpoints. Read latency down ~35%.",
       "Root-cause analysis on production incidents, plus the instrumentation we had been missing.",
     ],
@@ -28,9 +28,9 @@ export const experience: ExperienceItem[] = [
     dates: "Dec 2025 – Apr 2026",
     stack: ["Python", "FastAPI", "Qdrant", "Gemini API"],
     highlights: [
-      "RAG pipeline on Gemini and Qdrant. 500+ documents indexed, sub-500ms end-to-end retrieval across three engineering workflows, at over 95% retrieval accuracy.",
+      "RAG pipeline on Gemini and Qdrant, with prompt engineering and LLM context management. 500+ documents indexed, sub-500ms end-to-end retrieval across three engineering workflows.",
       "Async FastAPI layer so four ingestion streams run in parallel without blocking.",
-      "Validation pipelines that took embedding failures to zero, so bad documents fail loudly instead of quietly degrading retrieval.",
+      "Validation pipelines that eliminated every embedding failure observed in testing, so bad documents fail loudly instead of quietly degrading retrieval.",
     ],
   },
 ];

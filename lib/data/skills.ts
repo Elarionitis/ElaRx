@@ -14,11 +14,20 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     title: "Data",
-    items: ["PostgreSQL", "MySQL", "Qdrant", "Firebase", "Cloud Firestore"],
+    items: ["PostgreSQL", "MySQL", "MongoDB", "Qdrant", "Firebase", "Cloud Firestore"],
+  },
+  {
+    title: "AI and LLM",
+    items: [
+      "Retrieval-augmented generation",
+      "Prompt engineering",
+      "LLM context management",
+      "Gemini API",
+    ],
   },
   {
     title: "Tooling",
-    items: ["Git", "Linux", "Docker", "REST APIs"],
+    items: ["Git", "Linux", "Docker", "REST APIs", "Agile/Scrum"],
   },
   {
     title: "Systems",
@@ -28,6 +37,7 @@ export const skillGroups: SkillGroup[] = [
       "Concurrency and synchronisation",
       "Async I/O",
       "Event-sourced architectures",
+      "Cloud-native development",
     ],
   },
   {

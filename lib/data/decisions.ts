@@ -24,24 +24,12 @@ export type Decision = {
   /** Slug in projects.ts, or an org name from experience.ts. */
   source: string;
   sourceLabel: string;
-  domain: "Distributed systems" | "Machine learning" | "Concurrency" | "Databases" | "Systems";
+  domain: "Machine learning" | "Concurrency" | "Databases" | "Systems";
 };
 
 export const decisions: Decision[] = [
   {
     id: "D-01",
-    title: "Derive the committee locally instead of agreeing on one",
-    constraint:
-      "Electing a leader in a Byzantine network normally costs a full round of messages just to decide who is allowed to vote.",
-    reasoning:
-      "That round carries no application payload and grows with the network, so it is pure overhead. If every honest node can compute the same committee from a shared pseudorandom function and the public round number, the selection needs no messages at all — and it stays statistically indistinguishable from a uniformly random committee, even against a static Byzantine adversary. The cost moves from the network to local computation, which is the cheaper side of that trade.",
-    outcome: "Zero messages for committee selection, tolerating f < N/3 static faults.",
-    source: "leader-election",
-    sourceLabel: "Leader Election",
-    domain: "Distributed systems",
-  },
-  {
-    id: "D-02",
     title: "Send landmark vectors, not video",
     constraint: "Streaming webcam frames to a server for inference puts the whole video payload on the network path.",
     reasoning:
@@ -51,7 +39,7 @@ export const decisions: Decision[] = [
     domain: "Machine learning",
   },
   {
-    id: "D-03",
+    id: "D-02",
     title: "Hold the connection open rather than poll",
     constraint: "At a sub-100ms per-frame budget, HTTP request overhead is a meaningful fraction of the budget.",
     reasoning:
@@ -62,7 +50,7 @@ export const decisions: Decision[] = [
     domain: "Machine learning",
   },
   {
-    id: "D-04",
+    id: "D-03",
     title: "Trade two points of accuracy for a four-times smaller model",
     constraint: "The model was accurate enough and too slow to feel responsive.",
     reasoning:
@@ -73,7 +61,7 @@ export const decisions: Decision[] = [
     domain: "Machine learning",
   },
   {
-    id: "D-05",
+    id: "D-04",
     title: "Append events instead of locking balances",
     constraint: "Several people editing one shared ledger at once, on mobile clients that may be offline mid-edit.",
     reasoning:
@@ -84,7 +72,7 @@ export const decisions: Decision[] = [
     domain: "Concurrency",
   },
   {
-    id: "D-06",
+    id: "D-05",
     title: "Settle the group, not the pairs",
     constraint: "Settling a shared ledger pairwise generates far more transfers than the group actually needs.",
     reasoning:
@@ -95,7 +83,7 @@ export const decisions: Decision[] = [
     domain: "Concurrency",
   },
   {
-    id: "D-07",
+    id: "D-06",
     title: "Fix the query shape before reaching for a cache",
     constraint: "High-traffic endpoints were slow and a cache was the obvious first move.",
     reasoning:
@@ -106,7 +94,7 @@ export const decisions: Decision[] = [
     domain: "Databases",
   },
   {
-    id: "D-08",
+    id: "D-07",
     title: "Let ingestion streams run without blocking each other",
     constraint: "Four parallel document-ingestion streams were serialising behind synchronous I/O.",
     reasoning:
@@ -116,12 +104,12 @@ export const decisions: Decision[] = [
     domain: "Systems",
   },
   {
-    id: "D-09",
+    id: "D-08",
     title: "Fail loudly on a bad document rather than degrade quietly",
     constraint: "A document that fails to embed still leaves the pipeline running, just with worse retrieval.",
     reasoning:
       "Silent degradation is the worst failure mode in a retrieval system: nothing errors, results simply get less relevant, and you find out weeks later from a user. Validating at ingestion turns an invisible quality problem into a visible failure someone can fix.",
-    outcome: "Embedding failures taken to zero; retrieval accuracy held above 95%.",
+    outcome: "Every observed embedding failure eliminated in testing.",
     source: "SQORA",
     sourceLabel: "SQORA",
     domain: "Systems",

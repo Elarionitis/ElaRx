@@ -50,44 +50,6 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: "leader-election",
-    name: "Communication-Efficient Leader Election",
-    tagline: "Byzantine fault-tolerant consensus with zero-communication committee selection",
-    summary:
-      "A hybrid distributed-systems framework for leader election in a Byzantine-faulty network, co-authored under Prof. Nitin Awathare at IIT Jodhpur CSE.",
-    category: "featured",
-    status: "research",
-    domain: "Distributed systems",
-    role: "Co-author",
-    timeframe: "In progress, targeting Dec 2026 submission",
-    stack: ["Distributed systems", "Byzantine consensus", "Cryptography", "PKI"],
-    links: {},
-    problem:
-      "Leader election in a Byzantine setting normally costs a round of communication just to agree on who is eligible to vote. That selection traffic is pure overhead: it carries no application payload, and it grows with the size of the network.",
-    approach:
-      "Derive committee membership locally instead of agreeing on it. Every node computes the same committee from a shared pseudorandom function and the public round number, so selection costs nothing on the wire.",
-    architecture: [
-      {
-        title: "Byzantine fault tolerance",
-        body: "The framework tolerates f < N/3 static faults, the standard bound for Byzantine agreement, using cryptographic digital signatures over a public-key infrastructure to authenticate messages between nodes.",
-      },
-      {
-        title: "Local committee derivation",
-        body: "Committee membership is a function of a shared pseudorandom function and the public round number. Every honest node evaluates it independently and arrives at the same answer, so no messages are exchanged to form the committee.",
-      },
-    ],
-    decisions: [
-      {
-        title: "Why a PRF over a coordination round",
-        body: "A coordination round is the obvious way to agree on a committee and the expensive one. Deriving membership from a value every node already holds moves the cost from the network to local computation, which is the cheaper side of the trade in a wide network.",
-      },
-    ],
-    results: [
-      { value: "Zero", label: "Messages for selection" },
-      { value: "f < N/3", label: "Static faults tolerated" },
-    ],
-  },
-  {
     slug: "signease",
     name: "SignEase",
     tagline: "Real-time ASL recognition over WebSocket",
