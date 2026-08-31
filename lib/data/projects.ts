@@ -15,7 +15,7 @@ export const projects: Project[] = [
     name: "Aeris",
     tagline: "Air-quality intelligence platform",
     summary:
-      "Full-stack decision-support platform for air quality that combines ward-level AQI forecasting, source-attribution signals, inspection prioritization, and citizen advisories through a FastAPI backend and interactive React dashboard.",
+      "Forecasts AQI at ward level, attributes it to likely sources, and ranks which sites are worth inspecting first. FastAPI backend, React dashboard, XGBoost doing the forecasting, and advisories for people who just want to know whether to go outside.",
     stack: ["Python", "FastAPI", "React", "XGBoost", "Docker"],
     github: "https://github.com/Elarionitis/aeris",
     live: null,
@@ -24,7 +24,7 @@ export const projects: Project[] = [
     name: "SignEase",
     tagline: "Real-time sign language detection",
     summary:
-      "Web application for webcam-based sign recording and AI-assisted prediction, using a Next.js frontend with a Flask backend that extracts MediaPipe landmarks and runs TensorFlow Lite inference for ASL recognition.",
+      "Records ASL signs from a webcam and predicts them as you go. MediaPipe pulls the hand landmarks, a Flask service runs the TensorFlow Lite model, and the Next.js frontend handles the capture loop.",
     stack: ["Next.js", "TypeScript", "Flask", "TensorFlow Lite", "MediaPipe"],
     github: "https://github.com/Elarionitis/SignEase",
     live: "https://sign-ease-eight.vercel.app",
@@ -33,7 +33,7 @@ export const projects: Project[] = [
     name: "Repo Context MCP",
     tagline: "Repository context server for coding agents",
     summary:
-      "Lightweight MCP server that fetches GitHub repository metadata and README content, detects basic stack signals, and returns structured repository context for AI coding assistants.",
+      "An MCP server that hands a coding agent the context it would otherwise have to ask you for: repository metadata, the README, and a read on the stack, returned as structured data.",
     stack: ["TypeScript", "Node.js", "MCP SDK", "GitHub REST API"],
     github: "https://github.com/Elarionitis/repo-context-mcp",
     live: null,
@@ -42,7 +42,7 @@ export const projects: Project[] = [
     name: "Spendly",
     tagline: "Shared expense ledger",
     summary:
-      "Feature-first Flutter expense management app with Firebase-backed authentication and real-time sync, focused on shared group ledgers, debt settlement flows, analytics, and cross-platform delivery.",
+      "Group expense tracking that works out who owes whom and helps settle it. Flutter on both platforms, Firebase for auth and real-time sync, Riverpod holding the state together.",
     stack: ["Flutter", "Dart", "Riverpod", "Firebase", "Cloud Firestore"],
     github: "https://github.com/Elarionitis/Spendly",
     live: null,
@@ -51,7 +51,7 @@ export const projects: Project[] = [
     name: "Orbit",
     tagline: "Multi-client TCP chat",
     summary:
-      "Local multi-client TCP chat system with a threaded server and terminal client, featuring username-based messaging, server-side timestamps, and graceful connection handling.",
+      "A TCP chat server in C++17 that holds many clients at once, one thread per connection, with a terminal client to talk to it. Server-side timestamps, and disconnects that do not take the server down with them.",
     stack: ["C++17", "POSIX Sockets", "Multithreading", "CMake"],
     github: "https://github.com/Elarionitis/Orbit",
     live: null,

@@ -62,14 +62,16 @@ export const siteConfig: SiteConfig = {
   url: resolveSiteUrl(),
   name: "Suhan Ramani",
   handle: "Elarx.dev",
-  tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
-  lead: "I am a CS undergrad at IIT Jodhpur, into distributed systems and building things that talk to models in real time.",
+  tagline:
+    "CS undergrad at IIT Jodhpur building backend systems and AI tooling: retrieval pipelines, APIs, and the parts that get slow first.",
+  lead:
+    "I build backend systems, and lately most of them have a model somewhere in the middle. That changes what fast means.",
   intro:
-    "I like the parts where clean interfaces meet messy reality: retrieval that stays relevant, inference that stays responsive, and systems you can still reason about after they start growing.",
+    "Most of my work sits behind the interface: retrieval, APIs, the queries that get slow first. I would rather a system stay readable than clever.",
   about:
-    "I am studying B.Tech Computer Science at IIT Jodhpur, class of 2028. I like building end-to-end software where the backend has real constraints: distributed systems, AI-integrated workflows, and features that need to feel fast without turning into a black box.",
-  contact: "Open to SDE and AI/ML engineering internships. Email is the fastest way to reach me.",
-  writingIntro: "Notes on the things I am building and the things that broke while I built them.",
+    "B.Tech Computer Science at IIT Jodhpur, class of 2028. I work mostly on the backend, on distributed systems and retrieval pipelines and anything that has to hold up under load. Most of what I know came from building something, watching it break, and going to find out why.",
+  contact: "Looking for SDE and AI/ML engineering internships. Email reaches me fastest.",
+  writingIntro: "Notes on what I am building, and on what broke while I built it.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
   profileImage: "/pfp.jpg",
