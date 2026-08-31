@@ -6,18 +6,22 @@ export type SkillGroup = {
 export const skillGroups: SkillGroup[] = [
   {
     title: "Languages",
-    items: ["C/C++", "Python", "JavaScript", "TypeScript", "Java", "PHP", "Dart", "SQL"],
+    items: ["C/C++", "Python", "TypeScript", "JavaScript", "Java", "PHP", "Dart", "SQL"],
   },
   {
     title: "Frameworks",
-    items: ["FastAPI", "React.js", "Flutter", "Node.js", "TensorFlow"],
+    items: ["FastAPI", "React", "Next.js", "Node.js", "Flutter", "TensorFlow"],
   },
   {
-    title: "Systems",
-    items: ["distributed systems", "concurrency", "PostgreSQL", "MySQL", "Vector DBs", "Firebase"],
+    title: "Data",
+    items: ["PostgreSQL", "MySQL", "Qdrant", "Firebase", "Cloud Firestore"],
   },
   {
-    title: "Tools",
-    items: ["Git", "Linux", "REST APIs"],
+    title: "Tooling",
+    items: ["Git", "Linux", "Docker", "REST APIs"],
+  },
+  {
+    title: "Areas",
+    items: ["Distributed systems", "Concurrency", "Retrieval and RAG"],
   },
 ];
