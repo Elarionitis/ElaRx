@@ -22,12 +22,15 @@ npm run lint
 
 ## Configuration
 
-| Variable               | Purpose                                                  |
-| ---------------------- | -------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical origin, no trailing slash. Drives canonical tags, OG URLs, the sitemap and the feed. Defaults to `https://suhan.dev`. |
+The canonical origin is `https://elarx.dev`, set in `lib/data/site.ts`. It
+drives canonical tags, OG URLs, the sitemap and the RSS feed.
 
-Set it in your host's environment. Getting it wrong means every canonical URL
-and link preview points at the wrong domain.
+Preview deployments detect themselves and use their own `.vercel.app` URL
+instead, so branches don't compete with production for the same canonical.
+`npm run dev` uses `http://localhost:3000`.
+
+To point a deployment somewhere else, set `NEXT_PUBLIC_SITE_URL` (no trailing
+slash). It overrides everything above.
 
 ## Where the content lives
 

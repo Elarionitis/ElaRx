@@ -37,8 +37,29 @@ export type SiteConfig = {
   proof: Credential[];
 };
 
+const CANONICAL_URL = "https://elarx.dev";
+
+/*
+  Preview deploys have to describe themselves rather than claim the canonical
+  domain, or every branch ends up competing for the same URL in search results.
+  Vercel exposes both of these to the client bundle by default.
+*/
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV && process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
+    const deployment = process.env.NEXT_PUBLIC_VERCEL_URL;
+    if (deployment) return `https://${deployment}`;
+  }
+
+  if (process.env.NODE_ENV === "development") return "http://localhost:3000";
+
+  return CANONICAL_URL;
+}
+
 export const siteConfig: SiteConfig = {
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://suhan.dev").replace(/\/$/, ""),
+  url: resolveSiteUrl(),
   name: "Suhan Ramani",
   handle: "Elarx.dev",
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
