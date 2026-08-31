@@ -46,17 +46,18 @@ export default function AboutPage() {
         </div>
 
         <div className="lg:pt-3">
-          <Image
-            alt={siteConfig.name}
-            className="w-full max-w-[12rem] border border-rule"
-            height={384}
-            sizes="12rem"
-            src={siteConfig.profileImage}
-            style={{ borderRadius: "var(--radius-sheet)" }}
-            width={384}
-          />
-          <p className="label mt-3">
-            {siteConfig.hometown} &rarr; {siteConfig.location}
+          <div className="portrait w-full max-w-[12.5rem]">
+            <Image
+              alt={siteConfig.name}
+              height={400}
+              sizes="12.5rem"
+              src={siteConfig.profileImage}
+              width={400}
+            />
+          </div>
+          <p className="label mt-4 grid gap-0.5">
+            <span>{siteConfig.hometown}</span>
+            <span>&rarr; {siteConfig.location}</span>
           </p>
         </div>
       </header>

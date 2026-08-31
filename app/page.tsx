@@ -55,16 +55,16 @@ export default function Home() {
         </div>
 
         <aside className="lg:pt-2">
-          <Image
-            alt={siteConfig.name}
-            className="w-full max-w-[13rem] border border-rule"
-            height={416}
-            priority
-            sizes="13rem"
-            src={siteConfig.profileImage}
-            style={{ borderRadius: "var(--radius-sheet)" }}
-            width={416}
-          />
+          <div className="portrait w-full max-w-[13.5rem]">
+            <Image
+              alt={siteConfig.name}
+              height={432}
+              priority
+              sizes="13.5rem"
+              src={siteConfig.profileImage}
+              width={432}
+            />
+          </div>
           <p className="label mt-4">Currently</p>
           <ul className="mt-3 grid gap-2.5 text-sm text-ink-2">
             <li>
