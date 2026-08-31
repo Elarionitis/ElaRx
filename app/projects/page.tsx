@@ -11,9 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsPage() {
-  // Only offer filters that have something behind them.
-  const domains = [...new Set(projects.map((project) => project.domain))].sort();
-
   return (
     <div className="sheet pb-4">
       <header className="pt-16 sm:pt-20">
@@ -21,13 +18,13 @@ export default function ProjectsPage() {
           Projects
         </h1>
         <p className="measure mt-5 text-[1.05rem] leading-[1.6] text-ink-2">
-          Six of them. Open one to see what it is, what was hard about it, and the decisions it produced.
-          Filter by the kind of problem rather than the language.
+          Pick one to read what it is, what was hard about it, and the decisions it produced. Filter by the
+          kind of problem rather than the language.
         </p>
       </header>
 
       <div className="mt-12">
-        <ProjectIndex decisions={decisions} domains={domains} projects={projects} />
+        <ProjectIndex decisions={decisions} projects={projects} />
       </div>
     </div>
   );

@@ -1,13 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Decision } from "@/lib/data/decisions";
 import type { Project } from "@/lib/data/projects";
-
-/* Layout effects do not run on the server; fall back so SSR stays quiet. */
-const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const statusLabel: Record<Project["status"], string> = {
   live: "Live",
@@ -15,262 +12,33 @@ const statusLabel: Record<Project["status"], string> = {
   research: "In progress",
 };
 
-function Row({
-  decisions,
-  onEnter,
-  onLeave,
-  onToggle,
-  open,
-  pinned,
-  project,
-}: {
-  decisions: Decision[];
-  onEnter: () => void;
-  onLeave: () => void;
-  onToggle: () => void;
-  open: boolean;
-  pinned: boolean;
-  project: Project;
-}) {
-  const panelId = `${project.slug}-body`;
+/*
+  Master and detail rather than an accordion.
 
-  return (
-    <li
-      className="group/row relative scroll-mt-20 border-t border-rule"
-      id={project.slug}
-      onPointerEnter={onEnter}
-      onPointerLeave={onLeave}
-    >
-      {/* Marks the row the pointer is dwelling on, before it opens. */}
-      <span
-        aria-hidden="true"
-        className={`absolute -left-4 top-0 h-full w-px origin-top bg-accent transition-transform duration-200 ${
-          open ? "scale-y-100" : "scale-y-0 group-hover/row:scale-y-100"
-        }`}
-      />
-      <button
-        aria-controls={panelId}
-        aria-expanded={open}
-        /*
-          Three children, two columns on mobile: without explicit placement the
-          tagline lands in the 1.5rem toggle column and runs off the screen.
-        */
-        className="focus-ring group grid w-full grid-cols-[minmax(0,1fr)_1.5rem] items-baseline gap-x-5 gap-y-2 py-6 text-left sm:grid-cols-[13rem_minmax(0,1fr)_1.5rem]"
-        onClick={onToggle}
-        type="button"
-      >
-        <span className="col-start-1 row-start-1 min-w-0">
-          <span className="block text-[1.05rem] leading-tight tracking-[-0.015em] text-ink transition-colors group-hover:text-accent">
-            {project.name}
-          </span>
-          <span className="label mt-1.5 block">
-            {project.domain} &middot; {statusLabel[project.status]}
-          </span>
-        </span>
+  An accordion puts the variable-height panel inside the row you are pointing
+  at, so opening one row moves every row beneath it — which is what made
+  moving between projects land on the wrong one. Here the list and the detail
+  are separate columns, so nothing the detail does can shift the list.
 
-        <span className="measure col-span-2 row-start-2 text-[0.95rem] leading-[1.6] text-ink-2 sm:col-span-1 sm:col-start-2 sm:row-start-1">
-          {project.tagline}
-        </span>
-
-        <span
-          aria-hidden="true"
-          className={`col-start-2 row-start-1 justify-self-end transition-transform duration-200 sm:col-start-3 ${
-            open ? "rotate-45" : ""
-          } ${pinned ? "text-accent" : "text-ink-3"}`}
-        >
-          +
-        </span>
-      </button>
-
-      <div className={open ? "block" : "hidden"} id={panelId} role="region">
-        <div className="panel-in grid gap-8 pb-10 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-x-5">
-          <div className="flex flex-col gap-5">
-            <div>
-              <p className="label">Built with</p>
-              <ul className="mt-2 flex flex-wrap gap-x-2 gap-y-0.5 font-mono text-[0.72rem] text-ink-3">
-                {project.stack.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            {project.timeframe ? (
-              <div>
-                <p className="label">Status</p>
-                <p className="mt-2 text-[0.85rem] text-ink-2">{project.timeframe}</p>
-              </div>
-            ) : null}
-            {project.links.github || project.links.live ? (
-              <div className="flex flex-wrap gap-2">
-                {project.links.live ? (
-                  <a className="focus-ring btn btn-solid" href={project.links.live} rel="noreferrer" target="_blank">
-                    Live
-                  </a>
-                ) : null}
-                {project.links.github ? (
-                  <a className="focus-ring btn btn-line" href={project.links.github} rel="noreferrer" target="_blank">
-                    Source
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-
-          <div className="measure">
-            <p className="text-[0.95rem] leading-[1.65] text-ink-2">{project.summary}</p>
-
-            {project.problem ? (
-              <p className="mt-5 text-[0.95rem] leading-[1.65] text-ink-2">
-                <span className="text-ink">The problem. </span>
-                {project.problem}
-              </p>
-            ) : null}
-
-            {decisions.length > 0 ? (
-              <div className="mt-7">
-                <p className="label">Decisions from this project</p>
-                <ul className="mt-3 grid gap-2.5">
-                  {decisions.map((decision) => (
-                    <li className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3" key={decision.id}>
-                      <span className="ref pt-0.5">{decision.id}</span>
-                      <Link className="focus-ring tlink text-[0.95rem] leading-[1.5] text-ink" href={`/#${decision.id}`}>
-                        {decision.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="mt-6 text-[0.9rem] leading-[1.6] text-ink-3">
-                No decisions written up for this one yet — it was a build, not an argument.
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    </li>
-  );
-}
-
+  That buys the interaction its responsiveness back: because there is no
+  reflow to guard against, selection is instant on hover instead of waiting
+  out a dwell delay, and one project is always shown rather than the page
+  flickering between empty and full.
+*/
 export function ProjectIndex({
   decisions,
-  domains,
   projects,
 }: {
   decisions: Decision[];
-  domains: string[];
   projects: Project[];
 }) {
-  const [filter, setFilter] = useState<string>("All");
-  /*
-    One row open at a time, held as a single value so opening B and closing A
-    happen in the same commit rather than as two reflows.
-
-    `pinned` records whether it was opened by a click. A dwell-opened row
-    closes when the pointer leaves; a pinned one does not.
-  */
-  const [open, setOpen] = useState<{ slug: string; pinned: boolean } | null>(null);
-  const hoverEnabled = useRef(false);
-  const openTimer = useRef(0);
-  const closeTimer = useRef(0);
-
-  /*
-    Scroll anchoring.
-
-    Collapsing a row pulls every row beneath it upwards — measured at 354px on
-    this list, roughly six rows. With the pointer stationary that puts a
-    completely different project under the cursor, so moving from one row to
-    the next opened something several places further down.
-
-    Before each change we record where the row being interacted with sits in
-    the viewport; immediately after the DOM updates, and before the browser
-    paints, we scroll by the difference. The row under the pointer therefore
-    never moves, whatever happens above it.
-  */
-  const anchorSlug = useRef<string | null>(null);
-  const anchorTop = useRef(0);
-
-  const rememberAnchor = useCallback((slug: string) => {
-    const element = document.getElementById(slug);
-    if (!element) return;
-    anchorSlug.current = slug;
-    anchorTop.current = element.getBoundingClientRect().top;
-  }, []);
-
-  useIsomorphicLayoutEffect(() => {
-    const slug = anchorSlug.current;
-    anchorSlug.current = null;
-    if (!slug) return;
-
-    const element = document.getElementById(slug);
-    if (!element) return;
-
-    const delta = element.getBoundingClientRect().top - anchorTop.current;
-    if (Math.abs(delta) > 1) window.scrollBy(0, delta);
-  }, [open]);
-
-  useEffect(() => {
-    // No dwell-to-open for touch (there is no hover) or reduced motion.
-    hoverEnabled.current =
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    return () => {
-      window.clearTimeout(openTimer.current);
-      window.clearTimeout(closeTimer.current);
-    };
-  }, []);
-
-  const peek = useCallback(
-    (slug: string) => {
-      if (!hoverEnabled.current) return;
-      window.clearTimeout(closeTimer.current);
-      openTimer.current = window.setTimeout(() => {
-        rememberAnchor(slug);
-        setOpen((current) => (current?.slug === slug ? current : { slug, pinned: false }));
-      }, 320);
-    },
-    [rememberAnchor],
+  const domains = useMemo(
+    () => [...new Set(projects.map((project) => project.domain))].sort(),
+    [projects],
   );
 
-  const unpeek = useCallback((slug: string) => {
-    if (!hoverEnabled.current) return;
-    window.clearTimeout(openTimer.current);
-    closeTimer.current = window.setTimeout(() => {
-      setOpen((current) => (current && current.slug === slug && !current.pinned ? null : current));
-    }, 180);
-  }, []);
-
-  const toggle = useCallback(
-    (slug: string) => {
-      window.clearTimeout(openTimer.current);
-      window.clearTimeout(closeTimer.current);
-      rememberAnchor(slug);
-      setOpen((current) => (current?.slug === slug && current.pinned ? null : { slug, pinned: true }));
-    },
-    [rememberAnchor],
-  );
-
-  /*
-    Deep links from the homepage, the palette and an article open the project
-    they name. The hash never reaches the server, so this can only run on the
-    client — and it runs inside a frame callback so the row exists by the time
-    we scroll to it.
-  */
-  useEffect(() => {
-    function openFromHash() {
-      const hash = window.location.hash.replace("#", "");
-      if (!hash || !projects.some((project) => project.slug === hash)) return;
-      setOpen({ slug: hash, pinned: true });
-      document.getElementById(hash)?.scrollIntoView({ block: "start" });
-    }
-
-    const frame = window.requestAnimationFrame(openFromHash);
-    window.addEventListener("hashchange", openFromHash);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", openFromHash);
-    };
-  }, [projects]);
+  const [filter, setFilter] = useState("All");
+  const [activeSlug, setActiveSlug] = useState(projects[0]?.slug ?? "");
 
   const visible = useMemo(
     () => (filter === "All" ? projects : projects.filter((project) => project.domain === filter)),
@@ -283,51 +51,192 @@ export function ProjectIndex({
     return map;
   }, [projects]);
 
-  return (
-    <>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-rule-2 py-4">
-        <span className="label">Filter</span>
-        {["All", ...domains].map((option) => {
-          const isActive = filter === option;
-          const count = option === "All" ? projects.length : (counts.get(option) ?? 0);
+  // Deep links from the homepage, the palette and articles select a project.
+  useEffect(() => {
+    function selectFromHash() {
+      const hash = window.location.hash.replace("#", "");
+      if (hash && projects.some((project) => project.slug === hash)) setActiveSlug(hash);
+    }
 
-          return (
+    const frame = window.requestAnimationFrame(selectFromHash);
+    window.addEventListener("hashchange", selectFromHash);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", selectFromHash);
+    };
+  }, [projects]);
+
+  const changeFilter = useCallback(
+    (option: string) => {
+      setFilter(option);
+      const next = option === "All" ? projects : projects.filter((project) => project.domain === option);
+      // Never leave the detail showing something the list no longer offers.
+      if (next.length > 0 && !next.some((project) => project.slug === activeSlug)) {
+        setActiveSlug(next[0].slug);
+      }
+    },
+    [activeSlug, projects],
+  );
+
+  /*
+    Stacked layouts put the detail below the whole list, so a tap selects
+    something the reader cannot see. Bring it to them.
+  */
+  const select = useCallback((slug: string) => {
+    setActiveSlug(slug);
+    if (typeof window === "undefined" || window.matchMedia("(min-width: 1024px)").matches) return;
+
+    window.requestAnimationFrame(() => {
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document
+        .getElementById(slug)
+        ?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+    });
+  }, []);
+
+  const active = projects.find((project) => project.slug === activeSlug) ?? visible[0] ?? null;
+  const activeDecisions = active
+    ? decisions.filter((decision) => decision.source === active.slug)
+    : [];
+
+  return (
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:gap-14">
+      <div className="lg:sticky lg:top-20 lg:self-start">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-rule-2 py-3">
+          <span className="label">Filter</span>
+          {["All", ...domains].map((option) => (
             <button
-              aria-pressed={isActive}
+              aria-pressed={filter === option}
               className={`focus-ring text-sm transition-colors ${
-                isActive ? "text-accent" : "text-ink-2 hover:text-ink"
+                filter === option ? "text-accent" : "text-ink-2 hover:text-ink"
               }`}
               key={option}
-              onClick={() => setFilter(option)}
+              onClick={() => changeFilter(option)}
               type="button"
             >
               {option}
-              <span className="num ml-1.5 text-[0.7rem] text-ink-3">{count}</span>
+              <span className="num ml-1.5 text-[0.7rem] text-ink-3">
+                {option === "All" ? projects.length : (counts.get(option) ?? 0)}
+              </span>
             </button>
-          );
-        })}
+          ))}
+        </div>
+
+        <ul className="border-b border-rule">
+          {visible.map((project) => {
+            const selected = active?.slug === project.slug;
+
+            return (
+              <li className="relative border-t border-rule" key={project.slug}>
+                <span
+                  aria-hidden="true"
+                  className={`absolute -left-4 top-0 h-full w-px origin-top bg-accent transition-transform duration-200 ${
+                    selected ? "scale-y-100" : "scale-y-0"
+                  }`}
+                />
+                <button
+                  aria-current={selected ? "true" : undefined}
+                  className="focus-ring group block w-full py-4 text-left"
+                  onClick={() => select(project.slug)}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === "mouse") setActiveSlug(project.slug);
+                  }}
+                  type="button"
+                >
+                  <span
+                    className={`block text-[1.05rem] leading-tight tracking-[-0.015em] transition-colors ${
+                      selected ? "text-accent" : "text-ink group-hover:text-accent"
+                    }`}
+                  >
+                    {project.name}
+                  </span>
+                  <span className="label mt-1.5 block">
+                    {project.domain} &middot; {statusLabel[project.status]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+
+        {visible.length === 0 ? (
+          <p className="py-8 text-sm text-ink-2">Nothing in that domain yet.</p>
+        ) : null}
       </div>
 
-      <ul className="border-b border-rule">
-        {visible.map((project) => (
-          <Row
-            decisions={decisions.filter((decision) => decision.source === project.slug)}
-            key={project.slug}
-            onEnter={() => peek(project.slug)}
-            onLeave={() => unpeek(project.slug)}
-            onToggle={() => toggle(project.slug)}
-            open={open?.slug === project.slug}
-            pinned={open?.slug === project.slug && open.pinned}
-            project={project}
-          />
-        ))}
-      </ul>
+      {/*
+        The detail sits in its own column with a floor under its height, so
+        switching between a long project and a short one neither moves the list
+        nor collapses the page beneath you.
+      */}
+      {active ? (
+        <div className="scroll-mt-28 min-h-[22rem] lg:min-h-[30rem]" id={active.slug}>
+          <article className="panel-in" key={active.slug}>
+            <div className="clause flex items-baseline justify-between gap-4">
+              <h2 className="text-[1.4rem] leading-tight tracking-[-0.025em] text-ink sm:text-[1.6rem]">
+                {active.name}
+              </h2>
+              <p className="label shrink-0">{statusLabel[active.status]}</p>
+            </div>
 
-      {visible.length === 0 ? (
-        <p className="py-10 text-sm text-ink-2">Nothing in that domain yet.</p>
-      ) : (
-        <p className="label mt-4 hidden md:block">Hover to preview &middot; click to keep open</p>
-      )}
-    </>
+            <p className="measure mt-5 text-[1.05rem] leading-[1.65] text-ink-2">{active.summary}</p>
+
+            {active.problem ? (
+              <div className="mt-7">
+                <p className="label">The problem</p>
+                <p className="measure mt-3 text-[0.95rem] leading-[1.65] text-ink-2">{active.problem}</p>
+              </div>
+            ) : null}
+
+            <div className="mt-7">
+              <p className="label">Built with</p>
+              <ul className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.75rem] text-ink-3">
+                {active.stack.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            {activeDecisions.length > 0 ? (
+              <div className="mt-7">
+                <p className="label">Decisions from this project</p>
+                <ul className="mt-3 grid gap-2.5">
+                  {activeDecisions.map((decision) => (
+                    <li className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3" key={decision.id}>
+                      <span className="ref pt-0.5">{decision.id}</span>
+                      <Link
+                        className="focus-ring tlink text-[0.95rem] leading-[1.5] text-ink"
+                        href={`/#${decision.id}`}
+                      >
+                        {decision.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p className="measure mt-7 text-[0.9rem] leading-[1.6] text-ink-3">
+                No decisions written up for this one — it was a build, not an argument.
+              </p>
+            )}
+
+            {active.links.github || active.links.live ? (
+              <div className="mt-8 flex flex-wrap gap-2">
+                {active.links.live ? (
+                  <a className="focus-ring btn btn-solid" href={active.links.live} rel="noreferrer" target="_blank">
+                    Live
+                  </a>
+                ) : null}
+                {active.links.github ? (
+                  <a className="focus-ring btn btn-line" href={active.links.github} rel="noreferrer" target="_blank">
+                    Source
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
+          </article>
+        </div>
+      ) : null}
+    </div>
   );
 }
