@@ -17,6 +17,7 @@ export type SiteConfig = {
   intro: string;
   about: string;
   contact: string;
+  writingIntro: string;
   location: string;
   email: string;
   profileImage: string | null;
@@ -44,6 +45,7 @@ export const siteConfig: SiteConfig = {
   about:
     "I am studying B.Tech Computer Science at IIT Jodhpur, class of 2028. I like building end-to-end software where the backend has real constraints: distributed systems, AI-integrated workflows, and features that need to feel fast without turning into a black box.",
   contact: "Open to SDE and AI/ML engineering internships. Email is the fastest way to reach me.",
+  writingIntro: "Notes on the things I am building and the things that broke while I built them.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
   profileImage: "/pfp.jpg",
