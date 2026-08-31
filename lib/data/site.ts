@@ -8,6 +8,8 @@ export type SiteConfig = {
   name: string;
   handle: string;
   tagline: string;
+  lead: string;
+  intro: string;
   location: string;
   email: string;
   profileImage: string | null;
@@ -29,6 +31,9 @@ export const siteConfig: SiteConfig = {
   name: "Suhan Ramani",
   handle: "Elarx.dev",
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
+  lead: "I am a CS undergrad at IIT Jodhpur, into distributed systems and building things that talk to models in real time.",
+  intro:
+    "I like the parts where clean interfaces meet messy reality: retrieval that stays relevant, inference that stays responsive, and systems you can still reason about after they start growing.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
   profileImage: "/pfp.jpg",

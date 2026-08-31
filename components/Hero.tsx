@@ -1,140 +1,75 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
 
 import { LanyardStatus } from "@/components/LanyardStatus";
 import { siteConfig, type SiteLink } from "@/lib/data/site";
 
-const ctaKeys: Array<keyof typeof siteConfig.links> = [
-  "github",
-  "linkedin",
-  "x",
-  "leetcode",
-  "codeforces",
-  "email",
-  "resume",
-];
+const secondaryKeys = ["github", "linkedin", "x", "email"] as const;
 
-function HeroLink({ link, primary = false }: { link: SiteLink; primary?: boolean }) {
+function QuietLink({ link }: { link: SiteLink }) {
   const isExternal = link.url.startsWith("http");
 
   return (
     <a
-      className={
-        primary
-          ? "focus-ring inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-mono text-sm font-semibold text-white transition-colors hover:bg-accent-strong motion-reduce:transition-none"
-          : "focus-ring inline-flex min-h-11 items-center rounded-full border border-line bg-surface px-5 font-mono text-sm text-foreground transition-colors hover:border-accent hover:text-accent motion-reduce:transition-none"
-      }
+      className="focus-ring group inline-flex items-baseline gap-1 text-muted transition-colors hover:text-foreground"
       href={link.url}
       rel={isExternal ? "noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
     >
-      {link.label}
+      <span className="border-b border-transparent transition-colors group-hover:border-current">{link.label}</span>
+      {isExternal ? <span aria-hidden="true" className="text-[0.7em] text-faint">&#8599;</span> : null}
     </a>
   );
 }
 
 export function Hero() {
-  const ctaLinks = useMemo(() => ctaKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible), []);
+  const { resume } = siteConfig.links;
+  const secondary = secondaryKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
   const initials = siteConfig.name
     .split(" ")
     .map((part) => part[0])
     .join("");
 
-  useEffect(() => {
-    const pageBackground = document.body;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frameId = 0;
-
-    function updateMotionPreference() {
-      if (frameId) window.cancelAnimationFrame(frameId);
-      frameId = 0;
-      pageBackground.style.setProperty("--mx", "50%");
-      pageBackground.style.setProperty("--my", "50%");
-      pageBackground.style.setProperty("--cursor-opacity", "0");
-
-      if (reducedMotion.matches) return () => {};
-
-      function updatePosition(event: PointerEvent) {
-        if (event.pointerType !== "mouse" || frameId) return;
-
-        frameId = window.requestAnimationFrame(() => {
-          const x = (event.clientX / window.innerWidth) * 100;
-          const y = (event.clientY / window.innerHeight) * 100;
-
-          pageBackground.style.setProperty("--mx", `${Math.min(100, Math.max(0, x))}%`);
-          pageBackground.style.setProperty("--my", `${Math.min(100, Math.max(0, y))}%`);
-          pageBackground.style.setProperty("--cursor-opacity", "0.05");
-          frameId = 0;
-        });
-      }
-
-      function hideGlow() {
-        pageBackground.style.setProperty("--cursor-opacity", "0");
-      }
-
-      window.addEventListener("pointermove", updatePosition, { passive: true });
-      window.addEventListener("blur", hideGlow);
-      return () => {
-        window.removeEventListener("pointermove", updatePosition);
-        window.removeEventListener("blur", hideGlow);
-      };
-    }
-
-    let removePointerListener = updateMotionPreference();
-    function handleMotionChange() {
-      removePointerListener();
-      removePointerListener = updateMotionPreference();
-    }
-
-    reducedMotion.addEventListener("change", handleMotionChange);
-    return () => {
-      removePointerListener();
-      if (frameId) window.cancelAnimationFrame(frameId);
-      reducedMotion.removeEventListener("change", handleMotionChange);
-    };
-  }, []);
-
   return (
-    <section className="grid min-h-[calc(100vh-4rem)] content-center gap-10 py-20 sm:py-24">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="max-w-3xl">
-          <p className="eyebrow text-accent">FULL STACK DEVELOPER · systems and real-time AI</p>
-          <h1 className="mt-4 font-display text-5xl font-semibold tracking-normal text-foreground sm:text-6xl">
+    <section className="pb-16 pt-16 sm:pb-20 sm:pt-24">
+      <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
+        <div className="min-w-0">
+          <p className="eyebrow">{siteConfig.location}</p>
+          <h1 className="mt-3 font-display text-[clamp(3rem,10vw,4.5rem)] leading-[0.95] tracking-[-0.015em] text-foreground">
             {siteConfig.name}
           </h1>
-          <p className="mt-5 max-w-2xl text-2xl leading-snug text-foreground">
-            I am a CS undergrad at IIT Jodhpur, into distributed systems and building things that talk to models in
-            real time.
-          </p>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-            I like the parts where clean interfaces meet messy reality: retrieval that stays relevant, inference that
-            stays responsive, and systems you can still reason about after they start growing.
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            {ctaLinks.map((link, index) => (
-              <HeroLink key={link.url} link={link} primary={index === 0} />
-            ))}
-          </div>
         </div>
 
-        <div className="order-first size-40 overflow-hidden rounded-full border border-line bg-panel p-1.5 ring-8 ring-panel/40 sm:size-48 lg:order-none lg:ml-auto lg:size-72 xl:size-80">
+        <div className="size-20 shrink-0 overflow-hidden rounded-full border border-line bg-panel sm:size-24">
           {siteConfig.profileImage ? (
             <Image
-              alt={`${siteConfig.name} profile`}
-              className="size-full rounded-full object-cover"
-              height={320}
+              alt={siteConfig.name}
+              className="size-full object-cover"
+              height={192}
+              priority
               src={siteConfig.profileImage}
-              width={320}
+              width={192}
             />
           ) : (
-            <div className="grid size-full place-items-center rounded-full bg-surface font-display text-5xl font-semibold text-accent lg:text-7xl">
-              {initials}
-            </div>
+            <span className="grid size-full place-items-center font-display text-2xl text-muted">{initials}</span>
           )}
         </div>
+      </div>
+
+      <div className="mt-9 max-w-[36rem] space-y-4">
+        <p className="text-xl leading-[1.55] text-foreground sm:text-[1.375rem]">{siteConfig.lead}</p>
+        <p className="text-muted">{siteConfig.intro}</p>
+      </div>
+
+      <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+        <a
+          className="focus-ring inline-flex h-10 items-center rounded border border-foreground px-4 font-medium text-foreground transition-colors hover:bg-foreground hover:text-background"
+          href={resume.url}
+        >
+          {resume.label}
+        </a>
+        {secondary.map((link) => (
+          <QuietLink key={link.url} link={link} />
+        ))}
       </div>
 
       <LanyardStatus />

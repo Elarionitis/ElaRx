@@ -23,11 +23,11 @@ type LanyardResponse = {
   data?: LanyardData;
 };
 
-const statusClass: Record<DiscordStatus, string> = {
-  online: "bg-accent",
-  idle: "bg-accent-alt",
+const statusColor: Record<DiscordStatus, string> = {
+  online: "bg-emerald-500",
+  idle: "bg-amber-500",
   dnd: "bg-red-500",
-  offline: "bg-muted",
+  offline: "bg-faint",
 };
 
 const lastSpotifyStorageKey = "elarx:last-spotify";
@@ -95,15 +95,15 @@ export function LanyardStatus() {
     : null;
 
   return (
-    <div className="grid rounded-lg border border-line bg-surface min-h-20 gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4">
-      <div className="flex min-w-0 items-center gap-3 font-mono text-xs text-muted" aria-live="polite">
-        <span className={`size-2 shrink-0 rounded-full ${statusClass[data.discord_status]}`} />
+    <div className="mt-14 grid gap-3 border-t border-line pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <div className="flex min-w-0 items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-faint" aria-live="polite">
+        <span className={`size-2 shrink-0 rounded-full ${statusColor[data.discord_status]}`} />
         <span>{data.discord_status}</span>
       </div>
 
       {spotify && spotifySearchUrl ? (
         <a
-          className="focus-ring group flex min-w-0 items-center gap-3 rounded-lg p-1 transition-colors hover:bg-panel motion-reduce:transition-none"
+          className="focus-ring group flex min-w-0 items-center gap-3"
           href={spotifySearchUrl}
           rel="noreferrer"
           target="_blank"
@@ -111,21 +111,16 @@ export function LanyardStatus() {
           {spotify.album_art_url ? (
             <Image
               alt=""
-              className="size-11 shrink-0 rounded-md border border-line object-cover"
-              height={44}
+              className="size-10 shrink-0 rounded border border-line object-cover"
+              height={40}
               src={spotify.album_art_url}
-              width={44}
+              width={40}
             />
           ) : null}
           <span className="min-w-0">
-            <span className="block font-mono text-[0.68rem] font-semibold uppercase tracking-wide text-[#1db954]">
-              {data.spotify ? "Spotify" : "Last played"}
-            </span>
-            <span className="block truncate text-sm font-medium text-foreground">{spotify.song}</span>
-            <span className="block truncate font-mono text-xs text-muted">{spotify.artist}</span>
-          </span>
-          <span className="shrink-0 font-mono text-xs text-muted transition-colors group-hover:text-accent motion-reduce:transition-none">
-            Open ↗
+            <span className="eyebrow block">{data.spotify ? "Now playing" : "Last played"}</span>
+            <span className="mt-1 block truncate text-sm text-foreground group-hover:underline">{spotify.song}</span>
+            <span className="block truncate text-xs text-muted">{spotify.artist}</span>
           </span>
         </a>
       ) : null}
