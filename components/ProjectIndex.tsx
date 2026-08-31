@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { Decision } from "@/lib/data/decisions";
 import type { Project } from "@/lib/data/projects";
+
+/* Layout effects do not run on the server; fall back so SSR stays quiet. */
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const statusLabel: Record<Project["status"], string> = {
   live: "Live",
@@ -80,7 +83,7 @@ function Row({
       </button>
 
       <div className={open ? "block" : "hidden"} id={panelId} role="region">
-        <div className="grid gap-8 pb-10 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-x-5">
+        <div className="panel-in grid gap-8 pb-10 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-x-5">
           <div className="flex flex-col gap-5">
             <div>
               <p className="label">Built with</p>
@@ -159,19 +162,51 @@ export function ProjectIndex({
 }) {
   const [filter, setFilter] = useState<string>("All");
   /*
-    Two levels of open. Dwelling on a row peeks it; clicking pins it.
+    One row open at a time, held as a single value so opening B and closing A
+    happen in the same commit rather than as two reflows.
 
-    The dwell delay is what makes hover-to-expand usable rather than chaotic —
-    sweeping the pointer across the list never triggers anything, so rows below
-    stop jumping out from under the cursor. And because the panel lives inside
-    the row being hovered, the row only ever grows downwards, so the pointer
-    stays inside it and cannot flicker the panel open and shut.
+    `pinned` records whether it was opened by a click. A dwell-opened row
+    closes when the pointer leaves; a pinned one does not.
   */
-  const [pinnedSlug, setPinnedSlug] = useState<string | null>(null);
-  const [peekedSlug, setPeekedSlug] = useState<string | null>(null);
+  const [open, setOpen] = useState<{ slug: string; pinned: boolean } | null>(null);
   const hoverEnabled = useRef(false);
   const openTimer = useRef(0);
   const closeTimer = useRef(0);
+
+  /*
+    Scroll anchoring.
+
+    Collapsing a row pulls every row beneath it upwards — measured at 354px on
+    this list, roughly six rows. With the pointer stationary that puts a
+    completely different project under the cursor, so moving from one row to
+    the next opened something several places further down.
+
+    Before each change we record where the row being interacted with sits in
+    the viewport; immediately after the DOM updates, and before the browser
+    paints, we scroll by the difference. The row under the pointer therefore
+    never moves, whatever happens above it.
+  */
+  const anchorSlug = useRef<string | null>(null);
+  const anchorTop = useRef(0);
+
+  const rememberAnchor = useCallback((slug: string) => {
+    const element = document.getElementById(slug);
+    if (!element) return;
+    anchorSlug.current = slug;
+    anchorTop.current = element.getBoundingClientRect().top;
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    const slug = anchorSlug.current;
+    anchorSlug.current = null;
+    if (!slug) return;
+
+    const element = document.getElementById(slug);
+    if (!element) return;
+
+    const delta = element.getBoundingClientRect().top - anchorTop.current;
+    if (Math.abs(delta) > 1) window.scrollBy(0, delta);
+  }, [open]);
 
   useEffect(() => {
     // No dwell-to-open for touch (there is no hover) or reduced motion.
@@ -185,17 +220,35 @@ export function ProjectIndex({
     };
   }, []);
 
-  const peek = useCallback((slug: string) => {
-    if (!hoverEnabled.current) return;
-    window.clearTimeout(closeTimer.current);
-    openTimer.current = window.setTimeout(() => setPeekedSlug(slug), 320);
-  }, []);
+  const peek = useCallback(
+    (slug: string) => {
+      if (!hoverEnabled.current) return;
+      window.clearTimeout(closeTimer.current);
+      openTimer.current = window.setTimeout(() => {
+        rememberAnchor(slug);
+        setOpen((current) => (current?.slug === slug ? current : { slug, pinned: false }));
+      }, 320);
+    },
+    [rememberAnchor],
+  );
 
-  const unpeek = useCallback(() => {
+  const unpeek = useCallback((slug: string) => {
     if (!hoverEnabled.current) return;
     window.clearTimeout(openTimer.current);
-    closeTimer.current = window.setTimeout(() => setPeekedSlug(null), 180);
+    closeTimer.current = window.setTimeout(() => {
+      setOpen((current) => (current && current.slug === slug && !current.pinned ? null : current));
+    }, 180);
   }, []);
+
+  const toggle = useCallback(
+    (slug: string) => {
+      window.clearTimeout(openTimer.current);
+      window.clearTimeout(closeTimer.current);
+      rememberAnchor(slug);
+      setOpen((current) => (current?.slug === slug && current.pinned ? null : { slug, pinned: true }));
+    },
+    [rememberAnchor],
+  );
 
   /*
     Deep links from the homepage, the palette and an article open the project
@@ -207,7 +260,7 @@ export function ProjectIndex({
     function openFromHash() {
       const hash = window.location.hash.replace("#", "");
       if (!hash || !projects.some((project) => project.slug === hash)) return;
-      setPinnedSlug(hash);
+      setOpen({ slug: hash, pinned: true });
       document.getElementById(hash)?.scrollIntoView({ block: "start" });
     }
 
@@ -261,14 +314,10 @@ export function ProjectIndex({
             decisions={decisions.filter((decision) => decision.source === project.slug)}
             key={project.slug}
             onEnter={() => peek(project.slug)}
-            onLeave={unpeek}
-            onToggle={() => {
-              window.clearTimeout(openTimer.current);
-              setPeekedSlug(null);
-              setPinnedSlug((current) => (current === project.slug ? null : project.slug));
-            }}
-            open={pinnedSlug === project.slug || peekedSlug === project.slug}
-            pinned={pinnedSlug === project.slug}
+            onLeave={() => unpeek(project.slug)}
+            onToggle={() => toggle(project.slug)}
+            open={open?.slug === project.slug}
+            pinned={open?.slug === project.slug && open.pinned}
             project={project}
           />
         ))}
