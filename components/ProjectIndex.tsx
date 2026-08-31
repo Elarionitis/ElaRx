@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Decision } from "@/lib/data/decisions";
 import type { Project } from "@/lib/data/projects";
@@ -14,19 +14,37 @@ const statusLabel: Record<Project["status"], string> = {
 
 function Row({
   decisions,
+  onEnter,
+  onLeave,
   onToggle,
   open,
+  pinned,
   project,
 }: {
   decisions: Decision[];
+  onEnter: () => void;
+  onLeave: () => void;
   onToggle: () => void;
   open: boolean;
+  pinned: boolean;
   project: Project;
 }) {
   const panelId = `${project.slug}-body`;
 
   return (
-    <li className="scroll-mt-20 border-t border-rule" id={project.slug}>
+    <li
+      className="group/row relative scroll-mt-20 border-t border-rule"
+      id={project.slug}
+      onPointerEnter={onEnter}
+      onPointerLeave={onLeave}
+    >
+      {/* Marks the row the pointer is dwelling on, before it opens. */}
+      <span
+        aria-hidden="true"
+        className={`absolute -left-4 top-0 h-full w-px origin-top bg-accent transition-transform duration-200 ${
+          open ? "scale-y-100" : "scale-y-0 group-hover/row:scale-y-100"
+        }`}
+      />
       <button
         aria-controls={panelId}
         aria-expanded={open}
@@ -53,9 +71,9 @@ function Row({
 
         <span
           aria-hidden="true"
-          className={`col-start-2 row-start-1 justify-self-end text-ink-3 transition-transform duration-200 sm:col-start-3 ${
+          className={`col-start-2 row-start-1 justify-self-end transition-transform duration-200 sm:col-start-3 ${
             open ? "rotate-45" : ""
-          }`}
+          } ${pinned ? "text-accent" : "text-ink-3"}`}
         >
           +
         </span>
@@ -140,7 +158,44 @@ export function ProjectIndex({
   projects: Project[];
 }) {
   const [filter, setFilter] = useState<string>("All");
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  /*
+    Two levels of open. Dwelling on a row peeks it; clicking pins it.
+
+    The dwell delay is what makes hover-to-expand usable rather than chaotic —
+    sweeping the pointer across the list never triggers anything, so rows below
+    stop jumping out from under the cursor. And because the panel lives inside
+    the row being hovered, the row only ever grows downwards, so the pointer
+    stays inside it and cannot flicker the panel open and shut.
+  */
+  const [pinnedSlug, setPinnedSlug] = useState<string | null>(null);
+  const [peekedSlug, setPeekedSlug] = useState<string | null>(null);
+  const hoverEnabled = useRef(false);
+  const openTimer = useRef(0);
+  const closeTimer = useRef(0);
+
+  useEffect(() => {
+    // No dwell-to-open for touch (there is no hover) or reduced motion.
+    hoverEnabled.current =
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    return () => {
+      window.clearTimeout(openTimer.current);
+      window.clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  const peek = useCallback((slug: string) => {
+    if (!hoverEnabled.current) return;
+    window.clearTimeout(closeTimer.current);
+    openTimer.current = window.setTimeout(() => setPeekedSlug(slug), 320);
+  }, []);
+
+  const unpeek = useCallback(() => {
+    if (!hoverEnabled.current) return;
+    window.clearTimeout(openTimer.current);
+    closeTimer.current = window.setTimeout(() => setPeekedSlug(null), 180);
+  }, []);
 
   /*
     Deep links from the homepage, the palette and an article open the project
@@ -152,7 +207,7 @@ export function ProjectIndex({
     function openFromHash() {
       const hash = window.location.hash.replace("#", "");
       if (!hash || !projects.some((project) => project.slug === hash)) return;
-      setOpenSlug(hash);
+      setPinnedSlug(hash);
       document.getElementById(hash)?.scrollIntoView({ block: "start" });
     }
 
@@ -205,8 +260,15 @@ export function ProjectIndex({
           <Row
             decisions={decisions.filter((decision) => decision.source === project.slug)}
             key={project.slug}
-            onToggle={() => setOpenSlug((current) => (current === project.slug ? null : project.slug))}
-            open={openSlug === project.slug}
+            onEnter={() => peek(project.slug)}
+            onLeave={unpeek}
+            onToggle={() => {
+              window.clearTimeout(openTimer.current);
+              setPeekedSlug(null);
+              setPinnedSlug((current) => (current === project.slug ? null : project.slug));
+            }}
+            open={pinnedSlug === project.slug || peekedSlug === project.slug}
+            pinned={pinnedSlug === project.slug}
             project={project}
           />
         ))}
@@ -214,7 +276,9 @@ export function ProjectIndex({
 
       {visible.length === 0 ? (
         <p className="py-10 text-sm text-ink-2">Nothing in that domain yet.</p>
-      ) : null}
+      ) : (
+        <p className="label mt-4 hidden md:block">Hover to preview &middot; click to keep open</p>
+      )}
     </>
   );
 }
