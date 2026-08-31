@@ -1,22 +1,20 @@
-import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 
-// Display face for headings. Instrument Serif ships a single weight by design —
-// the size and the leading do the work instead of the weight axis.
-export const display = Instrument_Serif({
+// Variable grotesque with an optical-size axis. Distinctive at display sizes
+// without tipping into a novelty face, which is what the name needs.
+export const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
   display: "swap",
   variable: "--ff-display",
 });
 
-export const body = Inter({
+export const body = Instrument_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--ff-body",
 });
 
-// Reserved for metadata: dates, tags, labels, code.
+// Every piece of metadata on the site: labels, dates, figures, stack, code.
 export const mono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",

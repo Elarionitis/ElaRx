@@ -1,32 +1,37 @@
 import { Section } from "@/components/Section";
 import { siteConfig } from "@/lib/data/site";
 
-const contactKeys = ["github", "linkedin", "x"] as const;
+const elsewhereKeys = ["github", "linkedin", "x"] as const;
 
 export function Contact() {
-  const elsewhere = contactKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
+  const elsewhere = elsewhereKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
 
   return (
-    <Section id="contact" label="Contact">
-      <p className="text-lg leading-[1.7] text-foreground">{siteConfig.contact}</p>
-
-      <a className="link mt-6 inline-block font-display text-3xl text-foreground sm:text-4xl" href={`mailto:${siteConfig.email}`}>
-        {siteConfig.email}
-      </a>
-
-      <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
-        {elsewhere.map((link) => (
+    <Section aside="Available" id="contact" label="Contact">
+      <div className="card flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+        <div className="min-w-0">
+          <p className="text-muted">{siteConfig.contact}</p>
           <a
-            className="focus-ring inline-flex items-baseline gap-1 transition-colors hover:text-foreground"
-            href={link.url}
-            key={link.url}
-            rel="noreferrer"
-            target="_blank"
+            className="focus-ring mt-1 block truncate font-display text-2xl font-semibold tracking-[-0.02em] text-foreground transition-colors hover:text-accent sm:text-3xl"
+            href={`mailto:${siteConfig.email}`}
           >
-            <span className="border-b border-transparent hover:border-current">{link.label}</span>
-            <span aria-hidden="true" className="text-[0.7em] text-faint">&#8599;</span>
+            {siteConfig.email}
           </a>
-        ))}
+        </div>
+
+        <div className="flex shrink-0 gap-4 font-mono text-xs">
+          {elsewhere.map((link) => (
+            <a
+              className="focus-ring text-muted transition-colors hover:text-accent"
+              href={link.url}
+              key={link.url}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {link.label} <span aria-hidden="true">&#8599;</span>
+            </a>
+          ))}
+        </div>
       </div>
     </Section>
   );

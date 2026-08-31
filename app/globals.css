@@ -5,43 +5,46 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  Dark is the default here, so the dark set is the one that got designed and
-  the light set is derived from it rather than the other way round.
-
-  One accent: a cyan-teal that carries enough saturation to survive on a
-  near-black ground. It also sits opposite the warm browns in the profile
-  illustration, which is why the ring around it reads rather than blends.
+  Near-black ground with two levels of raised surface above it. The layering is
+  what makes a dense page read as built rather than as a document: cards sit on
+  the ground, hairlines separate them, and hover lifts one more step.
 */
 :root {
   color-scheme: light;
 
-  --background: #f7f8f8;
-  --foreground: #14181a;
-  --muted: #586265;
-  --faint: #8a9295;
+  --background: #f6f7f7;
   --surface: #ffffff;
-  --panel: #edefef;
-  --line: #dcdfdf;
-  --accent: #0c7268;
-  --accent-strong: #095a52;
+  --surface-2: #f0f2f2;
+  --foreground: #0e1112;
+  --muted: #545d5f;
+  --faint: #838c8e;
+  --line: #e2e5e5;
+  --line-strong: #d0d5d5;
+  --accent: #0b6f66;
+  --accent-strong: #085951;
   --accent-contrast: #ffffff;
-  --glow: 6%;
+  --accent-wash: color-mix(in srgb, var(--accent) 8%, transparent);
+  --glow: 5%;
+  --shadow: 0 1px 2px rgb(14 17 18 / 0.04), 0 8px 24px -12px rgb(14 17 18 / 0.12);
 }
 
 .dark {
   color-scheme: dark;
 
-  --background: #0a0c0d;
-  --foreground: #eceeed;
-  --muted: #97a0a1;
-  --faint: #697274;
-  --surface: #111415;
-  --panel: #171b1c;
-  --line: #232829;
-  --accent: #4fd1c5;
-  --accent-strong: #7ee3d9;
-  --accent-contrast: #06201d;
-  --glow: 9%;
+  --background: #08090a;
+  --surface: #0e1112;
+  --surface-2: #14181a;
+  --foreground: #f1f3f3;
+  --muted: #99a2a3;
+  --faint: #646d6f;
+  --line: #1b1f21;
+  --line-strong: #272d2f;
+  --accent: #34d3c1;
+  --accent-strong: #5fe3d4;
+  --accent-contrast: #04211e;
+  --accent-wash: color-mix(in srgb, var(--accent) 10%, transparent);
+  --glow: 8%;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -16px rgb(0 0 0 / 0.7);
 }
 
 @theme inline {
@@ -50,8 +53,10 @@
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-panel: var(--panel);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-contrast: var(--accent-contrast);
@@ -84,8 +89,8 @@ body {
   background-size: 200px 200px;
   color: var(--foreground);
   font-family: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
-  font-size: 1.0625rem;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -106,7 +111,7 @@ a {
     as the blog rather than sprawling to 1080px.
   */
   .shell {
-    width: min(56rem, calc(100% - 2.5rem));
+    width: min(66rem, calc(100% - 2rem));
     margin-inline: auto;
   }
 
@@ -125,9 +130,62 @@ a {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
-    line-height: 1;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
     text-transform: uppercase;
+  }
+
+  /* Anything that is a number the reader might compare. */
+  .figure {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .card-hover:hover {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--line-strong));
+    background: var(--surface-2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Status marker: a dot plus a word, sized to sit inside a card corner. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem 0.2rem 0.45rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pill-live {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    background: var(--accent-wash);
+    color: var(--accent);
+  }
+
+  .pill .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
   }
 
   .tag {

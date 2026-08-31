@@ -11,9 +11,9 @@ export const experience: ExperienceItem[] = [
     org: "Webify Design",
     dates: "May–Jun 2026",
     highlights: [
-      "Shipped features across 5+ production web apps in PHP, JavaScript and HTML5/CSS3. Reusing the modules that already existed instead of rewriting them cut release-cycle time by over 30%.",
-      "Reindexed MySQL and cleared the N+1 queries out of the busiest endpoints. Data-retrieval latency came down by around 35%.",
-      "Worked through root-cause analysis on production incidents with the wider team, and added the instrumentation we had been missing.",
+      "Shipped features across 5+ production web apps in PHP and JavaScript. Reusing existing modules cut release cycles by over 30%.",
+      "Reindexed MySQL and cleared N+1 queries from the hot endpoints. Read latency down ~35%.",
+      "Root-cause analysis on production incidents, plus the instrumentation we had been missing.",
     ],
   },
   {
@@ -21,9 +21,9 @@ export const experience: ExperienceItem[] = [
     org: "SQORA — AI-Powered Learning Platform (Winter of Code)",
     dates: "Dec 2025–Apr 2026",
     highlights: [
-      "Built a production RAG pipeline on the Gemini API and Qdrant. 500+ documents indexed, end-to-end retrieval under 500ms, serving three engineering workflows.",
-      "Wrote the FastAPI layer with async I/O so four ingestion streams could run in parallel without blocking each other.",
-      "Added validation and monitoring around ingestion so bad documents failed loudly instead of quietly degrading retrieval.",
+      "RAG pipeline on Gemini and Qdrant. 500+ documents, sub-500ms end-to-end retrieval, three workflows.",
+      "Async FastAPI layer so four ingestion streams run in parallel without blocking.",
+      "Validation and monitoring on ingestion, so bad documents fail loudly instead of degrading retrieval.",
     ],
   },
 ];

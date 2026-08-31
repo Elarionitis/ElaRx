@@ -1,3 +1,9 @@
+export type Stat = {
+  /** The number itself. Kept short enough to stay on one line. */
+  value: string;
+  label: string;
+};
+
 export type Credential = {
   label: string;
   value: string;
@@ -35,6 +41,7 @@ export type SiteConfig = {
     email: SiteLink;
     resume: SiteLink;
   };
+  stats: Stat[];
   proof: Credential[];
 };
 
@@ -66,14 +73,12 @@ export const siteConfig: SiteConfig = {
   role: "Backend and AI systems",
   tagline:
     "CS undergrad at IIT Jodhpur building backend systems and AI tooling: retrieval pipelines, APIs, and the parts that get slow first.",
-  lead:
-    "I build backend systems, and lately most of them have a model somewhere in the middle. That changes what fast means.",
-  intro:
-    "Most of my work sits behind the interface: retrieval, APIs, the queries that get slow first. I would rather a system stay readable than clever.",
+  lead: "I build backend systems that stay fast once they get big.",
+  intro: "Retrieval pipelines, APIs, and the queries that get slow first.",
   about:
-    "B.Tech Computer Science at IIT Jodhpur, class of 2028. I work mostly on the backend, on distributed systems and retrieval pipelines and anything that has to hold up under load. Most of what I know came from building something, watching it break, and going to find out why.",
-  contact: "Looking for SDE and AI/ML engineering internships. Email reaches me fastest.",
-  writingIntro: "Notes on what I am building, and on what broke while I built it.",
+    "B.Tech Computer Science at IIT Jodhpur, class of 2028. Most of what I know came from building something, watching it break, and going to find out why.",
+  contact: "Open to SDE and AI/ML internships.",
+  writingIntro: "What I am building, and what broke while I built it.",
   location: "IIT Jodhpur CSE",
   email: "suhanramani@gmail.com",
   profileImage: "/pfp.jpg",
@@ -116,6 +121,12 @@ export const siteConfig: SiteConfig = {
       visible: true,
     },
   },
+  stats: [
+    { value: "<500ms", label: "RAG retrieval" },
+    { value: "500+", label: "Docs indexed" },
+    { value: "35%", label: "Read latency cut" },
+    { value: "AIR 397", label: "JEE Advanced 2024" },
+  ],
   proof: [
     { label: "JEE Advanced 2024", value: "AIR 397 (General-EWS)" },
     { label: "JEE Main 2024", value: "99.55 percentile" },

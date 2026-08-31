@@ -4,18 +4,20 @@ import { siteConfig } from "@/lib/data/site";
 export function About() {
   return (
     <Section id="about" label="About">
-      <p className="text-lg leading-[1.7] text-foreground">{siteConfig.about}</p>
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-12">
+        <p className="max-w-[36rem] text-lg leading-[1.6] text-foreground">{siteConfig.about}</p>
 
-      {siteConfig.proof.length > 0 ? (
-        <dl className="mt-8 space-y-2.5 border-t border-line pt-6 font-mono text-xs text-muted">
-          {siteConfig.proof.map((item) => (
-            <div className="grid gap-x-4 gap-y-0.5 sm:grid-cols-[9.5rem_minmax(0,1fr)]" key={item.label}>
-              <dt className="text-faint">{item.label}</dt>
-              <dd className="min-w-0">{item.value}</dd>
-            </div>
-          ))}
-        </dl>
-      ) : null}
+        {siteConfig.proof.length > 0 ? (
+          <dl className="grid content-start gap-2 md:min-w-[17rem]">
+            {siteConfig.proof.map((item) => (
+              <div className="flex items-baseline justify-between gap-4 border-b border-line pb-2" key={item.label}>
+                <dt className="eyebrow">{item.label}</dt>
+                <dd className="figure text-xs text-foreground">{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </div>
     </Section>
   );
 }

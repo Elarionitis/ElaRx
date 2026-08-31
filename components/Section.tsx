@@ -1,26 +1,27 @@
 import type { ReactNode } from "react";
 
 /*
-  Every section shares one frame: a mono label in a narrow left column and the
-  content in a wider right column, separated from the previous section by a
-  single hairline. The label column collapses above the content on small
-  screens.
+  Section frame: a mono label and an optional right-hand slot on one line, a
+  hairline under them, then the content. Narrow enough to stay dense.
 */
 export function Section({
+  aside,
   children,
   id,
   label,
 }: {
+  aside?: ReactNode;
   children: ReactNode;
   id?: string;
   label: string;
 }) {
   return (
-    <section className="scroll-mt-16 border-t border-line py-12 sm:py-16" id={id}>
-      <div className="grid gap-5 sm:grid-cols-[8rem_minmax(0,44rem)] sm:gap-10">
-        <h2 className="eyebrow sm:pt-[0.45rem]">{label}</h2>
-        <div className="min-w-0">{children}</div>
+    <section className="scroll-mt-16 py-8 sm:py-10" id={id}>
+      <div className="flex items-baseline justify-between gap-4 border-b border-line pb-3">
+        <h2 className="eyebrow text-foreground">{label}</h2>
+        {aside ? <div className="eyebrow shrink-0">{aside}</div> : null}
       </div>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }
