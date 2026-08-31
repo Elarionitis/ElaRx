@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { ProjectIndex } from "@/components/ProjectIndex";
-import { decisions, domains } from "@/lib/data/decisions";
+import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = {
@@ -11,6 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectsPage() {
+  // Only offer filters that have something behind them.
+  const domains = [...new Set(projects.map((project) => project.domain))].sort();
+
   return (
     <div className="sheet pb-4">
       <header className="pt-16 sm:pt-20">
