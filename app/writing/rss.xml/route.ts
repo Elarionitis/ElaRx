@@ -30,6 +30,7 @@ export function GET() {
     .join("\n");
 
   const feed = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(`${siteConfig.name} — Writing`)}</title>
@@ -44,7 +45,10 @@ ${items}
 
   return new Response(feed, {
     headers: {
-      "content-type": "application/rss+xml; charset=utf-8",
+      // application/xml rather than application/rss+xml: browsers refuse to
+      // apply the XSLT stylesheet to the latter, and feed readers detect the
+      // format from the root element regardless.
+      "content-type": "application/xml; charset=utf-8",
       "cache-control": "public, max-age=0, s-maxage=3600",
     },
   });

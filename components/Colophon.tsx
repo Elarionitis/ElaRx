@@ -41,8 +41,10 @@ export function Colophon() {
               </li>
             </ul>
           </div>
-          <p className="label">
-            <span className="num">{new Date().getFullYear()}</span> &middot; Set in Archivo and IBM Plex Mono
+          <p className="label flex flex-wrap gap-x-2 md:justify-end">
+            <span className="num">{new Date().getFullYear()}</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Set in Archivo and IBM Plex Mono</span>
           </p>
         </div>
       </div>
