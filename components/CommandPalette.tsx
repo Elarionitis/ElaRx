@@ -171,7 +171,7 @@ export function CommandPalette({ email, items }: { email: string; items: Command
 
                   return (
                     <button
-                      className={`flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                      className={`flex w-full min-w-0 items-center justify-between gap-4 overflow-hidden rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                         isActive ? "bg-surface-2 text-foreground" : "text-muted hover:bg-surface-2"
                       }`}
                       data-active={isActive}
@@ -180,9 +180,11 @@ export function CommandPalette({ email, items }: { email: string; items: Command
                       onMouseMove={() => setCursor(index)}
                       type="button"
                     >
-                      <span className="truncate">{item.label}</span>
+                      <span className="min-w-0 flex-1 truncate">{item.label}</span>
                       {item.hint ? (
-                        <span className="shrink-0 font-mono text-[0.7rem] text-faint">{item.hint}</span>
+                        <span className="hidden max-w-[45%] shrink truncate font-mono text-[0.7rem] text-faint sm:block">
+                          {item.hint}
+                        </span>
                       ) : null}
                     </button>
                   );
