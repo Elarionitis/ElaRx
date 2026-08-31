@@ -87,9 +87,11 @@ export function LanyardStatus() {
     };
   }, []);
 
-  if (!data) return null;
+  const spotify = data?.spotify ?? lastSpotify;
 
-  const spotify = data.spotify ?? lastSpotify;
+  // Nothing to say when the status is offline and there is no track to show.
+  if (!data || (data.discord_status === "offline" && !spotify)) return null;
+
   const spotifySearchUrl = spotify
     ? `https://open.spotify.com/search/${encodeURIComponent(`${spotify.song} ${spotify.artist}`)}`
     : null;

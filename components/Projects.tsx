@@ -35,7 +35,7 @@ export function Projects() {
               <h3 className="font-display text-2xl leading-tight text-foreground">{project.name}</h3>
               <ProjectLinks project={project} />
             </div>
-            <p className="mt-0.5 text-sm text-accent">{project.tagline}</p>
+            <p className="mt-0.5 text-sm text-muted">{project.tagline}</p>
             <p className="mt-3 leading-[1.65] text-muted">{project.summary}</p>
             <p className="mt-3 font-mono text-xs text-faint">{project.stack.join("  ·  ")}</p>
           </li>
