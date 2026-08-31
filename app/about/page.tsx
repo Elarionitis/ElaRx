@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 
 import { experience } from "@/lib/data/experience";
 import { siteConfig } from "@/lib/data/site";
@@ -16,7 +15,7 @@ const selectedPositions = siteConfig.positions.slice(0, 3);
 export default function AboutPage() {
   return (
     <div className="sheet pb-4">
-      <header className="grid max-w-[52rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-12">
+      <header className="grid max-w-[54rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-14">
         <div className="min-w-0">
           <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
             About
@@ -45,21 +44,61 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="lg:pt-3">
-          <div className="portrait w-full max-w-[12.5rem]">
-            <Image
-              alt={siteConfig.name}
-              height={400}
-              sizes="12.5rem"
-              src={siteConfig.profileImage}
-              width={400}
-            />
-          </div>
-          <p className="label mt-4 grid gap-0.5">
-            <span>{siteConfig.hometown}</span>
-            <span>&rarr; {siteConfig.location}</span>
-          </p>
-        </div>
+        {/*
+          The sidebar carries the facts someone might want to grab without
+          reading four paragraphs. It exists so the column has something in it
+          the whole height of the prose — a portrait alone left a void beside
+          the text, which is what made this page look unfinished.
+        */}
+        <aside className="lg:sticky lg:top-24 lg:self-start">
+          <dl className="grid gap-5">
+            <div>
+              <dt className="label">Based in</dt>
+              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+                Jodhpur, Rajasthan
+                <br />
+                <span className="text-ink-3">from {siteConfig.hometown}</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="label">Studying</dt>
+              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+                B.Tech Computer Science
+                <br />
+                <span className="text-ink-3">IIT Jodhpur, class of 2028</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="label">Currently</dt>
+              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+                Overall Coordinator
+                <br />
+                <span className="text-ink-3">Anand Rathi Tinkerers&rsquo; Lab</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="label">Find me</dt>
+              <dd className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.95rem]">
+                {[
+                  siteConfig.links.github,
+                  siteConfig.links.linkedin,
+                  siteConfig.links.leetcode,
+                  siteConfig.links.codeforces,
+                ].map((link) => (
+                  <a
+                    className="focus-ring tlink text-ink-2"
+                    href={link.url}
+                    key={link.url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </dd>
+            </div>
+          </dl>
+        </aside>
       </header>
 
       <section className="pt-16">
