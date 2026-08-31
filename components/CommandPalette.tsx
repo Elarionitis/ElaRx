@@ -8,6 +8,8 @@ export type CommandItem = {
   group: string;
   label: string;
   hint?: string;
+  /** Extra text matched by search but never displayed. */
+  keywords?: string;
   href?: string;
   /** Non-navigation commands: copy, theme, download. */
   action?: "copy-email" | "toggle-theme";
@@ -17,7 +19,9 @@ export const OPEN_PALETTE_EVENT = "open-command-palette";
 
 function matches(item: CommandItem, query: string) {
   if (!query) return true;
-  return `${item.label} ${item.hint ?? ""} ${item.group}`.toLowerCase().includes(query.toLowerCase());
+  return `${item.label} ${item.hint ?? ""} ${item.keywords ?? ""} ${item.group}`
+    .toLowerCase()
+    .includes(query.toLowerCase());
 }
 
 export function CommandPalette({ email, items }: { email: string; items: CommandItem[] }) {

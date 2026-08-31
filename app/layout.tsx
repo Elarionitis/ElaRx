@@ -80,12 +80,15 @@ function buildCommandItems(): CommandItem[] {
       group: "Decisions",
       label: decision.title,
       hint: decision.id,
+      // Searching "locking" or "cache" should find the decision about it.
+      keywords: `${decision.constraint} ${decision.reasoning} ${decision.domain} ${decision.sourceLabel}`,
       href: `/#${decision.id}`,
     })),
     ...projects.map((project) => ({
       group: "Projects",
       label: project.name,
       hint: project.tagline,
+      keywords: `${project.summary} ${project.domain} ${project.stack.join(" ")}`,
       href: `/projects#${project.slug}`,
     })),
     ...getAllPosts().map((post) => ({

@@ -144,7 +144,7 @@ export const projects: Project[] = [
     tagline: "Air-quality intelligence platform",
     summary:
       "Ward-level AQI forecasting with source attribution and inspection ranking, served by a FastAPI backend behind a React dashboard.",
-    category: "work",
+    category: "featured",
     status: "source",
     domain: "Machine learning",
     role: "Solo",
