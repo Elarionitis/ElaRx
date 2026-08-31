@@ -1,44 +1,78 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 import { siteConfig } from "@/lib/data/site";
 
 const navItems = [
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Contact", href: "#contact" },
+  { label: "Work", href: "/#work" },
+  { label: "Writing", href: "/blog" },
+  { label: "About", href: "/#about" },
 ];
 
-export function Nav() {
-  const { setTheme, theme } = useTheme();
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // The server has no idea which theme the browser will resolve to, so the icon
+  // can only be drawn after hydration. Reserve the space in the meantime.
+  useEffect(() => setMounted(true), []);
+
+  const isDark = resolvedTheme === "dark";
 
   return (
-    <header className="sticky top-0 z-20 border-b border-line/70 bg-background/90 backdrop-blur">
-      <nav className="shell flex min-h-16 items-center justify-between gap-4">
-        <a className="focus-ring font-mono text-sm font-semibold text-foreground" href="#top">
-          {siteConfig.handle}
-        </a>
+    <button
+      aria-label={mounted ? `Switch to ${isDark ? "light" : "dark"} theme` : "Switch theme"}
+      className="focus-ring -mr-1.5 grid size-9 place-items-center rounded-full text-muted transition-colors hover:text-foreground"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      type="button"
+    >
+      {!mounted ? (
+        <span className="size-4" />
+      ) : isDark ? (
+        <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4.2" />
+          <path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7 5.4 5.4" strokeLinecap="round" />
+        </svg>
+      ) : (
+        <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z" strokeLinejoin="round" />
+        </svg>
+      )}
+    </button>
+  );
+}
 
-        <div className="flex items-center gap-1 sm:gap-3">
-          {navItems.map((item) => (
-            <a
-              className="focus-ring hidden rounded-full px-3 py-2 font-mono text-xs text-muted transition-colors hover:bg-panel hover:text-foreground sm:inline-flex"
-              href={item.href}
-              key={item.href}
-            >
-              {item.label}
-            </a>
-          ))}
-          <button
-            aria-label="Toggle theme"
-            className="focus-ring inline-flex h-9 min-w-16 items-center justify-center rounded-full border border-line bg-surface px-3 font-mono text-xs text-foreground transition-colors hover:border-accent hover:text-accent"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            type="button"
-          >
-            theme
-          </button>
+export function Nav() {
+  const pathname = usePathname();
+
+  return (
+    <header className="sticky top-0 z-30 border-b border-line bg-background/85 backdrop-blur-sm">
+      <nav className="shell flex h-14 items-center justify-between gap-4">
+        <Link className="focus-ring font-display text-lg leading-none text-foreground" href="/">
+          {siteConfig.handle}
+        </Link>
+
+        <div className="flex items-center gap-4 sm:gap-6">
+          {navItems.map((item) => {
+            const isActive = item.href.startsWith("/blog") && pathname.startsWith("/blog");
+
+            return (
+              <Link
+                className={`focus-ring text-sm transition-colors hover:text-foreground ${
+                  isActive ? "text-foreground" : "text-muted"
+                }`}
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+          <ThemeToggle />
         </div>
       </nav>
     </header>
