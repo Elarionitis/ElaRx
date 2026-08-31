@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* next-themes toggles a class, so the dark: variant has to follow it rather
+   than prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
   Editorial palette. Warm paper and warm black rather than pure #fff/#000 —
   a neutral grey page next to a serif always looks slightly dead.
