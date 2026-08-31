@@ -10,6 +10,8 @@ export type SiteLink = {
 };
 
 export type SiteConfig = {
+  /** Canonical origin, no trailing slash. Override per environment. */
+  url: string;
   name: string;
   handle: string;
   tagline: string;
@@ -36,6 +38,7 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://suhan.dev").replace(/\/$/, ""),
   name: "Suhan Ramani",
   handle: "Elarx.dev",
   tagline: "I build systems and AI tools where latency, retrieval, and reliability all matter.",
