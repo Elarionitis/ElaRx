@@ -36,18 +36,28 @@ slash). It overrides everything above.
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Discovery. Preview of each section with a route into it. Never the full list. |
-| `/projects` | Every project, grouped Featured / More work / Experiments. |
-| `/projects/[slug]` | Case study. Only generated for projects that have one written. |
+| `/` | The decision log, plus selected work, writing and background. |
+| `/projects` | Every project. One filterable index that expands in place. |
 | `/writing` | Post index. |
-| `/writing/[slug]` | Article. |
-| `/about` | Bio, experience, education, positions, skills, achievements. |
+| `/writing/[slug]` | Article. Its own measure and type scale. |
+| `/about` | Background, experience, education, selected positions. |
 | `/resume` | PDF viewer with zoom, open-in-tab and download. |
 
-`/blog` and `/blog/:slug` permanently redirect to `/writing`.
+`/blog` and `/blog/:slug` permanently redirect to `/writing`. There are no
+per-project routes: a project expands inline on `/projects`, and deep links
+like `/projects#signease` open the row they name.
 
-Contact is global (footer CTA plus the command palette), so there is no
-`/contact` route.
+## The decision log
+
+The spine of the site is `lib/data/decisions.ts`. Each entry is a real
+constraint from real work and the choice that resolved it, with a stable
+reference (`D-01`) printed in the margin.
+
+Decisions and projects share a `domain` vocabulary, which is what lets the
+projects page filter by the kind of problem rather than by language, and what
+connects a project to the decisions it produced and an article back to both.
+
+**Never renumber a published decision.** The id is a permalink.
 
 ## Command palette
 
@@ -69,17 +79,16 @@ of these:
 | Blog posts | `content/blog/*.md` |
 | Résumé, profile photo, post images | `public/` |
 
-### Case studies are opt-in
+### Adding work
 
-A project renders only the sections it has content for. `problem`, `approach`,
-`architecture`, `decisions`, `challenges` and `results` are all optional, and
-`hasCaseStudy()` decides whether a project gets a page at all. A project with
-none of them stays on the index and links straight to its repo, rather than
-opening a page with headings and nothing under them.
+A project needs a `domain` and belongs in one of three categories. Case-study
+fields (`problem`, `approach`, `architecture`, `decisions`, `challenges`,
+`results`) are all optional and render only when present, so a thin project
+reads as brief rather than unfinished.
 
-Three projects currently have write-ups: leader-election, signease, spendly.
-Aeris, repo-context-mcp and orbit do not — add a `problem` and an
-`architecture` array to either one and its page appears automatically.
+If a project produced a decision worth writing down, add it to
+`decisions.ts` with `source` set to the project slug. If it did not, it
+belongs on `/projects` and not on the homepage.
 
 Adding a project is one object appended to `lib/data/projects.ts`. Adding a
 post is one file in `content/blog/` — see [WRITING.md](WRITING.md).
@@ -104,13 +113,15 @@ assets/                        Instrument Serif, vendored for OG rendering
 
 ## How it is built
 
-- **One accent, three faces.** Bricolage Grotesque for display, Instrument Sans
-  for body, JetBrains Mono for every piece of metadata. Colours are CSS custom
-  properties in `app/globals.css`; the light set is on `:root`, the dark set on
-  `.dark`, and the `dark:` variant is pointed at that class.
-- **Layered surfaces.** `--background` for the page, `--surface` for cards,
-  `--surface-2` for hover, hairlines between. Density plus layering is what
-  carries the visual weight, not decoration.
+- **Paper, ink, and one annotation colour.** The reference object is a printed
+  technical specification: warm paper, black ink, hairline rules, 2px corners,
+  no shadows, and a vermillion used the way a red pen is used in a margin.
+- **Light is primary.** Dark mode is warm charcoal, never near-black.
+- **Archivo for text, IBM Plex Mono for apparatus.** Mono sets decision
+  references, labels, dates and code — never running prose.
+- **Base styles live in `@layer base`.** Unlayered CSS beats every cascade
+  layer, so an unlayered `a { color: inherit }` silently overrides any
+  component rule that colours an anchor.
 - **Static by default.** Every route prerenders. Markdown is parsed and code is
   highlighted with Shiki at build time, so no highlighter ships to the browser.
 - **Link previews are generated.** `next/og` draws a PNG per route, including

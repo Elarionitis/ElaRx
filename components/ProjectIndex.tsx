@@ -30,11 +30,15 @@ function Row({
       <button
         aria-controls={panelId}
         aria-expanded={open}
+        /*
+          Three children, two columns on mobile: without explicit placement the
+          tagline lands in the 1.5rem toggle column and runs off the screen.
+        */
         className="focus-ring group grid w-full grid-cols-[minmax(0,1fr)_1.5rem] items-baseline gap-x-5 gap-y-2 py-6 text-left sm:grid-cols-[13rem_minmax(0,1fr)_1.5rem]"
         onClick={onToggle}
         type="button"
       >
-        <span>
+        <span className="col-start-1 row-start-1 min-w-0">
           <span className="block text-[1.05rem] leading-tight tracking-[-0.015em] text-ink transition-colors group-hover:text-accent">
             {project.name}
           </span>
@@ -43,11 +47,15 @@ function Row({
           </span>
         </span>
 
-        <span className="measure text-[0.95rem] leading-[1.6] text-ink-2">{project.tagline}</span>
+        <span className="measure col-span-2 row-start-2 text-[0.95rem] leading-[1.6] text-ink-2 sm:col-span-1 sm:col-start-2 sm:row-start-1">
+          {project.tagline}
+        </span>
 
         <span
           aria-hidden="true"
-          className={`justify-self-end text-ink-3 transition-transform duration-200 ${open ? "rotate-45" : ""}`}
+          className={`col-start-2 row-start-1 justify-self-end text-ink-3 transition-transform duration-200 sm:col-start-3 ${
+            open ? "rotate-45" : ""
+          }`}
         >
           +
         </span>

@@ -55,12 +55,16 @@ export function Chrome() {
     <header className="sticky top-0 z-40 border-b border-rule bg-paper/92 backdrop-blur-sm">
       <div className="sheet flex h-14 items-center justify-between gap-4">
         <Link className="focus-ring flex items-baseline gap-2.5" href="/">
-          <span className="text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">{siteConfig.name}</span>
+          <span className="whitespace-nowrap text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
+            {siteConfig.name}
+          </span>
           <span className="label hidden sm:inline">{siteConfig.role}</span>
         </Link>
 
         <div className="flex items-center gap-4">
-          <nav aria-label="Primary">
+          {/* Below sm the routes move to their own row; four of them plus a
+              wordmark do not fit on one line at 375px without wrapping. */}
+          <nav aria-label="Primary" className="hidden sm:block">
             <ul className="flex items-center gap-4 sm:gap-5">
               {routes.map((route) => (
                 <li key={route.href}>
@@ -110,6 +114,30 @@ export function Chrome() {
           </button>
         </div>
       </div>
+
+      <nav aria-label="Primary" className="border-t border-rule sm:hidden">
+        <ul className="sheet flex h-11 items-center gap-5">
+          {routes.map((route) => (
+            <li key={route.href}>
+              <Link
+                aria-current={active(pathname, route.href) ? "page" : undefined}
+                className={`focus-ring relative block py-1 text-sm transition-colors ${
+                  active(pathname, route.href) ? "text-ink" : "text-ink-2"
+                }`}
+                href={route.href}
+              >
+                {route.label}
+                <span
+                  aria-hidden="true"
+                  className={`absolute -bottom-px left-0 h-px w-full bg-accent transition-transform duration-150 ${
+                    active(pathname, route.href) ? "scale-x-100" : "scale-x-0"
+                  }`}
+                />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {/* Reading progress, articles only. A rule that fills, not a bar that floats. */}
       {isArticle ? (
