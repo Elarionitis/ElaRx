@@ -14,7 +14,7 @@ export default function NotFound() {
         <Link className="link text-foreground" href="/">
           Home
         </Link>
-        <Link className="link text-foreground" href="/blog">
+        <Link className="link text-foreground" href="/writing">
           Writing
         </Link>
       </div>

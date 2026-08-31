@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/data/site";
 export const metadata: Metadata = {
   title: "Writing",
   description: siteConfig.writingIntro,
-  alternates: { canonical: "/blog" },
+  alternates: { canonical: "/writing" },
 };
 
 export default function BlogIndex() {
@@ -28,7 +28,7 @@ export default function BlogIndex() {
         <ol className="mt-12 divide-y divide-line border-t border-line">
           {posts.map((post) => (
             <li key={post.slug}>
-              <Link className="focus-ring group block py-7" href={`/blog/${post.slug}`}>
+              <Link className="focus-ring group block py-7" href={`/writing/${post.slug}`}>
                 <p className="eyebrow">
                   <time dateTime={post.date}>{formatPostDate(post.date)}</time>
                   <span aria-hidden="true"> &middot; </span>

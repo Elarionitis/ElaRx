@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: post.title,
     description: post.summary,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: { canonical: `/writing/${post.slug}` },
     openGraph: {
       type: "article",
       title: post.title,
@@ -43,7 +43,7 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <article className="shell max-w-[44rem] pb-16 pt-14 sm:pt-20">
-      <Link className="focus-ring eyebrow inline-block transition-colors hover:text-foreground" href="/blog">
+      <Link className="focus-ring eyebrow inline-block transition-colors hover:text-foreground" href="/writing">
         &larr; Writing
       </Link>
 

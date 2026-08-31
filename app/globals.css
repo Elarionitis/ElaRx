@@ -300,6 +300,83 @@ a {
     pointer-events: none;
   }
 
+  /* "View all ->" affordance. Used once per homepage section. */
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    transition: color 160ms ease;
+    white-space: nowrap;
+  }
+
+  .more:hover {
+    color: var(--accent);
+  }
+
+  .more .chev {
+    transition: transform 160ms ease;
+  }
+
+  .more:hover .chev {
+    transform: translateX(2px);
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: var(--surface-2);
+    padding-inline: 0.3rem;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    align-items: start;
+    justify-items: center;
+    padding: max(4rem, 12vh) 1rem 1rem;
+    background: color-mix(in srgb, var(--background) 72%, transparent);
+    backdrop-filter: blur(6px);
+    animation: fade-in 120ms ease;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .palette {
+    width: min(34rem, 100%);
+    max-height: min(28rem, 70vh);
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    animation: rise 140ms ease;
+    display: flex;
+    flex-direction: column;
+  }
+
   /* Inline text links: underline that sits below the baseline, not through it. */
   .link {
     text-decoration: underline;

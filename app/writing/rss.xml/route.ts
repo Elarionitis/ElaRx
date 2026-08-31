@@ -18,7 +18,7 @@ export function GET() {
 
   const items = posts
     .map((post) => {
-      const url = `${siteConfig.url}/blog/${post.slug}`;
+      const url = `${siteConfig.url}/writing/${post.slug}`;
       return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>
@@ -33,11 +33,11 @@ export function GET() {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(`${siteConfig.name} — Writing`)}</title>
-    <link>${siteConfig.url}/blog</link>
+    <link>${siteConfig.url}/writing</link>
     <description>${escapeXml(siteConfig.writingIntro)}</description>
     <language>en</language>
     <lastBuildDate>${updated.toUTCString()}</lastBuildDate>
-    <atom:link href="${siteConfig.url}/blog/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${siteConfig.url}/writing/rss.xml" rel="self" type="application/rss+xml" />
 ${items}
   </channel>
 </rss>`;

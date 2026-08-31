@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
 
+import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { CursorGlow } from "@/components/CursorGlow";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { getAllPosts } from "@/lib/blog";
+import { hasCaseStudy, projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
 
 import { body, display, mono } from "./fonts";
@@ -20,7 +23,7 @@ export const metadata: Metadata = {
   description,
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": `${siteConfig.url}/blog/rss.xml` },
+    types: { "application/rss+xml": `${siteConfig.url}/writing/rss.xml` },
   },
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
@@ -66,6 +69,35 @@ const personSchema = {
     .map((link) => link.url),
 };
 
+function buildCommandItems(): CommandItem[] {
+  return [
+    { group: "Pages", label: "Home", href: "/" },
+    { group: "Pages", label: "Projects", href: "/projects" },
+    { group: "Pages", label: "Writing", href: "/writing" },
+    { group: "Pages", label: "About", href: "/about" },
+    { group: "Pages", label: "Resume", href: "/resume" },
+    ...projects.filter(hasCaseStudy).map((project) => ({
+      group: "Projects",
+      label: project.name,
+      hint: project.tagline,
+      href: `/projects/${project.slug}`,
+    })),
+    ...getAllPosts().map((post) => ({
+      group: "Writing",
+      label: post.title,
+      hint: post.date,
+      href: `/writing/${post.slug}`,
+    })),
+    { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
+    { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
+    { group: "Actions", label: "Download resume", hint: "PDF", href: siteConfig.resumePath },
+    { group: "Elsewhere", label: "GitHub", href: siteConfig.links.github.url },
+    { group: "Elsewhere", label: "LinkedIn", href: siteConfig.links.linkedin.url },
+    { group: "Elsewhere", label: "LeetCode", href: siteConfig.links.leetcode.url },
+    { group: "Elsewhere", label: "Codeforces", href: siteConfig.links.codeforces.url },
+  ];
+}
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
@@ -82,6 +114,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             Skip to content
           </a>
           <CursorGlow />
+          <CommandPalette email={siteConfig.email} items={buildCommandItems()} />
           <div className="relative z-10 flex min-h-screen flex-col">
             <Nav />
             <main className="flex-1" id="main">

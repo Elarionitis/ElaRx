@@ -21,7 +21,23 @@ export const skillGroups: SkillGroup[] = [
     items: ["Git", "Linux", "Docker", "REST APIs"],
   },
   {
-    title: "Areas",
-    items: ["Distributed systems", "Concurrency", "Retrieval and RAG"],
+    title: "Systems",
+    items: [
+      "Distributed systems",
+      "Multithreading",
+      "Concurrency and synchronisation",
+      "Async I/O",
+      "Event-sourced architectures",
+    ],
+  },
+  {
+    title: "Domains",
+    items: [
+      "System architecture",
+      "Machine learning",
+      "Cryptography",
+      "AI-integrated systems",
+      "Performance analysis and debugging",
+    ],
   },
 ];
