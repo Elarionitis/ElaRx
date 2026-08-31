@@ -10,7 +10,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <div className="shell flex min-h-[60vh] flex-col justify-center py-20">
       <p className="eyebrow">Error</p>
-      <h1 className="mt-3 font-display text-[clamp(2.5rem,8vw,3.5rem)] leading-[1.05] text-foreground">
+      <h1 className="mt-3 font-display text-[clamp(2.5rem,8vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-foreground">
         Something broke
       </h1>
       <p className="mt-4 max-w-md text-muted">

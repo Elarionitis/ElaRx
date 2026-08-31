@@ -16,7 +16,7 @@ export default function BlogIndex() {
   return (
     <div className="shell pb-16 pt-14 sm:pt-20">
       <header className="max-w-[34rem]">
-        <h1 className="font-display text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] tracking-[-0.015em] text-foreground">
+        <h1 className="font-display text-[clamp(2.5rem,8vw,3.5rem)] font-semibold leading-[1] tracking-[-0.035em] text-foreground">
           Writing
         </h1>
         <p className="mt-4 text-muted">{siteConfig.writingIntro}</p>
@@ -35,7 +35,7 @@ export default function BlogIndex() {
                   {post.readingMinutes} min
                   {post.draft ? <span className="text-accent"> &middot; draft</span> : null}
                 </p>
-                <h2 className="mt-2 font-display text-2xl leading-tight text-foreground transition-colors group-hover:text-accent sm:text-[1.75rem]">
+                <h2 className="mt-2 font-display text-2xl font-semibold leading-tight tracking-[-0.025em] text-foreground transition-colors group-hover:text-accent sm:text-[1.6rem]">
                   {post.title}
                 </h2>
                 {post.summary ? <p className="mt-2 leading-[1.65] text-muted">{post.summary}</p> : null}

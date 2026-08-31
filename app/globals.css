@@ -352,8 +352,8 @@ a {
     margin-bottom: 0.6em;
     color: var(--foreground);
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-weight: 600;
+    letter-spacing: -0.025em;
     line-height: 1.2;
     scroll-margin-top: 5rem;
     text-wrap: balance;

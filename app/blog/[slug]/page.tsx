@@ -53,7 +53,7 @@ export default async function PostPage({ params }: PageProps) {
           <span aria-hidden="true"> &middot; </span>
           {post.readingMinutes} min read
         </p>
-        <h1 className="mt-3 max-w-[30rem] font-display text-[clamp(2.25rem,7vw,3.25rem)] leading-[1.05] tracking-[-0.015em] text-foreground">
+        <h1 className="mt-3 max-w-[32rem] font-display text-[clamp(2.25rem,7vw,3rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-foreground">
           {post.title}
         </h1>
         {post.summary ? <p className="mt-4 max-w-[34rem] text-lg leading-[1.6] text-muted">{post.summary}</p> : null}
