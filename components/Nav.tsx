@@ -3,14 +3,55 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 import { siteConfig } from "@/lib/data/site";
 
 const navItems = [
-  { label: "Work", href: "/#work" },
-  { label: "Writing", href: "/blog" },
-  { label: "About", href: "/#about" },
-];
+  { id: "work", label: "Work", href: "/#work" },
+  { id: "experience", label: "Experience", href: "/#experience" },
+  { id: "about", label: "About", href: "/#about" },
+  { id: null, label: "Writing", href: "/blog" },
+] as const;
+
+/*
+  Lights the nav item whose section is currently under a thin band near the top
+  of the viewport. The band is what keeps exactly one item lit — tracking plain
+  visibility lights every section tall enough to overlap the next.
+*/
+function useActiveSection(enabled: boolean) {
+  const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Off the home page there are no sections to track, and the caller already
+    // gates on the route, so a stale value here is never read.
+    if (!enabled) return;
+
+    const sections = navItems
+      .map((item) => (item.id ? document.getElementById(item.id) : null))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length === 0) return;
+
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        const inOrder = navItems.filter((item) => item.id && visible.has(item.id));
+        setActive(inOrder.length > 0 ? (inOrder[inOrder.length - 1].id as string) : null);
+      },
+      { rootMargin: "-12% 0px -76% 0px" },
+    );
+
+    for (const section of sections) observer.observe(section);
+    return () => observer.disconnect();
+  }, [enabled]);
+
+  return active;
+}
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -58,6 +99,8 @@ function ThemeToggle() {
 
 export function Nav() {
   const pathname = usePathname();
+  const onHome = pathname === "/";
+  const activeSection = useActiveSection(onHome);
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-background/85 backdrop-blur-sm">
@@ -68,17 +111,25 @@ export function Nav() {
 
         <div className="flex items-center gap-4 sm:gap-6">
           {navItems.map((item) => {
-            const isActive = item.href.startsWith("/blog") && pathname.startsWith("/blog");
+            const isActive = item.id
+              ? onHome && activeSection === item.id
+              : pathname.startsWith("/blog");
 
             return (
               <Link
-                className={`focus-ring text-sm transition-colors hover:text-foreground ${
+                className={`focus-ring group relative text-sm transition-colors hover:text-foreground ${
                   isActive ? "text-foreground" : "text-muted"
-                }`}
+                } ${item.id === "experience" ? "hidden sm:inline-block" : "inline-block"}`}
                 href={item.href}
                 key={item.href}
               >
                 {item.label}
+                <span
+                  aria-hidden="true"
+                  className={`absolute -bottom-1 left-0 h-px w-full origin-left bg-accent transition-transform duration-200 group-hover:scale-x-100 ${
+                    isActive ? "scale-x-100" : "scale-x-0"
+                  }`}
+                />
               </Link>
             );
           })}
