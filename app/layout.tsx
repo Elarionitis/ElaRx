@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { body, display, mono } from "./fonts";
+
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -40,7 +42,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
+      lang="en"
+      suppressHydrationWarning
+    >
       <body className="min-h-screen bg-background text-foreground antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen flex-col">
