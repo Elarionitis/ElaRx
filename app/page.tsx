@@ -7,12 +7,12 @@ import { Skills } from "@/components/Skills";
 
 export default function Home() {
   return (
-    <div id="top" className="shell">
+    <div className="shell">
       <Hero />
       <About />
+      <Projects />
       <Experience />
       <Skills />
-      <Projects />
       <Contact />
     </div>
   );
