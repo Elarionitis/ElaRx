@@ -61,7 +61,7 @@ export const projects: Project[] = [
     role: "Team lead, Team InnovX",
     timeframe: "Accenture Innovation Challenge, round 2",
     stack: ["TypeScript", "Next.js", "React", "NHAMCS 2022"],
-    links: {},
+    links: { github: "https://github.com/Elarionitis/CareQueue" },
     problem:
       "Triage is usually built as classification — a nurse assigns a severity level and the model learns to agree. But in the 2022 NHAMCS data, 45.8% of critical-care outcomes came from patients triaged level 3, 4 or 5. They were correctly processed, and then they waited. A model that agrees with the nurse learns to miss exactly the same people.",
     results: [
