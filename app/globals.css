@@ -5,38 +5,43 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  Editorial palette. Warm paper and warm black rather than pure #fff/#000 —
-  a neutral grey page next to a serif always looks slightly dead.
-  There is exactly one accent. Two accents is what makes a site look templated.
+  Dark is the default here, so the dark set is the one that got designed and
+  the light set is derived from it rather than the other way round.
+
+  One accent: a cyan-teal that carries enough saturation to survive on a
+  near-black ground. It also sits opposite the warm browns in the profile
+  illustration, which is why the ring around it reads rather than blends.
 */
 :root {
   color-scheme: light;
 
-  --background: #faf9f7;
-  --foreground: #1a1917;
-  --muted: #6a655d;
-  --faint: #948f86;
+  --background: #f7f8f8;
+  --foreground: #14181a;
+  --muted: #586265;
+  --faint: #8a9295;
   --surface: #ffffff;
-  --panel: #f1efe9;
-  --line: #e4e1d9;
-  --accent: #9c4221;
-  --accent-strong: #7f351a;
-  --accent-alt: #9c4221;
+  --panel: #edefef;
+  --line: #dcdfdf;
+  --accent: #0c7268;
+  --accent-strong: #095a52;
+  --accent-contrast: #ffffff;
+  --glow: 6%;
 }
 
 .dark {
   color-scheme: dark;
 
-  --background: #0e0e0d;
-  --foreground: #eae7e1;
-  --muted: #928d84;
-  --faint: #6b665f;
-  --surface: #161615;
-  --panel: #1c1b19;
-  --line: #282623;
-  --accent: #d98a63;
-  --accent-strong: #eda884;
-  --accent-alt: #d98a63;
+  --background: #0a0c0d;
+  --foreground: #eceeed;
+  --muted: #97a0a1;
+  --faint: #697274;
+  --surface: #111415;
+  --panel: #171b1c;
+  --line: #232829;
+  --accent: #4fd1c5;
+  --accent-strong: #7ee3d9;
+  --accent-contrast: #06201d;
+  --glow: 9%;
 }
 
 @theme inline {
@@ -49,7 +54,7 @@
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
-  --color-accent-alt: var(--accent-alt);
+  --color-accent-contrast: var(--accent-contrast);
 
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--ff-display), Georgia, "Times New Roman", serif;
@@ -74,13 +79,8 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  /*
-    A single tiling grain layer. The previous version stacked four background
-    images behind `background-attachment: fixed`, which repaints the whole
-    viewport on every scroll frame — very visible on mobile Safari.
-  */
   background-color: var(--background);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");
   background-size: 200px 200px;
   color: var(--foreground);
   font-family: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
@@ -106,7 +106,7 @@ a {
     as the blog rather than sprawling to 1080px.
   */
   .shell {
-    width: min(46rem, calc(100% - 2.5rem));
+    width: min(64rem, calc(100% - 2.5rem));
     margin-inline: auto;
   }
 
@@ -141,6 +141,105 @@ a {
     font-size: 0.7rem;
     line-height: 1.5;
     white-space: nowrap;
+  }
+
+  /*
+    The cursor spotlight. It is a single fixed layer moved with translate3d on
+    an animation frame, so it composites on the GPU and never triggers layout.
+    The earlier version painted a radial gradient into the body background,
+    which repainted the whole viewport on every pointer move.
+  */
+  .spotlight {
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    margin: -22rem 0 0 -22rem;
+    width: 44rem;
+    height: 44rem;
+    border-radius: 50%;
+    background: radial-gradient(circle closest-side, color-mix(in srgb, var(--accent) var(--glow), transparent), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms ease;
+    will-change: transform;
+  }
+
+  /* Buttons need to look pressable. Text with a tiny arrow does not. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding-inline: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .btn-primary:hover {
+    border-color: var(--accent-strong);
+    background: var(--accent-strong);
+  }
+
+  .btn-ghost {
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    color: var(--foreground);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn .arrow {
+    color: var(--faint);
+    font-size: 0.85em;
+    transition: transform 160ms ease, color 160ms ease;
+  }
+
+  .btn-ghost:hover .arrow {
+    color: var(--accent);
+    transform: translate(1px, -1px);
+  }
+
+  /* The profile illustration is the most distinctive thing on the page, so it
+     gets a ring rather than being cropped down to an avatar chip. */
+  .portrait {
+    position: relative;
+    border-radius: 50%;
+    padding: 0.4rem;
+    background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+
+  .portrait::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    box-shadow: 0 0 60px -12px color-mix(in srgb, var(--accent) 40%, transparent);
+    pointer-events: none;
   }
 
   /* Inline text links: underline that sits below the baseline, not through it. */

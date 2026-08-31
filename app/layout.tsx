@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
+import { CursorGlow } from "@/components/CursorGlow";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -80,7 +81,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           >
             Skip to content
           </a>
-          <div className="flex min-h-screen flex-col">
+          <CursorGlow />
+          <div className="relative z-10 flex min-h-screen flex-col">
             <Nav />
             <main className="flex-1" id="main">
               {children}

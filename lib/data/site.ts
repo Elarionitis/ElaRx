@@ -14,6 +14,7 @@ export type SiteConfig = {
   url: string;
   name: string;
   handle: string;
+  role: string;
   tagline: string;
   lead: string;
   intro: string;
@@ -62,6 +63,7 @@ export const siteConfig: SiteConfig = {
   url: resolveSiteUrl(),
   name: "Suhan Ramani",
   handle: "Elarx.dev",
+  role: "Backend and AI systems",
   tagline:
     "CS undergrad at IIT Jodhpur building backend systems and AI tooling: retrieval pipelines, APIs, and the parts that get slow first.",
   lead:

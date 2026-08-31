@@ -3,73 +3,82 @@ import Image from "next/image";
 import { LanyardStatus } from "@/components/LanyardStatus";
 import { siteConfig, type SiteLink } from "@/lib/data/site";
 
-const secondaryKeys = ["github", "linkedin", "x", "email"] as const;
+const actionKeys = ["github", "resume", "linkedin", "x", "email"] as const;
 
-function QuietLink({ link }: { link: SiteLink }) {
+function ActionLink({ link, primary = false }: { link: SiteLink; primary?: boolean }) {
   const isExternal = link.url.startsWith("http");
 
   return (
     <a
-      className="focus-ring group inline-flex items-baseline gap-1 text-muted transition-colors hover:text-foreground"
+      className={`focus-ring btn ${primary ? "btn-primary" : "btn-ghost"}`}
       href={link.url}
       rel={isExternal ? "noreferrer" : undefined}
       target={isExternal ? "_blank" : undefined}
     >
-      <span className="border-b border-transparent transition-colors group-hover:border-current">{link.label}</span>
-      {isExternal ? <span aria-hidden="true" className="text-[0.7em] text-faint">&#8599;</span> : null}
+      {link.label}
+      {isExternal && !primary ? (
+        <span aria-hidden="true" className="arrow">
+          &#8599;
+        </span>
+      ) : null}
     </a>
   );
 }
 
 export function Hero() {
-  const { resume } = siteConfig.links;
-  const secondary = secondaryKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
+  const actions = actionKeys.map((key) => siteConfig.links[key]).filter((link) => link.visible);
   const initials = siteConfig.name
     .split(" ")
     .map((part) => part[0])
     .join("");
 
   return (
-    <section className="pb-16 pt-16 sm:pb-20 sm:pt-24">
-      <div className="flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
-        <div className="min-w-0">
-          <p className="eyebrow">{siteConfig.location}</p>
-          <h1 className="mt-3 font-display text-[clamp(3rem,10vw,4.5rem)] leading-[0.95] tracking-[-0.015em] text-foreground">
+    <section className="pb-14 pt-14 sm:pb-16 sm:pt-20">
+      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+        <div className="order-2 min-w-0 lg:order-1">
+          <p className="eyebrow text-accent">
+            {siteConfig.role}
+            <span aria-hidden="true" className="mx-2 text-faint">
+              /
+            </span>
+            <span className="text-faint">{siteConfig.location}</span>
+          </p>
+
+          <h1 className="mt-4 font-display text-[clamp(3rem,9vw,4.75rem)] leading-[0.95] tracking-[-0.02em] text-foreground">
             {siteConfig.name}
           </h1>
+
+          <p className="mt-6 max-w-[34rem] text-xl leading-[1.5] text-foreground sm:text-[1.4rem]">
+            {siteConfig.lead}
+          </p>
+          <p className="mt-4 max-w-[34rem] text-muted">{siteConfig.intro}</p>
+
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            {actions.map((link, index) => (
+              <ActionLink key={link.url} link={link} primary={index === 0} />
+            ))}
+          </div>
         </div>
 
-        <div className="size-20 shrink-0 overflow-hidden rounded-full border border-line bg-panel sm:size-24">
-          {siteConfig.profileImage ? (
-            <Image
-              alt={siteConfig.name}
-              className="size-full object-cover"
-              height={192}
-              priority
-              src={siteConfig.profileImage}
-              width={192}
-            />
-          ) : (
-            <span className="grid size-full place-items-center font-display text-2xl text-muted">{initials}</span>
-          )}
+        <div className="order-1 lg:order-2">
+          <div className="portrait size-44 sm:size-56 lg:size-[19rem]">
+            {siteConfig.profileImage ? (
+              <Image
+                alt={siteConfig.name}
+                className="size-full rounded-full object-cover"
+                height={608}
+                priority
+                sizes="(min-width: 1024px) 19rem, (min-width: 640px) 14rem, 11rem"
+                src={siteConfig.profileImage}
+                width={608}
+              />
+            ) : (
+              <span className="grid size-full place-items-center rounded-full bg-panel font-display text-5xl text-accent">
+                {initials}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
-
-      <div className="mt-9 max-w-[36rem] space-y-4">
-        <p className="text-xl leading-[1.55] text-foreground sm:text-[1.375rem]">{siteConfig.lead}</p>
-        <p className="text-muted">{siteConfig.intro}</p>
-      </div>
-
-      <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
-        <a
-          className="focus-ring inline-flex h-10 items-center rounded border border-foreground px-4 font-medium text-foreground transition-colors hover:bg-foreground hover:text-background"
-          href={resume.url}
-        >
-          {resume.label}
-        </a>
-        {secondary.map((link) => (
-          <QuietLink key={link.url} link={link} />
-        ))}
       </div>
 
       <LanyardStatus />
