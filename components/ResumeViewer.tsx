@@ -3,22 +3,26 @@
 import { useState } from "react";
 
 /*
-  Zoom levels. "Fit" is the default and the point of this component: A4 is
-  taller than it is wide, so fitting to container width (the usual default)
-  pushes the bottom of the page below the fold. The frame is A4-shaped and
-  sized off the viewport height instead, so the whole page is visible at rest
-  and scrolling only starts once you deliberately zoom in.
+  Zoom resizes the frame rather than the document inside it, and the PDF is
+  always opened at view=Fit. That combination means the page is always whole
+  and there is never an inner scrollbar — zooming makes the frame taller than
+  the viewport and you scroll the page, which is the normal thing to do with a
+  document.
+
+  Sizing off the viewport height instead would guarantee no page scroll, but
+  it shrinks an A4 page until the body text is unreadable. Readable beats
+  above-the-fold for something whose whole job is to be read.
 */
-const ZOOM_STEPS = ["Fit", "100", "125", "150"] as const;
+const ZOOM_STEPS = [100, 125, 150] as const;
 type Zoom = (typeof ZOOM_STEPS)[number];
 
-function fragmentFor(zoom: Zoom) {
-  const base = "toolbar=0&navpanes=0&scrollbar=0";
-  return zoom === "Fit" ? `#view=Fit&${base}` : `#zoom=${zoom}&${base}`;
-}
+/** Frame width at 100%. A4 at this width renders body text near print size. */
+const BASE_WIDTH_REM = 44;
+
+const PDF_PARAMS = "#view=Fit&toolbar=0&navpanes=0&scrollbar=0";
 
 export function ResumeViewer({ name, path }: { name: string; path: string }) {
-  const [zoom, setZoom] = useState<Zoom>("Fit");
+  const [zoom, setZoom] = useState<Zoom>(100);
 
   const index = ZOOM_STEPS.indexOf(zoom);
   const fileName = `${name.replace(/\s+/g, "-")}-Resume.pdf`;
@@ -42,7 +46,7 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
           </button>
 
           <span aria-live="polite" className="num w-12 text-center text-xs text-ink-2">
-            {zoom === "Fit" ? "Fit" : `${zoom}%`}
+            {zoom}%
           </span>
 
           <button
@@ -77,15 +81,18 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
         </div>
       </div>
 
-      {/* A4 is 1:√2. The frame keeps that ratio off the viewport height, so the
-          page lands whole rather than cropped at the fold. */}
+      {/* A4 is 1:√2. Width drives the frame and the ratio gives the height, so
+          the document is always whole inside it however far you zoom. */}
       <div className="hidden justify-center border border-rule bg-paper-2 p-3 md:flex">
         <object
           aria-label={`${name} resume`}
-          className="block h-[min(calc(100dvh-15rem),52rem)] w-auto border border-rule bg-paper"
-          data={`${path}${fragmentFor(zoom)}`}
-          key={zoom}
-          style={{ aspectRatio: "1 / 1.4142", maxWidth: "100%" }}
+          className="block h-auto border border-rule bg-paper"
+          data={`${path}${PDF_PARAMS}`}
+          style={{
+            width: `${(BASE_WIDTH_REM * zoom) / 100}rem`,
+            maxWidth: "100%",
+            aspectRatio: "1 / 1.4142",
+          }}
           type="application/pdf"
         >
           <div className="grid h-full place-content-center p-10 text-center">
