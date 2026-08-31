@@ -12,13 +12,14 @@ export const metadata: Metadata = {
 export default function ResumePage() {
   return (
     <div className="sheet pb-4">
-      <header className="flex flex-col gap-6 pt-16 sm:flex-row sm:items-end sm:justify-between sm:pt-20">
-        <div className="min-w-0">
-          <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+      {/* Compact on purpose: every row here is a row the document loses. */}
+      <header className="flex flex-col gap-3 pt-10 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:pt-12">
+        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+          <h1 className="text-[clamp(1.6rem,3.4vw,2.1rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
             Resume
           </h1>
-          <p className="measure mt-5 text-[1.05rem] leading-[1.6] text-ink-2">
-            The complete professional record, on one page. The rest of this site is the curated version.
+          <p className="text-[0.95rem] text-ink-2">
+            The complete record. The rest of this site is the curated version.
           </p>
         </div>
         <p className="label shrink-0">
