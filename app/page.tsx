@@ -43,14 +43,30 @@ export default function Home() {
       {/* Identity. A statement, not a hero. */}
       <section className="grid gap-10 pt-16 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] lg:gap-16">
         <div className="min-w-0">
-          <h1 className="max-w-[22ch] text-[clamp(1.85rem,4.4vw,3rem)] font-medium leading-[1.15] tracking-[-0.035em] text-ink">
-            I build backend systems, and I am mostly interested in the point where they stop being
-            correct under load.
+          {/*
+            The name is the heading. The thesis reads immediately under it and
+            still carries the weight, but a portfolio whose h1 is a sentence
+            gives a visitor nothing to remember it by.
+          */}
+          <h1 className="text-[clamp(2.25rem,5.5vw,3.5rem)] font-medium leading-[1] tracking-[-0.04em] text-ink">
+            {siteConfig.name}
           </h1>
-          <p className="measure mt-7 text-[1.05rem] leading-[1.65] text-ink-2">
-            Computer science undergraduate at IIT Jodhpur. So far that has meant retrieval that had half a
-            second to answer, a ledger where the hard part turned out to be concurrency rather than
-            arithmetic, and a lot of time spent on why a query stopped being fast.
+          <p className="label mt-4">
+            {siteConfig.role}
+            <span aria-hidden="true" className="mx-2 text-rule-2">
+              &#9679;
+            </span>
+            {siteConfig.location}
+          </p>
+
+          <p className="measure mt-9 text-[clamp(1.2rem,2.2vw,1.5rem)] leading-[1.35] tracking-[-0.02em] text-ink">
+            I build backend systems, and I am mostly interested in the point where they stop being correct
+            under load.
+          </p>
+          <p className="measure mt-5 text-[1.05rem] leading-[1.65] text-ink-2">
+            So far that has meant retrieval that had half a second to answer, a ledger where the hard part
+            turned out to be concurrency rather than arithmetic, and a lot of time spent on why a query
+            stopped being fast.
           </p>
         </div>
 
@@ -65,21 +81,23 @@ export default function Home() {
               width={432}
             />
           </div>
-          <p className="label mt-4">Currently</p>
-          <ul className="mt-3 grid gap-2.5 text-sm text-ink-2">
-            <li>
-              <span className="label block">Leading</span>
-              <span className="mt-0.5 block">Anand Rathi Tinkerers&rsquo; Lab, the student-run makerspace here</span>
-            </li>
-            <li>
-              <span className="label block">Reading</span>
-              <span className="mt-0.5 block">Consensus protocols, and how much of them survives a real network</span>
-            </li>
-            <li>
-              <span className="label block">Away</span>
-              <span className="mt-0.5 block">Badminton, cycling, and setting contest problems</span>
-            </li>
-          </ul>
+          <div className="mt-9 border-t border-rule pt-5">
+            <p className="label">Currently</p>
+            <ul className="mt-4 grid gap-4 text-sm text-ink-2">
+              <li>
+                <span className="label block">Leading</span>
+                <span className="mt-1 block">Anand Rathi Tinkerers&rsquo; Lab, the student-run makerspace here</span>
+              </li>
+              <li>
+                <span className="label block">Reading</span>
+                <span className="mt-1 block">Consensus protocols, and how much of them survives a real network</span>
+              </li>
+              <li>
+                <span className="label block">Away</span>
+                <span className="mt-1 block">Badminton, cycling, and setting contest problems</span>
+              </li>
+            </ul>
+          </div>
         </aside>
       </section>
 

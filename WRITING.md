@@ -9,7 +9,7 @@ Make a new `.md` file in `content/blog/`. The filename becomes the URL:
 
 ```
 content/blog/why-my-rag-pipeline-was-slow.md
-      →  /blog/why-my-rag-pipeline-was-slow
+      →  /writing/why-my-rag-pipeline-was-slow
 ```
 
 Use lowercase words separated by hyphens. Once a post is public, don't rename
@@ -72,7 +72,7 @@ Images go in `public/` and are referenced from the root:
 npm run dev
 ```
 
-Open http://localhost:3000/blog. Drafts appear here and nowhere else. Edits
+Open http://localhost:3000/writing. Drafts appear here and nowhere else. Edits
 show up as you save.
 
 ## 5. Publish
@@ -83,8 +83,20 @@ Set `draft: false` (or delete the line), then commit and push:
 git add content/blog/why-my-rag-pipeline-was-slow.md && git commit -m "Add a post on RAG latency"
 ```
 
-The sitemap, the RSS feed at `/blog/rss.xml` and the post's link-preview image
+The sitemap, the RSS feed at `/writing/rss.xml` and the post's link-preview image
 are all generated from the file. Nothing else needs updating.
+
+## Linking a post to a project
+
+If a post is about one of your projects, add the project's slug to its tags:
+
+```markdown
+tags: [rag, python, spendly]
+```
+
+The post then shows a **Related project** block at the bottom linking to
+`/projects#spendly`, along with the decisions that project produced. Nothing
+else needs wiring — the connection is the slug.
 
 ## Notes
 
