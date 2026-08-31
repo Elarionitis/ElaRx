@@ -1,41 +1,52 @@
 @import "tailwindcss";
 
+/*
+  Editorial palette. Warm paper and warm black rather than pure #fff/#000 —
+  a neutral grey page next to a serif always looks slightly dead.
+  There is exactly one accent. Two accents is what makes a site look templated.
+*/
 :root {
   color-scheme: light;
-  --background: #f7f8f4;
-  --foreground: #151a1f;
-  --muted: #5d6972;
+
+  --background: #faf9f7;
+  --foreground: #1a1917;
+  --muted: #6a655d;
+  --faint: #948f86;
   --surface: #ffffff;
-  --panel: #e8edf0;
-  --line: #c8d0d5;
-  --accent: #117c72;
-  --accent-strong: #0e665e;
-  --accent-alt: #c47a13;
+  --panel: #f1efe9;
+  --line: #e4e1d9;
+  --accent: #9c4221;
+  --accent-strong: #7f351a;
+  --accent-alt: #9c4221;
 }
 
 .dark {
   color-scheme: dark;
-  --background: #0a1114;
-  --foreground: #edf2f4;
-  --muted: #a6b1b9;
-  --surface: #10191e;
-  --panel: #16242b;
-  --line: #31424b;
-  --accent: #38b7aa;
-  --accent-strong: #58d0c3;
-  --accent-alt: #d9922d;
+
+  --background: #0e0e0d;
+  --foreground: #eae7e1;
+  --muted: #928d84;
+  --faint: #6b665f;
+  --surface: #161615;
+  --panel: #1c1b19;
+  --line: #282623;
+  --accent: #d98a63;
+  --accent-strong: #eda884;
+  --accent-alt: #d98a63;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-surface: var(--surface);
   --color-panel: var(--panel);
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-alt: var(--accent-alt);
+
   --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--ff-display), Georgia, "Times New Roman", serif;
   --font-mono: var(--ff-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -46,27 +57,33 @@
 }
 
 html {
+  -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
   min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
+  /*
+    A single tiling grain layer. The previous version stacked four background
+    images behind `background-attachment: fixed`, which repaints the whole
+    viewport on every scroll frame — very visible on mobile Safari.
+  */
   background-color: var(--background);
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.035'/%3E%3C/svg%3E"),
-    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, var(--cursor-opacity, 0)) 0%, transparent 48%),
-    radial-gradient(ellipse 72% 52% at 92% 12%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 68%),
-    radial-gradient(ellipse 64% 48% at 4% 72%, color-mix(in srgb, var(--accent-alt) 3%, transparent), transparent 70%);
-  background-attachment: fixed;
-  background-position: 0 0, center, center, center;
-  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 180px 180px, auto, auto, auto;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
   color: var(--foreground);
   font-family: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -75,58 +92,74 @@ a {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 @layer components {
+  /*
+    One measure for the whole site. Long-form reading tops out around 70
+    characters, and the home page reads better when it obeys the same rule
+    as the blog rather than sprawling to 1080px.
+  */
   .shell {
-    width: min(1080px, calc(100% - 32px));
+    width: min(46rem, calc(100% - 2.5rem));
     margin-inline: auto;
   }
 
   .focus-ring {
     outline: 2px solid transparent;
-    outline-offset: 4px;
+    outline-offset: 3px;
   }
 
   .focus-ring:focus-visible {
     outline-color: var(--accent);
   }
 
+  /* Section labels, dates, tags — anything that is metadata rather than prose. */
   .eyebrow {
-    font-family: var(--ff-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.76rem;
-    letter-spacing: 0;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1;
     text-transform: uppercase;
   }
 
-  .chip {
+  .tag {
     display: inline-flex;
     align-items: center;
-    min-height: 1.75rem;
-    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--accent) 10%, var(--panel));
-    padding: 0.35rem 0.65rem;
-    color: var(--foreground);
-    font-family: var(--ff-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.75rem;
-    line-height: 1;
-  }
-
-  .status-strip {
-    min-height: 3rem;
     border: 1px solid var(--line);
-    border-radius: 0.75rem;
-    background: var(--surface);
+    border-radius: 3px;
+    padding: 0.15rem 0.45rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.5;
+    white-space: nowrap;
   }
 
+  /* Inline text links: underline that sits below the baseline, not through it. */
+  .link {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--foreground) 25%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 150ms ease, color 150ms ease;
+  }
+
+  .link:hover {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body {
-    --mx: 50%;
-    --my: 50%;
-    --cursor-opacity: 0;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

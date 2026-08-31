@@ -10,7 +10,7 @@ export function Skills() {
             <h2 className="font-display text-xl font-semibold text-foreground">{group.title}</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {group.items.map((item) => (
-                <span className="chip" key={item}>
+                <span className="tag" key={item}>
                   {item}
                 </span>
               ))}

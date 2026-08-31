@@ -62,7 +62,7 @@ export function Projects() {
                   <p className="max-w-3xl text-lg leading-8 text-muted">{project.summary}</p>
                   <div className="mt-5 flex flex-wrap gap-2">
                     {project.stack.map((item) => (
-                      <span className="chip transition-opacity group-hover:opacity-100 motion-reduce:transition-none" key={item}>
+                      <span className="tag" key={item}>
                         {item}
                       </span>
                     ))}

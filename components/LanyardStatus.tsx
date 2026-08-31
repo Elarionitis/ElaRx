@@ -95,7 +95,7 @@ export function LanyardStatus() {
     : null;
 
   return (
-    <div className="status-strip grid min-h-20 gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4">
+    <div className="grid rounded-lg border border-line bg-surface min-h-20 gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4">
       <div className="flex min-w-0 items-center gap-3 font-mono text-xs text-muted" aria-live="polite">
         <span className={`size-2 shrink-0 rounded-full ${statusClass[data.discord_status]}`} />
         <span>{data.discord_status}</span>
