@@ -19,13 +19,13 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
   const fileName = `${name.replace(/\s+/g, "-")}-Resume.pdf`;
 
   return (
-    <div className="pt-8">
+    <div className="pt-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <a className="focus-ring btn btn-primary" download={fileName} href={path}>
+          <a className="focus-ring btn btn-solid" download={fileName} href={path}>
             Download PDF
           </a>
-          <a className="focus-ring btn btn-ghost" href={path} rel="noreferrer" target="_blank">
+          <a className="focus-ring btn btn-line" href={path} rel="noreferrer" target="_blank">
             Open in new tab
             <span aria-hidden="true" className="arrow">
               &#8599;
@@ -33,10 +33,10 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
           </a>
         </div>
 
-        <div className="hidden items-center gap-1 rounded-full border border-line p-1 md:flex">
+        <div className="hidden items-center gap-1 rounded-full border border-rule p-1 md:flex">
           <button
             aria-label="Zoom out"
-            className="focus-ring grid size-7 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            className="focus-ring grid size-7 place-items-center rounded-full text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
             disabled={!canZoomOut}
             onClick={() => setZoom(ZOOM_STEPS[Math.max(zoomIndex - 1, 0)])}
             type="button"
@@ -45,12 +45,12 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
               <path d="M5 12h14" strokeLinecap="round" />
             </svg>
           </button>
-          <span aria-live="polite" className="figure w-12 text-center text-xs text-muted">
+          <span aria-live="polite" className="num w-12 text-center text-xs text-ink-2">
             {zoom}%
           </span>
           <button
             aria-label="Zoom in"
-            className="focus-ring grid size-7 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            className="focus-ring grid size-7 place-items-center rounded-full text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
             disabled={!canZoomIn}
             onClick={() => setZoom(ZOOM_STEPS[Math.min(zoomIndex + 1, ZOOM_STEPS.length - 1)])}
             type="button"
@@ -63,7 +63,7 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
       </div>
 
       {/* Desktop: the document itself, at A4 proportions. */}
-      <div className="mt-5 hidden overflow-hidden rounded-xl border border-line bg-surface-2 md:block">
+      <div className="mt-5 hidden overflow-hidden border border-rule bg-paper-2 md:block">
         <object
           aria-label={`${name} resume`}
           className="block h-[min(80vh,52rem)] w-full"
@@ -72,8 +72,8 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
           type="application/pdf"
         >
           <div className="p-10 text-center">
-            <p className="text-muted">Your browser will not display the PDF inline.</p>
-            <a className="focus-ring btn btn-primary mt-4" href={path} rel="noreferrer" target="_blank">
+            <p className="text-ink-2">Your browser will not display the PDF inline.</p>
+            <a className="focus-ring btn btn-solid mt-4" href={path} rel="noreferrer" target="_blank">
               Open the resume
             </a>
           </div>
@@ -81,19 +81,19 @@ export function ResumeViewer({ name, path }: { name: string; path: string }) {
       </div>
 
       {/* Small screens: an honest card rather than a frame that may render blank. */}
-      <div className="card mt-5 p-6 text-center md:hidden">
-        <div aria-hidden="true" className="mx-auto grid h-16 w-12 place-items-center rounded border border-line-strong bg-surface-2">
-          <span className="font-mono text-[0.6rem] tracking-widest text-faint">PDF</span>
+      <div className="mt-5 border border-rule p-6 text-center md:hidden">
+        <div aria-hidden="true" className="mx-auto grid h-16 w-12 place-items-center border border-rule-2 bg-paper-2">
+          <span className="font-mono text-[0.6rem] tracking-widest text-ink-3">PDF</span>
         </div>
-        <p className="mt-4 font-display text-base font-semibold tracking-[-0.02em] text-foreground">{fileName}</p>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-4 text-base font-semibold tracking-[-0.02em] text-ink">{fileName}</p>
+        <p className="mt-1 text-sm text-ink-2">
           One page, A4. Inline PDF preview is unreliable on phones, so open or download it instead.
         </p>
         <div className="mt-5 flex flex-col gap-2">
-          <a className="focus-ring btn btn-primary" href={path} rel="noreferrer" target="_blank">
+          <a className="focus-ring btn btn-solid" href={path} rel="noreferrer" target="_blank">
             Open resume
           </a>
-          <a className="focus-ring btn btn-ghost" download={fileName} href={path}>
+          <a className="focus-ring btn btn-line" download={fileName} href={path}>
             Download
           </a>
         </div>

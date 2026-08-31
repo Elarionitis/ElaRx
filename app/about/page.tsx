@@ -1,176 +1,138 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
-import { PageHeader } from "@/components/PageHeader";
 import { experience } from "@/lib/data/experience";
 import { siteConfig } from "@/lib/data/site";
-import { skillGroups } from "@/lib/data/skills";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Background, experience, education and what I am working on now.",
+  description: "Background, what I work on, and how I got here.",
   alternates: { canonical: "/about" },
 };
 
+/* Selected, not exhaustive. The resume is the complete record. */
+const selectedPositions = siteConfig.positions.slice(0, 2);
+
 export default function AboutPage() {
   return (
-    <div className="shell pb-8">
-      <PageHeader
-        actions={
-          <>
-            <Link className="focus-ring btn btn-primary" href="/resume">
-              Resume
-            </Link>
-            <a
-              className="focus-ring btn btn-ghost"
-              href={siteConfig.links.github.url}
-              rel="noreferrer"
-              target="_blank"
-            >
-              GitHub
-              <span aria-hidden="true" className="arrow">
-                &#8599;
-              </span>
-            </a>
-          </>
-        }
-        label={`${siteConfig.hometown} &rarr; ${siteConfig.location}`.replace("&rarr;", "→")}
-        title="About"
-      />
-
-      <div className="grid gap-12 pt-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16">
-        <div className="flex flex-col gap-14">
-          <section>
-            <div className="flex flex-col gap-6">
-              {siteConfig.bio.map((paragraph, index) => (
-                <p
-                  className={
-                    index === 0
-                      ? "text-lg leading-[1.65] text-foreground sm:text-xl"
-                      : "leading-[1.7] text-muted"
-                  }
-                  key={paragraph.slice(0, 32)}
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="eyebrow border-b border-line pb-3 text-foreground">Experience</h2>
-            <div className="mt-6 grid gap-3">
-              {experience.map((item) => (
-                <article className="card p-5" key={item.org}>
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                    <div className="min-w-0">
-                      <h3 className="font-display text-lg font-semibold tracking-[-0.025em] text-foreground">
-                        {item.role}
-                      </h3>
-                      <p className="mt-0.5 text-sm">
-                        <span className="text-accent">{item.org}</span>
-                        <span className="text-faint"> &middot; {item.context}</span>
-                      </p>
-                    </div>
-                    <p className="figure shrink-0 text-xs text-faint">{item.dates}</p>
-                  </div>
-
-                  <ul className="mt-4 grid gap-2 border-t border-line pt-4 text-sm leading-[1.55] text-muted">
-                    {item.highlights.map((highlight) => (
-                      <li className="grid grid-cols-[0.75rem_minmax(0,1fr)] gap-2" key={highlight}>
-                        <span aria-hidden="true" className="mt-[0.6em] h-px w-2 bg-line-strong" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.7rem] text-faint">
-                    {item.stack.map((tech) => (
-                      <li key={tech}>{tech}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="eyebrow border-b border-line pb-3 text-foreground">Education</h2>
-            <div className="mt-6 grid gap-3">
-              {siteConfig.education.map((item) => (
-                <article className="card p-5" key={item.institution}>
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                    <div className="min-w-0">
-                      <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-foreground">
-                        {item.institution}
-                      </h3>
-                      <p className="mt-0.5 text-sm text-accent">{item.qualification}</p>
-                    </div>
-                    <p className="figure shrink-0 text-xs text-faint">{item.dates}</p>
-                  </div>
-                  {item.detail ? <p className="mt-3 text-sm leading-[1.55] text-muted">{item.detail}</p> : null}
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <h2 className="eyebrow border-b border-line pb-3 text-foreground">Positions of responsibility</h2>
-            <ul className="mt-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line">
-              {siteConfig.positions.map((item) => (
-                <li className="bg-surface px-5 py-4" key={item.org}>
-                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                    <p className="text-sm font-medium text-foreground">
-                      {item.role}
-                      <span className="text-faint"> &middot; {item.org}</span>
-                    </p>
-                    <p className="figure shrink-0 text-xs text-faint">{item.dates}</p>
-                  </div>
-                  <p className="mt-1.5 text-sm text-muted">{item.detail}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
+    <div className="sheet pb-4">
+      <header className="grid gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_12rem] lg:gap-16">
+        <div className="min-w-0">
+          <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+            About
+          </h1>
+          <div className="measure mt-7 flex flex-col gap-5 text-[1.05rem] leading-[1.7] text-ink-2">
+            <p className="text-ink">
+              I came to computer science expecting to like the theory, and ended up liking the failure modes
+              more.
+            </p>
+            <p>
+              What happens to a system when the network partitions. When four writers hit the same record.
+              When a query that was fine at a thousand rows stops being fine at a million. Those are the
+              questions I keep coming back to, and they are why almost everything I have built ends up being
+              about coordination rather than features.
+            </p>
+            <p>
+              Right now that is a Byzantine consensus framework with a professor at IIT Jodhpur, where the
+              interesting result was that you can skip an entire round of communication if every node can
+              derive the same answer independently. Before that it was a retrieval pipeline that had half a
+              second to respond, and an expense ledger where the real problem turned out to be concurrency
+              wearing a consumer-app costume.
+            </p>
+            <p>
+              Away from all of it I play badminton, cycle, and set contest problems for the programming
+              society here — which is a good weekly reminder that a problem is only as good as its edge
+              cases.
+            </p>
+          </div>
         </div>
 
-        <aside className="flex flex-col gap-10 lg:sticky lg:top-24 lg:self-start">
-          <div className="portrait mx-auto size-40 lg:mx-0 lg:size-full lg:max-w-[14rem]">
-            <Image
-              alt={siteConfig.name}
-              className="size-full rounded-full object-cover"
-              height={448}
-              sizes="(min-width: 1024px) 14rem, 10rem"
-              src={siteConfig.profileImage}
-              width={448}
-            />
-          </div>
+        <div className="lg:pt-3">
+          <Image
+            alt={siteConfig.name}
+            className="w-full max-w-[12rem] border border-rule"
+            height={384}
+            sizes="12rem"
+            src={siteConfig.profileImage}
+            style={{ borderRadius: "var(--radius-sheet)" }}
+            width={384}
+          />
+          <p className="label mt-3">
+            {siteConfig.hometown} &rarr; {siteConfig.location}
+          </p>
+        </div>
+      </header>
 
-          <div>
-            <h2 className="eyebrow border-b border-line pb-3 text-foreground">Skills</h2>
-            <dl className="mt-4 grid gap-4">
-              {skillGroups.map((group) => (
-                <div key={group.title}>
-                  <dt className="eyebrow">{group.title}</dt>
-                  <dd className="mt-1.5 text-sm leading-[1.55] text-muted">{group.items.join(", ")}</dd>
+      <section className="pt-16">
+        <h2 className="clause label">Experience</h2>
+        <ul className="mt-8 border-b border-rule">
+          {experience.map((item) => (
+            <li className="border-t border-rule first:border-t-0" key={item.org}>
+              <div className="grid gap-x-5 gap-y-3 py-7 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                <div>
+                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.org}</p>
+                  <p className="label mt-1.5">{item.role}</p>
+                  <p className="label mt-1">
+                    <span className="num">{item.dates}</span>
+                  </p>
                 </div>
-              ))}
-            </dl>
-          </div>
+                <div className="measure">
+                  <p className="text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[0]}</p>
+                  <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[1]}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-          <div>
-            <h2 className="eyebrow border-b border-line pb-3 text-foreground">Achievements</h2>
-            <dl className="mt-4 grid gap-3">
-              {siteConfig.achievements.map((item) => (
-                <div key={item.title}>
-                  <dt className="text-sm font-medium text-foreground">{item.title}</dt>
-                  {item.detail ? <dd className="text-sm text-muted">{item.detail}</dd> : null}
+      <section className="pt-16">
+        <h2 className="clause label">Education</h2>
+        <ul className="mt-8 border-b border-rule">
+          {siteConfig.education.map((item) => (
+            <li className="border-t border-rule first:border-t-0" key={item.institution}>
+              <div className="grid gap-x-5 gap-y-2 py-6 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                <div>
+                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.institution}</p>
+                  <p className="label mt-1.5">
+                    <span className="num">{item.dates}</span>
+                  </p>
                 </div>
-              ))}
-            </dl>
-          </div>
-        </aside>
-      </div>
+                <p className="measure text-[0.95rem] leading-[1.65] text-ink-2">
+                  {item.qualification}
+                  {item.detail ? `. ${item.detail}` : ""}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="pt-16">
+        <h2 className="clause label">Outside the code</h2>
+        <ul className="mt-8 border-b border-rule">
+          {selectedPositions.map((item) => (
+            <li className="border-t border-rule first:border-t-0" key={item.org}>
+              <div className="grid gap-x-5 gap-y-2 py-6 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                <div>
+                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.org}</p>
+                  <p className="label mt-1.5">
+                    <span className="num">{item.dates}</span>
+                  </p>
+                </div>
+                <p className="measure text-[0.95rem] leading-[1.65] text-ink-2">{item.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <p className="measure mt-6 text-[0.9rem] leading-[1.6] text-ink-3">
+          The complete record — every position, every result, every date — is on the{" "}
+          <a className="tlink text-ink-2" href="/resume">
+            resume
+          </a>
+          .
+        </p>
+      </section>
     </div>
   );
 }

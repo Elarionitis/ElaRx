@@ -8,6 +8,8 @@
   skipped — see README for which projects still need write-ups.
 */
 
+import type { Decision } from "@/lib/data/decisions";
+
 export type ProjectCategory = "featured" | "work" | "experiment";
 export type ProjectStatus = "live" | "source" | "research";
 
@@ -30,6 +32,8 @@ export type Project = {
   summary: string;
   category: ProjectCategory;
   status: ProjectStatus;
+  /** Shared vocabulary with decisions.ts, so the two can be cross-filtered. */
+  domain: Decision["domain"];
   role: string;
   timeframe?: string;
   stack: string[];
@@ -53,6 +57,7 @@ export const projects: Project[] = [
       "A hybrid distributed-systems framework for leader election in a Byzantine-faulty network, co-authored under Prof. Nitin Awathare at IIT Jodhpur CSE.",
     category: "featured",
     status: "research",
+    domain: "Distributed systems",
     role: "Co-author",
     timeframe: "In progress, targeting Dec 2026 submission",
     stack: ["Distributed systems", "Byzantine consensus", "Cryptography", "PKI"],
@@ -90,6 +95,7 @@ export const projects: Project[] = [
       "A sequence-aware Transformer that reads American Sign Language from a webcam, served by a low-latency inference microservice and streamed back to the browser frame by frame.",
     category: "featured",
     status: "live",
+    domain: "Machine learning",
     role: "Solo",
     stack: ["Python", "TensorFlow", "FastAPI", "React", "MediaPipe", "WebSocket"],
     links: { github: "https://github.com/Elarionitis/SignEase", live: "https://sign-ease-eight.vercel.app" },
@@ -136,6 +142,7 @@ export const projects: Project[] = [
       "A group expense tracker built as an append-only ledger, so concurrent edits from several people cannot conflict, and a settlement algorithm that minimises the number of payments.",
     category: "featured",
     status: "source",
+    domain: "Concurrency",
     role: "Solo",
     stack: ["Flutter", "Dart", "Riverpod", "Cloud Firestore"],
     links: { github: "https://github.com/Elarionitis/Spendly" },
@@ -177,6 +184,7 @@ export const projects: Project[] = [
       "Ward-level AQI forecasting with source attribution and inspection ranking, served by a FastAPI backend behind a React dashboard.",
     category: "work",
     status: "source",
+    domain: "Machine learning",
     role: "Solo",
     stack: ["Python", "FastAPI", "React", "XGBoost", "Docker"],
     links: { github: "https://github.com/Elarionitis/aeris" },
@@ -189,6 +197,7 @@ export const projects: Project[] = [
       "An MCP server that hands a coding agent repository metadata, README content and stack signals as structured data, instead of making it ask.",
     category: "work",
     status: "source",
+    domain: "Systems",
     role: "Solo",
     stack: ["TypeScript", "Node.js", "MCP SDK", "GitHub REST API"],
     links: { github: "https://github.com/Elarionitis/repo-context-mcp" },
@@ -201,6 +210,7 @@ export const projects: Project[] = [
       "A threaded chat server in C++17 that holds many clients at once, one thread per connection, with a terminal client to talk to it.",
     category: "experiment",
     status: "source",
+    domain: "Concurrency",
     role: "Solo",
     stack: ["C++17", "POSIX Sockets", "Multithreading", "CMake"],
     links: { github: "https://github.com/Elarionitis/Orbit" },

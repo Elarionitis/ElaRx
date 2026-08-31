@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
 
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
-import { CursorGlow } from "@/components/CursorGlow";
-import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { Chrome } from "@/components/Chrome";
+import { Colophon } from "@/components/Colophon";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts } from "@/lib/blog";
-import { hasCaseStudy, projects } from "@/lib/data/projects";
+import { decisions } from "@/lib/data/decisions";
+import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
 
 import { body, display, mono } from "./fonts";
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf9f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e0e0d" },
+    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#191713" },
   ],
 };
 
@@ -76,11 +76,17 @@ function buildCommandItems(): CommandItem[] {
     { group: "Pages", label: "Writing", href: "/writing" },
     { group: "Pages", label: "About", href: "/about" },
     { group: "Pages", label: "Resume", href: "/resume" },
-    ...projects.filter(hasCaseStudy).map((project) => ({
+    ...decisions.map((decision) => ({
+      group: "Decisions",
+      label: decision.title,
+      hint: decision.id,
+      href: `/#${decision.id}`,
+    })),
+    ...projects.map((project) => ({
       group: "Projects",
       label: project.name,
       hint: project.tagline,
-      href: `/projects/${project.slug}`,
+      href: `/projects#${project.slug}`,
     })),
     ...getAllPosts().map((post) => ({
       group: "Writing",
@@ -105,22 +111,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background text-foreground antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange enableSystem>
+      <body className="min-h-screen bg-paper text-ink antialiased">
+        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
           <a
-            className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-line focus:bg-surface focus:px-4 focus:py-2 focus:text-sm"
+            className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-rule-2 focus:bg-paper-2 focus:px-4 focus:py-2 focus:text-sm"
             href="#main"
           >
             Skip to content
           </a>
-          <CursorGlow />
           <CommandPalette email={siteConfig.email} items={buildCommandItems()} />
           <div className="relative z-10 flex min-h-screen flex-col">
-            <Nav />
+            <Chrome />
             <main className="flex-1" id="main">
               {children}
             </main>
-            <Footer />
+            <Colophon />
           </div>
         </ThemeProvider>
         <script

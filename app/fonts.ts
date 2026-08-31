@@ -1,22 +1,24 @@
-import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 
-// Variable grotesque with an optical-size axis. Distinctive at display sizes
-// without tipping into a novelty face, which is what the name needs.
-export const display = Bricolage_Grotesque({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--ff-display",
-});
-
-export const body = Instrument_Sans({
+/*
+  Archivo is a grotesque built for signage and documents — tight, even colour,
+  a real width axis. It holds a specification sheet the way Inter does not.
+*/
+export const body = Archivo({
   subsets: ["latin"],
   display: "swap",
   variable: "--ff-body",
 });
 
-// Every piece of metadata on the site: labels, dates, figures, stack, code.
-export const mono = JetBrains_Mono({
+/*
+  Mono is the margin apparatus only: decision numbers, dates, labels, code.
+  It never sets running text.
+*/
+export const mono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
   variable: "--ff-mono",
 });
+
+export const display = body;

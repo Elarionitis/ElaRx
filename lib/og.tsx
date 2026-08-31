@@ -8,14 +8,14 @@ export const ogContentType = "image/png";
 
 // Vendored rather than fetched at build time so the image renders the same
 // with or without a network connection.
-const serif = fs.readFileSync(path.join(process.cwd(), "assets", "InstrumentSerif-Regular.ttf"));
+const face = fs.readFileSync(path.join(process.cwd(), "assets", "Archivo-SemiBold.ttf"));
 
-export const ogFonts = [{ name: "Instrument Serif", data: serif, style: "normal" as const, weight: 400 as const }];
+export const ogFonts = [{ name: "Archivo", data: face, style: "normal" as const, weight: 600 as const }];
 
-const paper = "#f7f8f8";
-const ink = "#14181a";
-const muted = "#586265";
-const accent = "#0c7268";
+const paper = "#faf7f2";
+const ink = "#15120e";
+const muted = "#4c463c";
+const accent = "#c2371d";
 
 export function OgCard({
   byline,
@@ -48,10 +48,10 @@ export function OgCard({
       <div
         style={{
           display: "flex",
-          fontFamily: "Instrument Serif",
-          fontSize: title.length > 52 ? 76 : 96,
+          fontFamily: "Archivo",
+          fontSize: title.length > 52 ? 62 : 82,
           lineHeight: 1.05,
-          letterSpacing: -1.5,
+          letterSpacing: -2.5,
           color: ink,
         }}
       >
