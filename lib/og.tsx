@@ -12,10 +12,10 @@ const serif = fs.readFileSync(path.join(process.cwd(), "assets", "InstrumentSeri
 
 export const ogFonts = [{ name: "Instrument Serif", data: serif, style: "normal" as const, weight: 400 as const }];
 
-const paper = "#faf9f7";
-const ink = "#1a1917";
-const muted = "#6a655d";
-const accent = "#9c4221";
+const paper = "#f7f8f8";
+const ink = "#14181a";
+const muted = "#586265";
+const accent = "#0c7268";
 
 export function OgCard({
   byline,
