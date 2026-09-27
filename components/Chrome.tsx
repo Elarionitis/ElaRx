@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 import { OPEN_PALETTE_EVENT } from "@/components/CommandPalette";
 import { siteConfig } from "@/lib/data/site";
@@ -28,6 +29,7 @@ function active(pathname: string, href: string) {
 export function Chrome() {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
+  const themeButtonRef = useRef<HTMLButtonElement>(null);
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const isArticle = pathname.startsWith("/writing/");
@@ -52,6 +54,30 @@ export function Chrome() {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [isArticle]);
+
+  function toggleTheme() {
+    const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const button = themeButtonRef.current;
+
+    if (!button || reduceMotion || !document.startViewTransition) {
+      setTheme(nextTheme);
+      return;
+    }
+
+    const bounds = button.getBoundingClientRect();
+    const x = bounds.left + bounds.width / 2;
+    const y = bounds.top + bounds.height / 2;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const transition = document.startViewTransition(() => flushSync(() => setTheme(nextTheme)));
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 560, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)", pseudoElement: "::view-transition-new(root)" },
+      );
+    });
+  }
 
   return (
     <header
@@ -109,7 +135,8 @@ export function Chrome() {
           <button
             aria-label="Toggle theme"
             className="focus-ring grid size-7 place-items-center text-ink-3 transition-colors hover:text-ink"
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            onClick={toggleTheme}
+            ref={themeButtonRef}
             type="button"
           >
             <svg aria-hidden="true" className="hidden size-4 dark:block" fill="none" stroke="currentColor" strokeWidth="1.4" viewBox="0 0 24 24">

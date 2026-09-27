@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
@@ -42,47 +43,58 @@ export default function Home() {
   return (
     <div className="sheet pb-4">
       <section className="pt-14 sm:pt-20 lg:pt-24">
-        <div className="max-w-4xl">
-          <p className="label flex items-center gap-3">
-            <span className="inline-block size-1.5 rounded-full bg-accent" />
-            {siteConfig.name} · {siteConfig.location}
-          </p>
-          <h1 className="mt-7 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
-            Software Engineer
-          </h1>
-          <p className="mt-7 max-w-3xl text-[clamp(1.55rem,3.6vw,2.8rem)] leading-[1.08] tracking-[-0.045em] text-ink">
-            Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
-          </p>
-          <p className="label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
-          <p className="measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
-            I care about the moment an idea becomes useful: the interface people touch, the intelligence behind it,
-            and the engineering that keeps it working when reality arrives.
-          </p>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_10rem] lg:items-center lg:gap-12">
+          <div className="max-w-4xl">
+            <p className="label flex items-center gap-3">
+              <span className="inline-block size-1.5 rounded-full bg-accent" />
+              {siteConfig.name} · {siteConfig.location}
+            </p>
+            <h1 className="mt-7 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
+              Software Engineer
+            </h1>
+            <p className="mt-7 max-w-3xl text-[clamp(1.55rem,3.6vw,2.8rem)] leading-[1.08] tracking-[-0.045em] text-ink">
+              Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
+            </p>
+            <p className="label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
+            <p className="measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
+              I care about the moment an idea becomes useful: the interface people touch, the intelligence behind it,
+              and the engineering that keeps it working when reality arrives.
+            </p>
 
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Link className="focus-ring btn btn-solid" href="/resume">
-              Resume
-            </Link>
-            <a className="focus-ring btn btn-line" href={`mailto:${siteConfig.email}`}>
-              Email
-            </a>
-            <a
-              className="focus-ring btn btn-line"
-              href={siteConfig.links.github.url}
-              rel="noreferrer"
-              target="_blank"
-            >
-              GitHub
-            </a>
-            <a
-              className="focus-ring btn btn-line"
-              href={siteConfig.links.x.url}
-              rel="noreferrer"
-              target="_blank"
-            >
-              X / @SuhanRamani09
-            </a>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <Link className="focus-ring btn btn-solid" href="/resume">
+                Resume
+              </Link>
+              <a className="focus-ring btn btn-line" href={`mailto:${siteConfig.email}`}>
+                Email
+              </a>
+              <a
+                className="focus-ring btn btn-line"
+                href={siteConfig.links.github.url}
+                rel="noreferrer"
+                target="_blank"
+              >
+                GitHub
+              </a>
+              <a
+                className="focus-ring btn btn-line"
+                href={siteConfig.links.x.url}
+                rel="noreferrer"
+                target="_blank"
+              >
+                X / @SuhanRamani09
+              </a>
+            </div>
           </div>
+          <aside className="hero-portrait-assembly">
+            <div className="hero-portrait">
+              <Image alt={siteConfig.name} height={264} priority sizes="(min-width: 1024px) 132px, 108px" src={siteConfig.profileImage} width={264} />
+              <span aria-hidden="true" className="hero-portrait-orbit" />
+              <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-one" />
+              <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-two" />
+              <span aria-hidden="true" className="hero-portrait-signal" />
+            </div>
+          </aside>
         </div>
         <div className="mt-12 sm:mt-16">
           <HeroSystem />
