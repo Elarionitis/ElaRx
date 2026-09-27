@@ -104,14 +104,16 @@ export default function Home() {
         <SelectedWork projects={selected} />
       </Clause>
 
-      <Clause label={`Field notes · ${decisions.length} decisions`}>
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-16">
-          <p className="measure -mt-2 text-[1.05rem] leading-[1.6] text-ink-2">
-            In free time, I turn architecture tradeoffs into short notes: the constraint, the tempting
-            alternative, and the design choice that held up. Pick a system concern or let the archive surprise you.
-          </p>
-          <p className="border-l border-accent pl-4 text-sm leading-[1.6] text-ink-2 lg:mt-0">
-            This is a living part of the site. New projects earn an entry only when there is a decision worth defending.
+      <Clause label="How I think">
+        <div className="thinking-intro">
+          <div>
+            <p className="label text-accent">Engineering decisions</p>
+            <p className="mt-3 max-w-2xl text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.12] tracking-[-0.035em] text-ink">
+              Every system has a tradeoff. These are the calls behind the work.
+            </p>
+          </div>
+          <p>
+            Open an entry for the constraint, the decision, and what it changed.
           </p>
         </div>
         <div className="mt-8">

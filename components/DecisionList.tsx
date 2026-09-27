@@ -27,69 +27,43 @@ function DecisionRow({
   const panelId = `${decision.id}-body`;
 
   return (
-    <li className="scroll-mt-24 border-t border-rule first:border-t-0" id={decision.id}>
+    <li className={`thinking-row scroll-mt-24 ${open ? "is-open" : ""}`} id={decision.id}>
       <button
         aria-controls={panelId}
         aria-expanded={open}
-        className="focus-ring group grid w-full grid-cols-[3.25rem_minmax(0,1fr)_1.5rem] items-baseline gap-x-3 py-5 text-left sm:grid-cols-[4rem_minmax(0,1fr)_9rem_1.5rem] sm:gap-x-5"
+        className="thinking-trigger focus-ring group"
         onClick={onToggle}
         type="button"
       >
-        <span className="ref">{decision.id}</span>
-
-        <span className="min-w-0">
-          <span className="block text-[1.05rem] leading-[1.35] tracking-[-0.015em] text-ink transition-colors group-hover:text-accent sm:text-[1.15rem]">
-            {decision.title}
-          </span>
-          <span className="label mt-2 block sm:hidden">{decision.sourceLabel}</span>
-        </span>
-
-        <span className="label hidden text-right sm:block">{decision.sourceLabel}</span>
-
-        <span
-          aria-hidden="true"
-          className={`justify-self-end text-ink-3 transition-transform duration-200 ${open ? "rotate-45" : ""}`}
-        >
-          +
-        </span>
+        <span className="ref">{decision.id.replace("D-", "")}</span>
+        <span className="label thinking-domain">{decision.domain}</span>
+        <span className="thinking-title">{decision.title}</span>
+        <span className="label thinking-source">{decision.sourceLabel}</span>
+        <span aria-hidden="true" className="thinking-toggle">+</span>
       </button>
 
-      <div className={open ? "panel-in block" : "hidden"} id={panelId} role="region">
-        {/*
-          The domain sits above the body rather than in the 4rem reference
-          column — a label like "Distributed systems" is far wider than the
-          column and used to run straight over the text beside it.
-        */}
-        <div className="grid gap-6 pb-8 sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-x-5">
-          <span aria-hidden="true" className="hidden sm:block" />
-          <div className="measure">
-            <p className="label">{decision.domain}</p>
-            <p className="mt-3 text-[0.95rem] leading-[1.6] text-ink-2">
-              <span className="text-ink">Design constraint. </span>
-              {decision.constraint}
-            </p>
-            <p className="mt-4 text-[0.95rem] leading-[1.6] text-ink-2">
-              <span className="text-ink">Design rationale. </span>
-              {decision.reasoning}
-            </p>
-            {decision.outcome ? (
-              <p className="mt-5 border-l-2 border-accent pl-4 text-[0.95rem] leading-[1.6] text-ink">
-                {decision.outcome}
-              </p>
-            ) : null}
-            <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link className="focus-ring tlink text-sm text-ink-2" href={`/projects#${decision.source}`}>
-                See {decision.sourceLabel}
-              </Link>
-              <button
-                className="focus-ring text-sm text-ink-3 transition-colors hover:text-accent"
-                onClick={onCopy}
-                type="button"
-              >
-                {copied ? "Link copied" : `Copy link to ${decision.id}`}
-              </button>
-            </div>
+      <div className={open ? "thinking-panel panel-in" : "hidden"} id={panelId} role="region">
+        <div className="thinking-flow">
+          <div className="thinking-step">
+            <p className="label">Constraint</p>
+            <p>{decision.constraint}</p>
           </div>
+          <div className="thinking-step">
+            <p className="label">Decision</p>
+            <p>{decision.reasoning}</p>
+          </div>
+          <div className="thinking-step thinking-consequence">
+            <p className="label">Consequence</p>
+            <p>{decision.outcome ?? "Implementation detail documented in the linked project."}</p>
+          </div>
+        </div>
+        <div className="thinking-links">
+          <Link className="focus-ring tlink" href={`/projects#${decision.source}`}>
+            See {decision.sourceLabel}
+          </Link>
+          <button className="focus-ring" onClick={onCopy} type="button">
+            {copied ? "Link copied" : `Copy ${decision.id}`}
+          </button>
         </div>
       </div>
     </li>
@@ -153,25 +127,23 @@ export function DecisionList({ items }: { items: Decision[] }) {
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-rule py-3">
-        <div aria-label="Filter notes by topic" className="flex flex-wrap gap-x-3 gap-y-1" role="group">
+      <div className="thinking-controls">
+        <div aria-label="Filter decisions by topic" className="thinking-filters" role="group">
           {["All", ...domains].map((option) => (
             <button
               aria-pressed={domain === option}
-              className={`focus-ring text-xs transition-colors ${domain === option ? "text-accent" : "text-ink-3 hover:text-ink"}`}
+              className={`focus-ring ${domain === option ? "is-active" : ""}`}
               key={option}
               onClick={() => setDomain(option)}
               type="button"
-            >
-              {option === "All" ? `All notes · ${items.length}` : option}
-            </button>
+            >{option === "All" ? `All decisions · ${items.length}` : option}</button>
           ))}
         </div>
-        <button className="focus-ring tlink text-sm text-ink-2" onClick={surprise} type="button">
+        <button className="thinking-random focus-ring" onClick={surprise} type="button">
           Surprise me <span aria-hidden="true">↗</span>
         </button>
       </div>
-      <ul className="border-b border-rule">
+      <ul className="thinking-list">
         {visibleItems.map((decision) => (
           <DecisionRow
             copied={copiedId === decision.id}
