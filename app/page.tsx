@@ -1,8 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
-import { NowPlaying } from "@/components/NowPlaying";
+import { HeroSystem } from "@/components/HeroSystem";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
@@ -41,32 +40,22 @@ export default function Home() {
 
   return (
     <div className="sheet pb-4">
-      {/* Identity. A statement, not a hero. */}
-      <section className="grid gap-10 pt-16 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] lg:gap-16">
-        <div className="min-w-0">
-          {/*
-            The name is the heading. The thesis reads immediately under it and
-            still carries the weight, but a portfolio whose h1 is a sentence
-            gives a visitor nothing to remember it by.
-          */}
-          <h1 className="text-[clamp(2.25rem,5.5vw,3.5rem)] font-medium leading-[1] tracking-[-0.04em] text-ink">
-            {siteConfig.name}
+      <section className="pt-14 sm:pt-20 lg:pt-24">
+        <div className="max-w-4xl">
+          <p className="label flex items-center gap-3">
+            <span className="inline-block size-1.5 rounded-full bg-accent" />
+            {siteConfig.name} · {siteConfig.location}
+          </p>
+          <h1 className="mt-7 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
+            Software Engineer
           </h1>
-          <p className="label mt-4">
-            {siteConfig.role}
-            <span aria-hidden="true" className="mx-2 text-rule-2">
-              &#9679;
-            </span>
-            {siteConfig.location}
+          <p className="mt-7 max-w-3xl text-[clamp(1.55rem,3.6vw,2.8rem)] leading-[1.08] tracking-[-0.045em] text-ink">
+            Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
           </p>
-
-          <p className="measure mt-9 text-[clamp(1.2rem,2.2vw,1.5rem)] leading-[1.35] tracking-[-0.02em] text-ink">
-            I build systems that stay calm when the easy version stops working.
-          </p>
-          <p className="measure mt-5 text-[1.05rem] leading-[1.65] text-ink-2">
-            So far that has meant retrieval that had half a second to answer, a ledger where the hard part
-            turned out to be concurrency rather than arithmetic, and a lot of time spent on why a query
-            stopped being fast.
+          <p className="label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
+          <p className="measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
+            I care about the moment an idea becomes useful: the interface people touch, the intelligence behind it,
+            and the engineering that keeps it working when reality arrives.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">
@@ -93,45 +82,21 @@ export default function Home() {
               X / @SuhanRamani09
             </a>
           </div>
-
-          <div className="measure mt-12 border-t border-rule pt-5">
-            <p className="label">Working principles</p>
-            <p className="mt-2 text-[0.95rem] leading-[1.6] text-ink-2">
-              Make the constraint visible. Prefer the smaller moving part. Leave behind a trail someone else can follow.
+        </div>
+        <div className="mt-12 sm:mt-16">
+          <HeroSystem />
+        </div>
+        <div className="mt-6 grid gap-5 border-t border-rule pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] sm:gap-12">
+          <p className="text-[0.95rem] leading-[1.6] text-ink-2">
+            Make the constraint visible. Prefer the smaller moving part. Leave behind a trail someone else can follow.
+          </p>
+          <div>
+            <p className="label">Currently</p>
+            <p className="mt-1 text-sm leading-[1.55] text-ink-2">
+              Leading Anand Rathi Tinkerers&rsquo; Lab, reading consensus protocols, and building.
             </p>
           </div>
         </div>
-
-        <aside className="lg:pt-2">
-          <div className="portrait w-full max-w-[13.5rem]">
-            <Image
-              alt={siteConfig.name}
-              height={432}
-              priority
-              sizes="13.5rem"
-              src={siteConfig.profileImage}
-              width={432}
-            />
-          </div>
-          <div className="mt-9 border-t border-rule pt-5">
-            <p className="label">Currently</p>
-            <ul className="mt-4 grid gap-4 text-sm text-ink-2">
-              <li>
-                <span className="label block">Leading</span>
-                <span className="mt-1 block">Anand Rathi Tinkerers&rsquo; Lab, the student-run makerspace here</span>
-              </li>
-              <li>
-                <span className="label block">Reading</span>
-                <span className="mt-1 block">Consensus protocols, and how much of them survives a real network</span>
-              </li>
-              <li>
-                <span className="label block">Away</span>
-                <span className="mt-1 block">Badminton, cycling, and setting contest problems</span>
-              </li>
-              <NowPlaying />
-            </ul>
-          </div>
-        </aside>
       </section>
 
       <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">

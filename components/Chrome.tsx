@@ -9,11 +9,12 @@ import { OPEN_PALETTE_EVENT } from "@/components/CommandPalette";
 import { siteConfig } from "@/lib/data/site";
 
 const routes = [
-  { label: "Projects", href: "/projects" },
-  { label: "Writing", href: "/writing" },
+  { label: "Work", href: "/projects" },
+  { label: "Thinking", href: "/#decisions" },
   { label: "About", href: "/about" },
-  { label: "Resume", href: "/resume" },
 ];
+
+const mobileRoutes = [...routes, { label: "Contact", href: `mailto:${siteConfig.email}` }];
 
 function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -28,6 +29,7 @@ export function Chrome() {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
   const [progress, setProgress] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const isArticle = pathname.startsWith("/writing/");
 
   useEffect(() => {
@@ -51,14 +53,37 @@ export function Chrome() {
     };
   }, [isArticle]);
 
+  useEffect(() => {
+    let frame = 0;
+    function update() {
+      frame = 0;
+      setScrolled(window.scrollY > 12);
+    }
+    function onScroll() {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    }
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-paper/92 backdrop-blur-sm">
+    <header
+      className={`sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
+        scrolled
+          ? "border-rule-2 bg-paper/92 shadow-[0_8px_28px_-24px_color-mix(in_srgb,var(--ink)_60%,transparent)] backdrop-blur-md"
+          : "border-transparent bg-paper/70 backdrop-blur-sm"
+      }`}
+    >
       <div className="sheet flex h-14 items-center justify-between gap-4">
         <Link className="focus-ring flex items-baseline gap-2.5" href="/">
           <span className="whitespace-nowrap text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
             {siteConfig.name}
           </span>
-          <span className="label hidden sm:inline">{siteConfig.role}</span>
+          <span className="label hidden sm:inline">Software Engineer</span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -88,7 +113,7 @@ export function Chrome() {
             </ul>
           </nav>
 
-          <button
+            <button
             aria-label="Search"
             className="focus-ring hidden items-center gap-2 border border-rule px-2 py-1 text-xs text-ink-3 transition-colors hover:border-rule-2 hover:text-ink-2 md:flex"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
@@ -112,12 +137,18 @@ export function Chrome() {
               <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z" strokeLinejoin="round" />
             </svg>
           </button>
+          <a
+            className="focus-ring hidden text-sm text-ink-2 transition-colors hover:text-accent sm:block"
+            href={`mailto:${siteConfig.email}`}
+          >
+            Contact
+          </a>
         </div>
       </div>
 
       <nav aria-label="Primary" className="border-t border-rule sm:hidden">
         <ul className="sheet flex h-11 items-center gap-5">
-          {routes.map((route) => (
+          {mobileRoutes.map((route) => (
             <li key={route.href}>
               <Link
                 aria-current={active(pathname, route.href) ? "page" : undefined}
