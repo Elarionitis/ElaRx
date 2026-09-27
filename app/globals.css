@@ -195,8 +195,8 @@
 
   .hero-portrait {
     position: relative;
-    width: 6.75rem;
-    height: 6.75rem;
+    width: 8rem;
+    height: 8rem;
   }
 
   .hero-portrait img {
@@ -403,7 +403,8 @@
 
   @media (min-width: 64rem) {
     .hero-portrait-assembly { justify-content: flex-end; }
-    .hero-portrait { width: 8.25rem; height: 8.25rem; }
+    .hero-portrait { width: 12.5rem; height: 12.5rem; }
+    .hero-portrait-signal { transform-origin: 0.12rem 6.68rem; }
   }
 
   .thinking-intro {

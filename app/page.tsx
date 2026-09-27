@@ -43,16 +43,19 @@ export default function Home() {
   return (
     <div className="sheet pb-4">
       <section className="pt-14 sm:pt-20 lg:pt-24">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_10rem] lg:items-center lg:gap-12">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.85fr)_minmax(13.75rem,1fr)] lg:items-center lg:gap-12">
           <div className="max-w-4xl">
             <p className="label flex items-center gap-3">
               <span className="inline-block size-1.5 rounded-full bg-accent" />
-              {siteConfig.name} · {siteConfig.location}
+              {siteConfig.location}
             </p>
-            <h1 className="mt-7 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
+            <p className="mt-6 text-[clamp(2rem,3.5vw,2.75rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
+              {siteConfig.name}
+            </p>
+            <h1 className="mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
               Software Engineer
             </h1>
-            <p className="mt-7 max-w-3xl text-[clamp(1.55rem,3.6vw,2.8rem)] leading-[1.08] tracking-[-0.045em] text-ink">
+            <p className="mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
               Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
             </p>
             <p className="label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
@@ -88,7 +91,7 @@ export default function Home() {
           </div>
           <aside className="hero-portrait-assembly">
             <div className="hero-portrait">
-              <Image alt={siteConfig.name} height={264} priority sizes="(min-width: 1024px) 132px, 108px" src={siteConfig.profileImage} width={264} />
+              <Image alt={siteConfig.name} height={400} priority sizes="(min-width: 1024px) 200px, 128px" src={siteConfig.profileImage} width={400} />
               <span aria-hidden="true" className="hero-portrait-orbit" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-one" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-two" />
