@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome } from "@/components/Chrome";
 import { Colophon } from "@/components/Colophon";
-import { CursorHalo } from "@/components/CursorHalo";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
@@ -51,8 +50,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e172a" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f4" },
+    { media: "(prefers-color-scheme: dark)", color: "#10131a" },
   ],
 };
 
@@ -118,14 +117,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-screen bg-paper text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
-          <div aria-hidden="true" className="ambient-canvas" />
           <a
             className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-rule-2 focus:bg-paper-2 focus:px-4 focus:py-2 focus:text-sm"
             href="#main"
           >
             Skip to content
           </a>
-          <CursorHalo />
           <CommandPalette email={siteConfig.email} items={buildCommandItems()} />
           <div className="relative z-10 flex min-h-screen flex-col">
             <Chrome />

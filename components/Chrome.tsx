@@ -33,18 +33,18 @@ export function Chrome() {
   const isArticle = pathname.startsWith("/writing/");
 
   useEffect(() => {
-    if (!isArticle) return;
-
     let frame = 0;
     function update() {
       frame = 0;
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
+      setScrolled(window.scrollY > 12);
+      if (isArticle) {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
+      }
     }
     function onScroll() {
       if (!frame) frame = window.requestAnimationFrame(update);
     }
-
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -53,29 +53,12 @@ export function Chrome() {
     };
   }, [isArticle]);
 
-  useEffect(() => {
-    let frame = 0;
-    function update() {
-      frame = 0;
-      setScrolled(window.scrollY > 12);
-    }
-    function onScroll() {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    }
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-
   return (
     <header
       className={`sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
         scrolled
-          ? "border-rule-2 bg-paper/92 shadow-[0_8px_28px_-24px_color-mix(in_srgb,var(--ink)_60%,transparent)] backdrop-blur-md"
-          : "border-transparent bg-paper/70 backdrop-blur-sm"
+          ? "border-rule-2 bg-paper shadow-[0_8px_28px_-24px_color-mix(in_srgb,var(--ink)_60%,transparent)]"
+          : "border-transparent bg-paper"
       }`}
     >
       <div className="sheet flex h-14 items-center justify-between gap-4">
@@ -150,21 +133,25 @@ export function Chrome() {
         <ul className="sheet flex h-11 items-center gap-5">
           {mobileRoutes.map((route) => (
             <li key={route.href}>
-              <Link
-                aria-current={active(pathname, route.href) ? "page" : undefined}
-                className={`focus-ring relative block py-1 text-sm transition-colors ${
-                  active(pathname, route.href) ? "text-ink" : "text-ink-2"
-                }`}
-                href={route.href}
-              >
-                {route.label}
-                <span
-                  aria-hidden="true"
-                  className={`absolute -bottom-px left-0 h-px w-full bg-accent transition-transform duration-150 ${
-                    active(pathname, route.href) ? "scale-x-100" : "scale-x-0"
+              {route.href.startsWith("mailto:") ? (
+                <a className="focus-ring relative block py-1 text-sm text-ink-2 transition-colors hover:text-ink" href={route.href}>{route.label}</a>
+              ) : (
+                <Link
+                  aria-current={active(pathname, route.href) ? "page" : undefined}
+                  className={`focus-ring relative block py-1 text-sm transition-colors ${
+                    active(pathname, route.href) ? "text-ink" : "text-ink-2"
                   }`}
-                />
-              </Link>
+                  href={route.href}
+                >
+                  {route.label}
+                  <span
+                    aria-hidden="true"
+                    className={`absolute -bottom-px left-0 h-px w-full bg-accent transition-transform duration-150 ${
+                      active(pathname, route.href) ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                </Link>
+              )}
             </li>
           ))}
         </ul>

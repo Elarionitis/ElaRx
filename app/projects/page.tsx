@@ -6,7 +6,7 @@ import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Distributed systems research, machine learning services, and the smaller things in between.",
+  description: "Full-stack products, intelligent systems, and engineering experiments built by Suhan Ramani.",
   alternates: { canonical: "/projects" },
 };
 

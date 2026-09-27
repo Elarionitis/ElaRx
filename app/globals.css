@@ -107,52 +107,6 @@
 }
 
 @layer components {
-  /* A sparse, slow-moving field gives the page atmosphere without competing
-     with the document. It stays behind every interactive surface. */
-  .ambient-canvas {
-    position: fixed;
-    z-index: 0;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .ambient-canvas::before,
-  .ambient-canvas::after {
-    content: "";
-    position: absolute;
-    width: min(46vw, 42rem);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    filter: blur(2px);
-    opacity: 0.42;
-    will-change: transform;
-  }
-
-  .ambient-canvas::before {
-    top: -18rem;
-    right: -13rem;
-    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0 9%, transparent 57%);
-    animation: drift-one 18s ease-in-out infinite alternate;
-  }
-
-  .ambient-canvas::after {
-    bottom: -22rem;
-    left: -15rem;
-    background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 14%, transparent) 0 7%, transparent 60%);
-    animation: drift-two 22s ease-in-out infinite alternate;
-  }
-
-  @keyframes drift-one {
-    from { transform: translate3d(-1%, -1%, 0) scale(0.96); }
-    to { transform: translate3d(5%, 4%, 0) scale(1.06); }
-  }
-
-  @keyframes drift-two {
-    from { transform: translate3d(2%, 2%, 0) scale(1); }
-    to { transform: translate3d(-4%, -5%, 0) scale(1.08); }
-  }
-
   /* Two measures: the document, and the running text inside it. */
   .sheet {
     width: min(72rem, calc(100% - 2.5rem));
@@ -203,19 +157,15 @@
     height: 0.55rem;
     border: 1px solid var(--accent);
     background: var(--paper);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 28%, transparent);
-    animation: node-pulse 4.5s ease-out infinite;
   }
 
   .hero-node-one { left: 20%; top: 31%; }
-  .hero-node-two { left: 43%; top: 62%; animation-delay: 1.2s; }
-  .hero-node-three { left: 67%; top: 28%; animation-delay: 2.5s; }
-  .hero-node-four { left: 84%; top: 66%; animation-delay: 3.1s; }
+  .hero-node-two { left: 43%; top: 62%; }
+  .hero-node-three { left: 67%; top: 28%; }
+  .hero-node-four { left: 84%; top: 66%; }
 
   .hero-signal { width: 0.25rem; height: 0.25rem; background: var(--accent); opacity: 0; }
   .hero-signal-one { animation: signal-one 6s linear infinite; }
-  .hero-signal-two { animation: signal-two 7s 1.8s linear infinite; }
-  .hero-signal-three { animation: signal-three 5.5s 3s linear infinite; }
 
   .hero-system-key {
     position: absolute;
@@ -229,13 +179,7 @@
     letter-spacing: 0.1em;
   }
 
-  @keyframes node-pulse {
-    0%, 72%, 100% { box-shadow: 0 0 0 0 transparent; }
-    78% { box-shadow: 0 0 0 0.45rem color-mix(in srgb, var(--accent) 20%, transparent); }
-  }
   @keyframes signal-one { 0% { left: 18%; top: 31%; opacity: 0; } 5%, 78% { opacity: 1; } 100% { left: 84%; top: 66%; opacity: 0; } }
-  @keyframes signal-two { 0% { left: 0%; top: 30%; opacity: 0; } 8%, 68% { opacity: 1; } 100% { left: 67%; top: 28%; opacity: 0; } }
-  @keyframes signal-three { 0% { left: 15%; top: 88%; opacity: 0; } 8%, 70% { opacity: 1; } 100% { left: 84%; top: 66%; opacity: 0; } }
 
   .work-transition {
     display: flex;
@@ -386,6 +330,8 @@
     .selected-work-grid { grid-template-columns: 1fr; }
     .project-card { min-height: 25rem; }
     .project-visual { min-height: 10.5rem; }
+    .hero-signal { display: none; }
+    .project-signal { animation: none; opacity: 0.8; }
   }
 
   .thinking-intro {
@@ -594,26 +540,6 @@
 
   .panel-in {
     animation: panel-in 190ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
-  }
-
-  .cursor-halo {
-    position: fixed;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    margin: -13rem 0 0 -13rem;
-    width: 26rem;
-    height: 26rem;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle closest-side,
-      color-mix(in srgb, var(--accent) var(--halo), transparent),
-      transparent
-    );
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 500ms ease;
-    will-change: transform;
   }
 
   /* Text link with an underline that thickens rather than appears. */
