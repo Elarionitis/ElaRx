@@ -3,12 +3,10 @@
 import { useEffect, useRef } from "react";
 
 /*
-  A faint warm halo that follows the pointer.
+  A faint colour halo that follows the pointer.
 
   Kept deliberately quiet: 3% of the accent on paper, 5% on the dark ground,
-  and small enough to read as a light source rather than a spotlight. The old
-  version of this was a 44rem teal wash, which was the wrong instrument for a
-  document.
+  and small enough to read as a light source rather than a spotlight.
 
   Costs nothing to host. It is one fixed element moved with translate3d inside
   an animation frame, so it composites on the GPU and never triggers layout or

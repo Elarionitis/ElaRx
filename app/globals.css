@@ -5,11 +5,11 @@
 
 /*
   ── Design system ────────────────────────────────────────────────────────────
-  The reference object is a printed technical specification: warm paper, black
-  ink, hairline rules, and a single annotation colour in the margin.
+  A cool cloud surface, deep blue ink, and a violet-to-cyan accent spectrum.
+  The neutral surface does the reading work; colour only guides attention.
 
   Consequences that hold everywhere:
-    · light is the primary theme, dark is warm charcoal and never near-black
+    · light is the primary theme, dark is blue-black and never pure black
     · radii are 2px, because a spec sheet has corners, not pills
     · there are no shadows; separation is a hairline
     · mono is reserved for apparatus (numbers, labels, dates), never prose
@@ -17,35 +17,35 @@
 :root {
   color-scheme: light;
 
-  --paper: #faf7f2;
-  --paper-2: #f3eee4;
-  --paper-3: #ebe4d6;
-  --ink: #15120e;
-  --ink-2: #4c463c;
-  --ink-3: #8a8274;
-  --rule: #ddd5c6;
-  --rule-2: #c5bba7;
-  --accent: #c2371d;
-  --accent-2: #9e2b13;
-  --accent-wash: #f7e6e1;
-  --on-accent: #fdf6f3;
+  --paper: #f8fafc;
+  --paper-2: #f0f4f8;
+  --paper-3: #e6edf5;
+  --ink: #14213d;
+  --ink-2: #40516d;
+  --ink-3: #71809a;
+  --rule: #d9e1ec;
+  --rule-2: #c2cedd;
+  --accent: #6558e8;
+  --accent-2: #008fba;
+  --accent-wash: #e9e7ff;
+  --on-accent: #ffffff;
 }
 
 .dark {
   color-scheme: dark;
 
-  --paper: #191713;
-  --paper-2: #211e19;
-  --paper-3: #2a2620;
-  --ink: #f2eee6;
-  --ink-2: #ada597;
-  --ink-3: #7a7264;
-  --rule: #302c25;
-  --rule-2: #453f36;
-  --accent: #ef6a4c;
-  --accent-2: #f78a70;
-  --accent-wash: #2c1d18;
-  --on-accent: #1c0f0b;
+  --paper: #0e172a;
+  --paper-2: #14213b;
+  --paper-3: #1a2a48;
+  --ink: #f2f6ff;
+  --ink-2: #bdc9de;
+  --ink-3: #8c9ab3;
+  --rule: #263958;
+  --rule-2: #365072;
+  --accent: #a99cff;
+  --accent-2: #57d5ee;
+  --accent-wash: #242550;
+  --on-accent: #10162b;
 }
 
 @theme inline {
@@ -107,6 +107,52 @@
 }
 
 @layer components {
+  /* A sparse, slow-moving field gives the page atmosphere without competing
+     with the document. It stays behind every interactive surface. */
+  .ambient-canvas {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ambient-canvas::before,
+  .ambient-canvas::after {
+    content: "";
+    position: absolute;
+    width: min(46vw, 42rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.42;
+    will-change: transform;
+  }
+
+  .ambient-canvas::before {
+    top: -18rem;
+    right: -13rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0 9%, transparent 57%);
+    animation: drift-one 18s ease-in-out infinite alternate;
+  }
+
+  .ambient-canvas::after {
+    bottom: -22rem;
+    left: -15rem;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 14%, transparent) 0 7%, transparent 60%);
+    animation: drift-two 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-one {
+    from { transform: translate3d(-1%, -1%, 0) scale(0.96); }
+    to { transform: translate3d(5%, 4%, 0) scale(1.06); }
+  }
+
+  @keyframes drift-two {
+    from { transform: translate3d(2%, 2%, 0) scale(1); }
+    to { transform: translate3d(-4%, -5%, 0) scale(1.08); }
+  }
+
   /* Two measures: the document, and the running text inside it. */
   .sheet {
     width: min(68rem, calc(100% - 2.5rem));
@@ -253,7 +299,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.005em;
-    transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+    transition: transform 160ms ease, background-color 140ms ease, color 140ms ease, border-color 140ms ease;
     white-space: nowrap;
   }
 
@@ -266,6 +312,7 @@
     background: var(--accent);
     border-color: var(--accent);
     color: var(--on-accent);
+    transform: translateY(-1px);
   }
 
   .btn-line {
@@ -275,6 +322,7 @@
 
   .btn-line:hover {
     border-color: var(--ink);
+    transform: translateY(-1px);
   }
 
   .kbd {

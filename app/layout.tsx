@@ -51,8 +51,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#191713" },
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e172a" },
   ],
 };
 
@@ -118,6 +118,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-screen bg-paper text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
+          <div aria-hidden="true" className="ambient-canvas" />
           <a
             className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-rule-2 focus:bg-paper-2 focus:px-4 focus:py-2 focus:text-sm"
             href="#main"
