@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
 import { HeroSystem } from "@/components/HeroSystem";
+import { SelectedWork } from "@/components/SelectedWork";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
@@ -100,24 +101,7 @@ export default function Home() {
       </section>
 
       <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">
-        <ul className="border-b border-rule">
-          {selected.map((project) => (
-            <li className="border-t border-rule first:border-t-0" key={project.slug}>
-              <Link
-                className="focus-ring group grid grid-cols-[minmax(0,1fr)] gap-x-5 gap-y-2 py-6 sm:grid-cols-[13rem_minmax(0,1fr)]"
-                href={`/projects#${project.slug}`}
-              >
-                <div>
-                  <h3 className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink transition-colors group-hover:text-accent">
-                    {project.name}
-                  </h3>
-                  <p className="label mt-1.5">{project.role}</p>
-                </div>
-                <p className="measure text-[0.95rem] leading-[1.6] text-ink-2">{project.summary}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <SelectedWork projects={selected} />
       </Clause>
 
       <Clause label={`Field notes · ${decisions.length} decisions`}>
