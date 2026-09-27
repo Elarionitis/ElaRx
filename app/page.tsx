@@ -52,7 +52,7 @@ export default function Home() {
             <p className="mt-6 text-[clamp(2rem,3.5vw,2.75rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
               {siteConfig.name}
             </p>
-            <h1 className="mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink">
+            <h1 className="lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink" data-lens-copy="Software Engineer" data-lens-target>
               Software Engineer
             </h1>
             <p className="mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
@@ -65,14 +65,15 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">
-              <Link className="focus-ring btn btn-solid" href="/resume">
+              <Link className="focus-ring btn btn-solid" data-lens-target href="/resume">
                 Resume
               </Link>
-              <a className="focus-ring btn btn-line" href={`mailto:${siteConfig.email}`}>
+              <a className="focus-ring btn btn-line" data-lens-target href={`mailto:${siteConfig.email}`}>
                 Email
               </a>
               <a
                 className="focus-ring btn btn-line"
+                data-lens-target
                 href={siteConfig.links.github.url}
                 rel="noreferrer"
                 target="_blank"
@@ -81,6 +82,7 @@ export default function Home() {
               </a>
               <a
                 className="focus-ring btn btn-line"
+                data-lens-target
                 href={siteConfig.links.x.url}
                 rel="noreferrer"
                 target="_blank"
@@ -90,7 +92,7 @@ export default function Home() {
             </div>
           </div>
           <aside className="hero-portrait-assembly">
-            <div className="hero-portrait">
+            <div className="hero-portrait" data-lens-target>
               <Image alt={siteConfig.name} height={400} priority sizes="(min-width: 1024px) 200px, 128px" src={siteConfig.profileImage} width={400} />
               <span aria-hidden="true" className="hero-portrait-orbit" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-one" />

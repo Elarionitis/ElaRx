@@ -135,6 +135,8 @@ export function Chrome() {
           <button
             aria-label="Toggle theme"
             className="focus-ring grid size-7 place-items-center text-ink-3 transition-colors hover:text-ink"
+            onPointerEnter={() => { document.documentElement.dataset.lensFocus = "theme"; }}
+            onPointerLeave={() => { delete document.documentElement.dataset.lensFocus; }}
             onClick={toggleTheme}
             ref={themeButtonRef}
             type="button"

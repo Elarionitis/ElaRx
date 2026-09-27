@@ -81,7 +81,7 @@ export function SelectedWork({ projects }: { projects: Project[] }) {
       <p className="work-transition label"><span aria-hidden="true" />Systems, in practice</p>
       <div className="selected-work-grid">
         {projects.map((project, index) => (
-          <Link className={`project-card project-card-${project.slug} focus-ring`} href={`/projects#${project.slug}`} key={project.slug}>
+          <Link className={`project-card project-card-${project.slug} focus-ring`} data-lens-target href={`/projects#${project.slug}`} key={project.slug}>
             <div className="project-card-top">
               <span className="ref">/{String(index + 1).padStart(2, "0")}</span>
               <span className="label">{project.domain}</span>

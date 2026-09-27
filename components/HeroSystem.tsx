@@ -6,7 +6,7 @@ const paths = [
 
 export function HeroSystem() {
   return (
-    <div aria-hidden="true" className="hero-system">
+    <div aria-hidden="true" className="hero-system" data-lens-target>
       <div className="hero-system-grid" />
       <svg className="hero-system-lines" fill="none" preserveAspectRatio="none" viewBox="0 0 520 250">
         {paths.map((path, index) => (

@@ -17,6 +17,10 @@
 :root {
   color-scheme: light;
 
+  --lens-x: -30rem;
+  --lens-y: -30rem;
+  --lens-radius: 12rem;
+
   --paper: #f7f7f4;
   --paper-2: #efefea;
   --paper-3: #e5e5df;
@@ -113,6 +117,38 @@
   mix-blend-mode: normal;
 }
 
+/* The lens is a quiet field of light that makes the latent grid readable. */
+.cursor-lens { display: none; }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-lens-enabled] .cursor-lens {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle var(--lens-radius) at var(--lens-x) var(--lens-y), color-mix(in srgb, var(--accent) 10%, transparent) 0%, color-mix(in srgb, var(--accent) 4%, transparent) 37%, transparent 72%);
+    transition: opacity 240ms ease, background-size 200ms ease;
+  }
+
+  html.dark[data-lens-enabled] .cursor-lens {
+    background: radial-gradient(circle var(--lens-radius) at var(--lens-x) var(--lens-y), color-mix(in srgb, var(--accent) 16%, transparent) 0%, color-mix(in srgb, var(--accent) 7%, transparent) 37%, transparent 72%);
+  }
+
+  html[data-lens-active] .cursor-lens { opacity: 1; }
+  html[data-lens-focus="theme"] { --lens-radius: 8.5rem; }
+
+  html[data-lens-enabled] .cursor-lens::after {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(color-mix(in srgb, var(--accent) 16%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--accent) 16%, transparent) 1px, transparent 1px);
+    background-size: 3rem 3rem;
+    content: "";
+    mask-image: radial-gradient(circle var(--lens-radius) at var(--lens-x) var(--lens-y), black, transparent 70%);
+  }
+}
+
 @layer components {
   /* Two measures: the document, and the running text inside it. */
   .sheet {
@@ -186,6 +222,11 @@
     letter-spacing: 0.1em;
   }
 
+  .hero-system[data-lens-active] .hero-system-grid { opacity: 0.82; }
+  .hero-system[data-lens-active] .hero-system-path { stroke: color-mix(in srgb, var(--accent) 44%, var(--ink-3)); }
+  .hero-system[data-lens-active] .hero-node { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
+  .hero-system[data-lens-active] .hero-system-key { color: color-mix(in srgb, var(--ink-2) 82%, var(--accent)); }
+
   @keyframes signal-one { 0% { left: 18%; top: 31%; opacity: 0; } 5%, 78% { opacity: 1; } 100% { left: 84%; top: 66%; opacity: 0; } }
 
   .hero-portrait-assembly {
@@ -217,6 +258,22 @@
     border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
     border-radius: 50%;
   }
+
+  .hero-portrait[data-lens-active] .hero-portrait-orbit { border-color: color-mix(in srgb, var(--accent) 72%, var(--rule)); }
+  .hero-portrait[data-lens-active] img { border-color: color-mix(in srgb, var(--accent) 45%, var(--rule-2)); }
+
+  .lens-heading { position: relative; isolation: isolate; }
+  .lens-heading::after {
+    position: absolute;
+    inset: 0;
+    color: color-mix(in srgb, var(--accent) 42%, var(--ink));
+    content: attr(data-lens-copy);
+    opacity: 0;
+    pointer-events: none;
+    mask-image: radial-gradient(circle 12rem at var(--lens-local-x, -30rem) var(--lens-local-y, -30rem), black 0%, transparent 72%);
+    transition: opacity 160ms ease;
+  }
+  .lens-heading[data-lens-active]::after { opacity: 0.74; }
 
   .hero-portrait-node,
   .hero-portrait-signal {
@@ -296,6 +353,12 @@
     background: color-mix(in srgb, var(--paper-2) 82%, var(--paper));
     transform: translateY(-3px);
   }
+
+  .project-card[data-lens-active] {
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--rule-2));
+  }
+
+  .btn[data-lens-active] { border-color: color-mix(in srgb, var(--accent) 64%, var(--rule-2)); }
 
   .project-card:hover::before,
   .project-card:focus-visible::before { transform: scaleX(1); }
