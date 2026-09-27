@@ -56,7 +56,7 @@ export const siteConfig = {
   name: "Suhan Ramani",
   handle: "Elarx.dev",
   role: "Backend and distributed systems",
-  location: "IIT Jodhpur",
+  location: "Bengaluru, India",
   hometown: "Surat, Gujarat",
   email: EMAIL,
   profileImage: "/pfp.jpg",

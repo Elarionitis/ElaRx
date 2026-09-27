@@ -82,6 +82,7 @@ export default function AboutPage() {
                 {[
                   siteConfig.links.github,
                   siteConfig.links.linkedin,
+                  siteConfig.links.x,
                   siteConfig.links.leetcode,
                   siteConfig.links.codeforces,
                 ].map((link) => (

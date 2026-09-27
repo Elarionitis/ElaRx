@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Decision } from "@/lib/data/decisions";
 
@@ -54,7 +54,7 @@ function DecisionRow({
         </span>
       </button>
 
-      <div className={open ? "block" : "hidden"} id={panelId} role="region">
+      <div className={open ? "panel-in block" : "hidden"} id={panelId} role="region">
         {/*
           The domain sits above the body rather than in the 4rem reference
           column — a label like "Distributed systems" is far wider than the
@@ -65,11 +65,11 @@ function DecisionRow({
           <div className="measure">
             <p className="label">{decision.domain}</p>
             <p className="mt-3 text-[0.95rem] leading-[1.6] text-ink-2">
-              <span className="text-ink">Constraint. </span>
+              <span className="text-ink">Design constraint. </span>
               {decision.constraint}
             </p>
             <p className="mt-4 text-[0.95rem] leading-[1.6] text-ink-2">
-              <span className="text-ink">Why this. </span>
+              <span className="text-ink">Design rationale. </span>
               {decision.reasoning}
             </p>
             {decision.outcome ? (
@@ -99,6 +99,9 @@ function DecisionRow({
 export function DecisionList({ items }: { items: Decision[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [domain, setDomain] = useState("All");
+  const domains = useMemo(() => [...new Set(items.map((item) => item.domain))], [items]);
+  const visibleItems = domain === "All" ? items : items.filter((item) => item.domain === domain);
 
   /*
     A decision id is a permalink. Arriving at /#D-04 opens that decision and
@@ -122,13 +125,11 @@ export function DecisionList({ items }: { items: Decision[] }) {
   }, [items]);
 
   const toggle = useCallback((id: string) => {
-    setOpenId((current) => {
-      const next = current === id ? null : id;
-      // replaceState rather than a hash assignment, so this never adds history.
-      window.history.replaceState(null, "", next ? `#${next}` : window.location.pathname);
-      return next;
-    });
-  }, []);
+    const next = openId === id ? null : id;
+    setOpenId(next);
+    // This must live outside the state updater: React can call an updater while rendering.
+    window.history.replaceState(null, "", next ? `#${next}` : window.location.pathname);
+  }, [openId]);
 
   const copy = useCallback((id: string) => {
     const url = `${window.location.origin}${window.location.pathname}#${id}`;
@@ -141,18 +142,47 @@ export function DecisionList({ items }: { items: Decision[] }) {
     );
   }, []);
 
+  const surprise = useCallback(() => {
+    const pool = visibleItems.filter((item) => item.id !== openId);
+    const next = pool[Math.floor(Math.random() * pool.length)] ?? visibleItems[0];
+    if (!next) return;
+    setOpenId(next.id);
+    window.history.replaceState(null, "", `#${next.id}`);
+    window.setTimeout(() => document.getElementById(next.id)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
+  }, [openId, visibleItems]);
+
   return (
-    <ul className="border-b border-rule">
-      {items.map((decision) => (
-        <DecisionRow
-          copied={copiedId === decision.id}
-          decision={decision}
-          key={decision.id}
-          onCopy={() => copy(decision.id)}
-          onToggle={() => toggle(decision.id)}
-          open={openId === decision.id}
-        />
-      ))}
-    </ul>
+    <div>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-rule py-3">
+        <div aria-label="Filter notes by topic" className="flex flex-wrap gap-x-3 gap-y-1" role="group">
+          {["All", ...domains].map((option) => (
+            <button
+              aria-pressed={domain === option}
+              className={`focus-ring text-xs transition-colors ${domain === option ? "text-accent" : "text-ink-3 hover:text-ink"}`}
+              key={option}
+              onClick={() => setDomain(option)}
+              type="button"
+            >
+              {option === "All" ? `All notes · ${items.length}` : option}
+            </button>
+          ))}
+        </div>
+        <button className="focus-ring tlink text-sm text-ink-2" onClick={surprise} type="button">
+          Surprise me <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <ul className="border-b border-rule">
+        {visibleItems.map((decision) => (
+          <DecisionRow
+            copied={copiedId === decision.id}
+            decision={decision}
+            key={decision.id}
+            onCopy={() => copy(decision.id)}
+            onToggle={() => toggle(decision.id)}
+            open={openId === decision.id}
+          />
+        ))}
+      </ul>
+    </div>
   );
 }

@@ -103,6 +103,7 @@ function buildCommandItems(): CommandItem[] {
     { group: "Actions", label: "Download resume", hint: "PDF", href: siteConfig.resumePath },
     { group: "Elsewhere", label: "GitHub", href: siteConfig.links.github.url },
     { group: "Elsewhere", label: "LinkedIn", href: siteConfig.links.linkedin.url },
+    { group: "Elsewhere", label: "X / @SuhanRamani09", href: siteConfig.links.x.url },
     { group: "Elsewhere", label: "LeetCode", href: siteConfig.links.leetcode.url },
     { group: "Elsewhere", label: "Codeforces", href: siteConfig.links.codeforces.url },
   ];

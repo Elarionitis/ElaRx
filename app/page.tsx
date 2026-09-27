@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { DecisionIndex } from "@/components/DecisionIndex";
 import { DecisionList } from "@/components/DecisionList";
 import { NowPlaying } from "@/components/NowPlaying";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
@@ -62,8 +61,7 @@ export default function Home() {
           </p>
 
           <p className="measure mt-9 text-[clamp(1.2rem,2.2vw,1.5rem)] leading-[1.35] tracking-[-0.02em] text-ink">
-            I build backend systems, and I am mostly interested in the point where they stop being correct
-            under load.
+            I build systems that stay calm when the easy version stops working.
           </p>
           <p className="measure mt-5 text-[1.05rem] leading-[1.65] text-ink-2">
             So far that has meant retrieval that had half a second to answer, a ledger where the hard part
@@ -86,10 +84,21 @@ export default function Home() {
             >
               GitHub
             </a>
+            <a
+              className="focus-ring btn btn-line"
+              href={siteConfig.links.x.url}
+              rel="noreferrer"
+              target="_blank"
+            >
+              X / @SuhanRamani09
+            </a>
           </div>
 
-          <div className="measure mt-12">
-            <DecisionIndex decisions={decisions} />
+          <div className="measure mt-12 border-t border-rule pt-5">
+            <p className="label">Working principles</p>
+            <p className="mt-2 text-[0.95rem] leading-[1.6] text-ink-2">
+              Make the constraint visible. Prefer the smaller moving part. Leave behind a trail someone else can follow.
+            </p>
           </div>
         </div>
 
@@ -125,18 +134,6 @@ export default function Home() {
         </aside>
       </section>
 
-      {/*
-        The spine of the site. Not "here are my projects" but "here are the
-        decisions", because that is the thing a résumé cannot show.
-      */}
-      <Clause label={`Decisions · ${decisions.length}`}>
-        <p className="measure -mt-2 mb-8 text-[0.95rem] leading-[1.6] text-ink-2">
-          Every project I have worked on came down to a handful of choices, each with an obvious
-          alternative I did not take. These are those choices. Open one to see the reasoning.
-        </p>
-        <DecisionList items={decisions} />
-      </Clause>
-
       <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">
         <ul className="border-b border-rule">
           {selected.map((project) => (
@@ -156,6 +153,21 @@ export default function Home() {
             </li>
           ))}
         </ul>
+      </Clause>
+
+      <Clause label={`Field notes · ${decisions.length} decisions`}>
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-16">
+          <p className="measure -mt-2 text-[1.05rem] leading-[1.6] text-ink-2">
+            In free time, I turn architecture tradeoffs into short notes: the constraint, the tempting
+            alternative, and the design choice that held up. Pick a system concern or let the archive surprise you.
+          </p>
+          <p className="border-l border-accent pl-4 text-sm leading-[1.6] text-ink-2 lg:mt-0">
+            This is a living part of the site. New projects earn an entry only when there is a decision worth defending.
+          </p>
+        </div>
+        <div className="mt-8">
+          <DecisionList items={decisions} />
+        </div>
       </Clause>
 
       <Clause label="Writing" more="All writing" moreHref="/writing">
