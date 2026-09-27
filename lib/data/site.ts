@@ -55,7 +55,7 @@ export const siteConfig = {
   url: resolveSiteUrl(),
   name: "Suhan Ramani",
   handle: "Elarx.dev",
-  role: "Backend and distributed systems",
+  role: "Software Engineer",
   location: "Bengaluru, India",
   hometown: "Surat, Gujarat",
   email: EMAIL,
@@ -63,8 +63,7 @@ export const siteConfig = {
   resumePath: "/Resume.pdf",
   discordUserId: "1369332498042982564",
 
-  tagline:
-    "CS undergrad at IIT Jodhpur working on distributed systems, Byzantine consensus and retrieval pipelines.",
+  tagline: "Software Engineer building full-stack products, intelligent systems, and things that ship.",
   lead: "I build backend systems that stay fast once they get big.",
   intro: "Distributed systems, retrieval pipelines, and the queries that get slow first.",
   contact: "Open to SDE and AI/ML internships.",
