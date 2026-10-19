@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
+import { ProjectDiagram } from "@/components/ProjectDiagram";
 import type { Project } from "@/lib/data/projects";
 
 function SignEaseVisual() {
@@ -79,30 +80,15 @@ function Visual({ slug }: { slug: string }) {
 }
 
 export function SelectedWork({ projects }: { projects: Project[] }) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const [entered, setEntered] = useState(false);
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
-  useEffect(() => {
-    const node = rootRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        setEntered(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.2 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="selected-work" ref={rootRef}>
+    <div className="selected-work">
       <p className="work-transition label"><span aria-hidden="true" />Systems, in practice</p>
       <div className="selected-work-grid">
         {projects.map((project, index) => (
           <Link
-            className={`project-card project-card-${project.slug} focus-ring ${entered ? "has-entered" : ""} ${activeSlug === project.slug ? "is-active" : ""}`}
+            className={`project-card project-card-${project.slug} focus-ring ${activeSlug === project.slug ? "is-active" : ""}`}
             data-lens-target
             href={`/projects#${project.slug}`}
             key={project.slug}
@@ -126,7 +112,7 @@ export function SelectedWork({ projects }: { projects: Project[] }) {
               <span className="ref">/{String(index + 1).padStart(2, "0")}</span>
               <span className="label">{project.domain}</span>
             </div>
-            <div className="project-visual"><Visual slug={project.slug} /></div>
+            <div className="project-visual"><ProjectDiagram><Visual slug={project.slug} /></ProjectDiagram></div>
             <div className="project-card-copy">
               <h3>{project.name}</h3>
               <p className="project-value">{project.tagline}</p>

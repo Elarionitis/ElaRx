@@ -424,7 +424,8 @@
     pointer-events: none;
   }
 
-  .project-visual-svg { position: relative; z-index: 1; width: 100%; overflow: visible; }
+  .project-diagram { position: relative; z-index: 1; width: 100%; }
+  .project-visual-svg { display: block; width: 100%; overflow: visible; }
   .project-route, .project-axis { stroke: var(--rule-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
   .project-route-accent, .project-forecast { stroke: var(--accent); }
   .project-shape { stroke: var(--ink-2); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -478,14 +479,11 @@
   .project-card-link span { color: var(--accent); font-size: 1.05rem; transition: transform 180ms ease; }
   .project-card:hover .project-card-link span, .project-card:focus-visible .project-card-link span { transform: translateX(4px); }
 
-  .project-card.has-entered .project-signal-signease { animation: project-signease 1.35s ease-in-out both; }
-  .project-card.has-entered .project-signal-spendly { animation: project-spendly 1.45s ease-in-out both; }
-  .project-card.has-entered .project-signal-carequeue { animation: project-carequeue 1.4s ease-in-out both; }
-  .project-card.has-entered .project-signal-aeris { animation: project-aeris 1.5s ease-in-out both; }
-  .project-card.is-active .project-signal-signease { animation: project-signease 1.15s ease-in-out both; }
-  .project-card.is-active .project-signal-spendly { animation: project-spendly 1.2s ease-in-out both; }
-  .project-card.is-active .project-signal-carequeue { animation: project-carequeue 1.18s ease-in-out both; }
-  .project-card.is-active .project-signal-aeris { animation: project-aeris 1.25s ease-in-out both; }
+  .project-diagram.is-running .project-signal-signease { animation: project-signease 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-diagram.is-running .project-signal-spendly { animation: project-spendly 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-diagram.is-running .project-signal-carequeue { animation: project-carequeue 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-diagram.is-running .project-signal-aeris { animation: project-aeris 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-card.is-active .project-diagram.is-running .project-signal { animation-duration: 2s; }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .project-card.is-active { transform: perspective(70rem) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateY(-3px); }
