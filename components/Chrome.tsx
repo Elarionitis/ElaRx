@@ -32,17 +32,14 @@ export function Chrome() {
   const themeButtonRef = useRef<HTMLButtonElement>(null);
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
-  const isArticle = pathname.startsWith("/writing/");
 
   useEffect(() => {
     let frame = 0;
     function update() {
       frame = 0;
       setScrolled(window.scrollY > 12);
-      if (isArticle) {
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
-      }
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
     }
     function onScroll() {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -53,7 +50,7 @@ export function Chrome() {
       window.removeEventListener("scroll", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [isArticle]);
+  }, [pathname]);
 
   function toggleTheme() {
     const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -186,14 +183,11 @@ export function Chrome() {
         </ul>
       </nav>
 
-      {/* Reading progress, articles only. A rule that fills, not a bar that floats. */}
-      {isArticle ? (
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
-          style={{ transform: `scaleX(${progress})` }}
-        />
-      ) : null}
+      <div
+        aria-hidden="true"
+        className="scroll-progress absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
+        style={{ transform: `scaleX(${progress})` }}
+      />
     </header>
   );
 }
