@@ -10,6 +10,24 @@
   down does not belong on the homepage.
 */
 
+export type DecisionDemo =
+  | {
+      kind: "latency-budget";
+      label: string;
+      budget: number;
+    }
+  | {
+      kind: "event-fold";
+      label: string;
+      events: string[];
+      result: string;
+    }
+  | {
+      kind: "baseline-gate";
+      label: string;
+      threshold: string;
+    };
+
 export type Decision = {
   /** Stable reference, printed in the margin. Never renumber a published one. */
   id: string;
@@ -26,6 +44,8 @@ export type Decision = {
   sourceLabel: string;
   /** System-design lens used by the archive filters. */
   domain: string;
+  /** A compact, qualitative proof for decisions whose mechanism benefits from interaction. */
+  demo?: DecisionDemo;
 };
 
 export const decisions: Decision[] = [
@@ -49,6 +69,11 @@ export const decisions: Decision[] = [
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Real-time systems",
+    demo: {
+      kind: "latency-budget",
+      label: "Latency budget",
+      budget: 100,
+    },
   },
   {
     id: "D-03",
@@ -71,6 +96,12 @@ export const decisions: Decision[] = [
     source: "spendly",
     sourceLabel: "Spendly",
     domain: "Distributed state",
+    demo: {
+      kind: "event-fold",
+      label: "Fold an event log",
+      events: ["Expense recorded", "Payment recorded", "Settlement recorded"],
+      result: "Net positions",
+    },
   },
   {
     id: "D-05",
@@ -169,6 +200,11 @@ export const decisions: Decision[] = [
     source: "aeris",
     sourceLabel: "Aeris",
     domain: "ML platform",
+    demo: {
+      kind: "baseline-gate",
+      label: "Compare to persistence",
+      threshold: "Forecast must beat persistence by at least 10%.",
+    },
   },
   {
     id: "D-14",

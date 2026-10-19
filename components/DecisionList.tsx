@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { DecisionDemo } from "@/components/DecisionDemo";
 import type { Decision } from "@/lib/data/decisions";
 
 /*
@@ -42,28 +43,31 @@ function DecisionRow({
         <span aria-hidden="true" className="thinking-toggle">+</span>
       </button>
 
-      <div className={open ? "thinking-panel panel-in" : "hidden"} id={panelId} role="region">
-        <div className="thinking-flow">
-          <div className="thinking-step">
-            <p className="label">Constraint</p>
-            <p>{decision.constraint}</p>
+      <div aria-hidden={!open} className={`thinking-panel-frame ${open ? "is-open" : ""}`} id={panelId} inert={!open} role="region">
+        <div className="thinking-panel">
+          <div className="thinking-flow">
+            <div className="thinking-step">
+              <p className="label">Constraint</p>
+              <p>{decision.constraint}</p>
+            </div>
+            <div className="thinking-step">
+              <p className="label">Decision</p>
+              <p>{decision.reasoning}</p>
+            </div>
+            <div className="thinking-step thinking-consequence">
+              <p className="label">Consequence</p>
+              <p>{decision.outcome ?? "Implementation detail documented in the linked project."}</p>
+            </div>
           </div>
-          <div className="thinking-step">
-            <p className="label">Decision</p>
-            <p>{decision.reasoning}</p>
+          {decision.demo ? <DecisionDemo demo={decision.demo} /> : null}
+          <div className="thinking-links">
+            <Link className="focus-ring tlink" href={`/projects#${decision.source}`}>
+              See {decision.sourceLabel}
+            </Link>
+            <button className="focus-ring" onClick={onCopy} type="button">
+              {copied ? "Link copied" : `Copy ${decision.id}`}
+            </button>
           </div>
-          <div className="thinking-step thinking-consequence">
-            <p className="label">Consequence</p>
-            <p>{decision.outcome ?? "Implementation detail documented in the linked project."}</p>
-          </div>
-        </div>
-        <div className="thinking-links">
-          <Link className="focus-ring tlink" href={`/projects#${decision.source}`}>
-            See {decision.sourceLabel}
-          </Link>
-          <button className="focus-ring" onClick={onCopy} type="button">
-            {copied ? "Link copied" : `Copy ${decision.id}`}
-          </button>
         </div>
       </div>
     </li>
@@ -77,36 +81,59 @@ export function DecisionList({ items }: { items: Decision[] }) {
   const domains = useMemo(() => [...new Set(items.map((item) => item.domain))], [items]);
   const visibleItems = domain === "All" ? items : items.filter((item) => item.domain === domain);
 
-  /*
-    A decision id is a permalink. Arriving at /#D-04 opens that decision and
-    scrolls to it, and opening one rewrites the hash so the address bar always
-    points at what is on screen.
-  */
-  useEffect(() => {
-    function openFromHash() {
-      const hash = window.location.hash.replace("#", "");
-      if (!hash || !items.some((item) => item.id === hash)) return;
-      setOpenId(hash);
-      document.getElementById(hash)?.scrollIntoView({ block: "start" });
-    }
+  const applyUrlState = useCallback((scroll: boolean) => {
+    const params = new URLSearchParams(window.location.search);
+    const requestedDomain = params.get("topic");
+    const hash = window.location.hash.replace("#", "");
+    const linkedDecision = items.find((item) => item.id === hash);
+    const nextOpenId = linkedDecision?.id ?? null;
+    // A permalink always wins over a stale or manually edited filter, so the
+    // requested decision cannot be hidden by the list that is meant to show it.
+    const nextDomain = linkedDecision?.domain
+      ?? (requestedDomain && domains.includes(requestedDomain) ? requestedDomain : "All");
 
-    const frame = window.requestAnimationFrame(openFromHash);
-    window.addEventListener("hashchange", openFromHash);
+    setDomain(nextDomain);
+    setOpenId(nextOpenId);
+    if (nextOpenId && scroll) {
+      window.requestAnimationFrame(() => document.getElementById(nextOpenId)?.scrollIntoView({ block: "start" }));
+    }
+  }, [domains, items]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => applyUrlState(true));
+    const onNavigation = () => applyUrlState(true);
+    window.addEventListener("hashchange", onNavigation);
+    window.addEventListener("popstate", onNavigation);
     return () => {
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", openFromHash);
+      window.removeEventListener("hashchange", onNavigation);
+      window.removeEventListener("popstate", onNavigation);
     };
-  }, [items]);
+  }, [applyUrlState]);
+
+  const updateUrl = useCallback((nextDomain: string, nextOpenId: string | null, mode: "push" | "replace" = "push") => {
+    const url = new URL(window.location.href);
+    if (nextDomain === "All") url.searchParams.delete("topic");
+    else url.searchParams.set("topic", nextDomain);
+    url.hash = nextOpenId ?? "";
+    window.history[`${mode}State`](null, "", `${url.pathname}${url.search}${url.hash}`);
+  }, []);
 
   const toggle = useCallback((id: string) => {
     const next = openId === id ? null : id;
     setOpenId(next);
-    // This must live outside the state updater: React can call an updater while rendering.
-    window.history.replaceState(null, "", next ? `#${next}` : window.location.pathname);
-  }, [openId]);
+    updateUrl(domain, next);
+  }, [domain, openId, updateUrl]);
+
+  const changeDomain = useCallback((nextDomain: string) => {
+    const nextOpenId = nextDomain === "All" || items.find((item) => item.id === openId)?.domain === nextDomain ? openId : null;
+    setDomain(nextDomain);
+    setOpenId(nextOpenId);
+    updateUrl(nextDomain, nextOpenId);
+  }, [items, openId, updateUrl]);
 
   const copy = useCallback((id: string) => {
-    const url = `${window.location.origin}${window.location.pathname}#${id}`;
+    const url = `${window.location.origin}${window.location.pathname}${window.location.search}#${id}`;
     navigator.clipboard?.writeText(url).then(
       () => {
         setCopiedId(id);
@@ -121,9 +148,9 @@ export function DecisionList({ items }: { items: Decision[] }) {
     const next = pool[Math.floor(Math.random() * pool.length)] ?? visibleItems[0];
     if (!next) return;
     setOpenId(next.id);
-    window.history.replaceState(null, "", `#${next.id}`);
+    updateUrl(domain, next.id);
     window.setTimeout(() => document.getElementById(next.id)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
-  }, [openId, visibleItems]);
+  }, [domain, openId, updateUrl, visibleItems]);
 
   return (
     <div>
@@ -134,7 +161,7 @@ export function DecisionList({ items }: { items: Decision[] }) {
               aria-pressed={domain === option}
               className={`focus-ring ${domain === option ? "is-active" : ""}`}
               key={option}
-              onClick={() => setDomain(option)}
+              onClick={() => changeDomain(option)}
               type="button"
             >{option === "All" ? `All decisions · ${items.length}` : option}</button>
           ))}
