@@ -366,11 +366,23 @@
     transition: transform 240ms ease;
   }
 
+  .project-card::after {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(14rem circle at var(--spot-x, 50%) var(--spot-y, 50%), color-mix(in srgb, var(--accent) 11%, transparent), transparent 66%);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
   .project-card:hover {
     border-color: color-mix(in srgb, var(--accent) 55%, var(--rule-2));
     background: color-mix(in srgb, var(--paper-2) 82%, var(--paper));
     transform: translateY(-3px);
   }
+
+  .project-card.is-active::after { opacity: 1; }
 
   .project-card[data-lens-active] {
     border-color: color-mix(in srgb, var(--accent) 42%, var(--rule-2));
@@ -463,10 +475,18 @@
   .project-card-link span { color: var(--accent); font-size: 1.05rem; transition: transform 180ms ease; }
   .project-card:hover .project-card-link span, .project-card:focus-visible .project-card-link span { transform: translateX(4px); }
 
-  .project-signal-signease { animation: project-signease 4.8s ease-in-out infinite; }
-  .project-signal-spendly { animation: project-spendly 5.3s ease-in-out infinite; }
-  .project-signal-carequeue { animation: project-carequeue 5s ease-in-out infinite; }
-  .project-signal-aeris { animation: project-aeris 5.6s ease-in-out infinite; }
+  .project-card.has-entered .project-signal-signease { animation: project-signease 1.35s ease-in-out both; }
+  .project-card.has-entered .project-signal-spendly { animation: project-spendly 1.45s ease-in-out both; }
+  .project-card.has-entered .project-signal-carequeue { animation: project-carequeue 1.4s ease-in-out both; }
+  .project-card.has-entered .project-signal-aeris { animation: project-aeris 1.5s ease-in-out both; }
+  .project-card.is-active .project-signal-signease { animation: project-signease 1.15s ease-in-out both; }
+  .project-card.is-active .project-signal-spendly { animation: project-spendly 1.2s ease-in-out both; }
+  .project-card.is-active .project-signal-carequeue { animation: project-carequeue 1.18s ease-in-out both; }
+  .project-card.is-active .project-signal-aeris { animation: project-aeris 1.25s ease-in-out both; }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project-card.is-active { transform: perspective(70rem) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateY(-3px); }
+  }
 
   @keyframes project-signease { 0% { cx: 61px; opacity: 0; } 9%, 78% { opacity: 1; } 100% { cx: 330px; opacity: 0; } }
   @keyframes project-spendly { 0% { cx: 71px; cy: 55px; opacity: 0; } 10%, 76% { opacity: 1; } 55% { cx: 178px; cy: 90px; } 100% { cx: 364px; cy: 90px; opacity: 0; } }
@@ -744,6 +764,8 @@
     .thinking-panel-frame, .thinking-panel, .decision-budget-fill, .decision-chart-forecast, .magnetic-link { transition: none; }
     .hero-reveal { opacity: 1; transform: none; }
     .hero-stage.is-revealed .hero-reveal { animation: none; }
+    .project-card { transition: none; }
+    .project-card .project-signal { animation: none; opacity: 0.8; }
   }
 
   /* Text link with an underline that thickens rather than appears. */

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 import type { Project } from "@/lib/data/projects";
 
@@ -76,12 +79,49 @@ function Visual({ slug }: { slug: string }) {
 }
 
 export function SelectedWork({ projects }: { projects: Project[] }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [entered, setEntered] = useState(false);
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    const node = rootRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        setEntered(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.2 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="selected-work">
+    <div className="selected-work" ref={rootRef}>
       <p className="work-transition label"><span aria-hidden="true" />Systems, in practice</p>
       <div className="selected-work-grid">
         {projects.map((project, index) => (
-          <Link className={`project-card project-card-${project.slug} focus-ring`} data-lens-target href={`/projects#${project.slug}`} key={project.slug}>
+          <Link
+            className={`project-card project-card-${project.slug} focus-ring ${entered ? "has-entered" : ""} ${activeSlug === project.slug ? "is-active" : ""}`}
+            data-lens-target
+            href={`/projects#${project.slug}`}
+            key={project.slug}
+            onFocus={() => setActiveSlug(project.slug)}
+            onMouseEnter={() => setActiveSlug(project.slug)}
+            onMouseLeave={() => setActiveSlug(null)}
+            onPointerMove={(event) => {
+              if (event.pointerType !== "mouse") return;
+              const bounds = event.currentTarget.getBoundingClientRect();
+              event.currentTarget.style.setProperty("--tilt-x", `${((event.clientX - bounds.left) / bounds.width - 0.5) * 3}deg`);
+              event.currentTarget.style.setProperty("--tilt-y", `${((event.clientY - bounds.top) / bounds.height - 0.5) * -3}deg`);
+              event.currentTarget.style.setProperty("--spot-x", `${((event.clientX - bounds.left) / bounds.width) * 100}%`);
+              event.currentTarget.style.setProperty("--spot-y", `${((event.clientY - bounds.top) / bounds.height) * 100}%`);
+            }}
+            onPointerLeave={(event) => {
+              event.currentTarget.style.setProperty("--tilt-x", "0deg");
+              event.currentTarget.style.setProperty("--tilt-y", "0deg");
+            }}
+          >
             <div className="project-card-top">
               <span className="ref">/{String(index + 1).padStart(2, "0")}</span>
               <span className="label">{project.domain}</span>
