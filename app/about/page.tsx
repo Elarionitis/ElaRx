@@ -126,6 +126,19 @@ export default function AboutPage() {
       </section>
 
       <section className="pt-16">
+        <h2 className="clause label">Why I build</h2>
+        <div className="mt-8 grid gap-6 border border-rule p-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:p-7">
+          <div aria-label="Campus photo placeholder" className="grid min-h-40 place-items-center border border-dashed border-rule-2 bg-paper-2 p-4 text-center">
+            <span className="label">Campus photo<br />placeholder</span>
+          </div>
+          <div className="measure self-center text-[1rem] leading-[1.7] text-ink-2">
+            <p className="text-ink">I like building because it turns a vague, shared frustration into something another person can actually use.</p>
+            <p className="mt-4">The best part is usually the moment a rough idea stops being a conversation and becomes a tool: a person tries it, something unexpected happens, and the next useful question appears.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="pt-16">
         <h2 className="clause label">Education</h2>
         <ul className="mt-8 border-b border-rule">
           {siteConfig.education.map((item) => (

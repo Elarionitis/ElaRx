@@ -12,6 +12,7 @@ import { siteConfig } from "@/lib/data/site";
 const routes = [
   { label: "Work", href: "/projects" },
   { label: "Thinking", href: "/#decisions" },
+  { label: "Writing", href: "/writing" },
   { label: "About", href: "/about" },
 ];
 

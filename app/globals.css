@@ -161,6 +161,8 @@
     max-width: 34rem;
   }
 
+  .writing-empty { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-wash) 42%, var(--paper-2)), var(--paper-2)); }
+
   .hero-system {
     position: relative;
     isolation: isolate;

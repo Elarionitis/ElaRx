@@ -136,11 +136,13 @@ export default function Home() {
         </div>
       </Clause>
 
-      <Clause label="Writing" more="All writing" moreHref="/writing">
+      <Clause label="Latest writing" more="All writing" moreHref="/writing">
         {posts.length === 0 ? (
-          <p className="measure text-[0.95rem] text-ink-2">
-            Nothing published yet. The first few will be write-ups of the decisions above.
-          </p>
+          <div className="writing-empty measure border border-rule bg-paper-2 p-5">
+            <p className="label text-accent">In the notebook</p>
+            <p className="mt-2 text-[1.05rem] leading-[1.45] text-ink">The first field notes are being prepared.</p>
+            <p className="mt-2 text-[0.92rem] leading-[1.6] text-ink-2">They will expand the decisions above: what broke, what changed, and why the smaller system won.</p>
+          </div>
         ) : (
           <ul className="border-b border-rule">
             {posts.map((post) => (

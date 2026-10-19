@@ -25,7 +25,7 @@ export type Achievement = {
   Canonical origin. Preview deployments describe themselves rather than claim
   the production domain; NEXT_PUBLIC_SITE_URL overrides everything.
 */
-const CANONICAL_URL = "https://elarx.dev";
+const DEFAULT_SITE_URL = "https://elarx.dev";
 
 /*
   The contact address, declared once. The mailto link, the JSON-LD, the footer
@@ -38,7 +38,7 @@ const CANONICAL_URL = "https://elarx.dev";
 const EMAIL = "suhanramani@gmail.com";
 
 function resolveSiteUrl(): string {
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  const explicit = process.env.SITE_URL;
   if (explicit) return explicit.replace(/\/$/, "");
 
   if (process.env.NEXT_PUBLIC_VERCEL_ENV && process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
@@ -48,7 +48,7 @@ function resolveSiteUrl(): string {
 
   if (process.env.NODE_ENV === "development") return "http://localhost:3000";
 
-  return CANONICAL_URL;
+  return DEFAULT_SITE_URL;
 }
 
 export const siteConfig = {
