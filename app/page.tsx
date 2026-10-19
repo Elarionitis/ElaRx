@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
+import { HeroSignalField } from "@/components/HeroSignalField";
 import { HeroSystem } from "@/components/HeroSystem";
+import { MagneticLink } from "@/components/MagneticLink";
 import { SelectedWork } from "@/components/SelectedWork";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
@@ -42,53 +44,48 @@ export default function Home() {
 
   return (
     <div className="sheet pb-4">
+      <HeroSignalField>
       <section className="pt-14 sm:pt-20 lg:pt-24">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.85fr)_minmax(13.75rem,1fr)] lg:items-center lg:gap-12">
           <div className="max-w-4xl">
-            <p className="label flex items-center gap-3">
+            <p className="hero-reveal hero-reveal-1 label flex items-center gap-3">
               <span className="inline-block size-1.5 rounded-full bg-accent" />
               {siteConfig.location}
             </p>
-            <p className="mt-6 text-[clamp(2rem,3.5vw,2.75rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
+            <p className="hero-reveal hero-reveal-2 mt-6 text-[clamp(2rem,3.5vw,2.75rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
               {siteConfig.name}
             </p>
-            <h1 className="lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink" data-lens-copy="Software Engineer" data-lens-target>
+            <h1 className="hero-reveal hero-reveal-3 lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink" data-lens-copy="Software Engineer" data-lens-target>
               Software Engineer
             </h1>
-            <p className="mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
+            <p className="hero-reveal hero-reveal-4 mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
               Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
             </p>
-            <p className="label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
-            <p className="measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
+            <p className="hero-reveal hero-reveal-5 label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
+            <p className="hero-reveal hero-reveal-5 measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
               I care about the moment an idea becomes useful: the interface people touch, the intelligence behind it,
               and the engineering that keeps it working when reality arrives.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-2">
-              <Link className="focus-ring btn btn-solid" data-lens-target href="/resume">
-                Resume
-              </Link>
-              <a className="focus-ring btn btn-line" data-lens-target href={`mailto:${siteConfig.email}`}>
-                Email
-              </a>
-              <a
+            <div className="hero-reveal hero-reveal-6 mt-8 flex flex-wrap gap-2">
+              <MagneticLink className="focus-ring btn btn-solid" href="/resume">Resume</MagneticLink>
+              <MagneticLink className="focus-ring btn btn-line" href={`mailto:${siteConfig.email}`}>Email</MagneticLink>
+              <MagneticLink
                 className="focus-ring btn btn-line"
-                data-lens-target
                 href={siteConfig.links.github.url}
                 rel="noreferrer"
                 target="_blank"
               >
                 GitHub
-              </a>
-              <a
+              </MagneticLink>
+              <MagneticLink
                 className="focus-ring btn btn-line"
-                data-lens-target
                 href={siteConfig.links.x.url}
                 rel="noreferrer"
                 target="_blank"
               >
                 X / @SuhanRamani09
-              </a>
+              </MagneticLink>
             </div>
           </div>
           <aside className="hero-portrait-assembly">
@@ -116,6 +113,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </HeroSignalField>
 
       <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">
         <SelectedWork projects={selected} />
