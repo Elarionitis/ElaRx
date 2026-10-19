@@ -12,7 +12,7 @@ export type CommandItem = {
   keywords?: string;
   href?: string;
   /** Non-navigation commands: copy, theme, download. */
-  action?: "copy-email" | "toggle-theme";
+  action?: "copy-email" | "toggle-theme" | "surprise";
 };
 
 export const OPEN_PALETTE_EVENT = "open-command-palette";
@@ -68,6 +68,11 @@ export function CommandPalette({ email, items }: { email: string; items: Command
       }
       if (item.action === "toggle-theme") {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
+        close();
+        return;
+      }
+      if (item.action === "surprise") {
+        router.push(item.href ?? "/");
         close();
         return;
       }
