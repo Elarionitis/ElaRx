@@ -505,8 +505,8 @@
 
   @media (min-width: 64rem) {
     .hero-portrait-assembly { justify-content: flex-end; }
-    .hero-portrait { width: 12.5rem; height: 12.5rem; }
-    .hero-portrait-signal { transform-origin: 0.12rem 6.68rem; }
+    .hero-portrait { width: 16rem; height: 16rem; }
+    .hero-portrait-signal { transform-origin: 0.12rem 8.42rem; }
   }
 
   .thinking-intro {

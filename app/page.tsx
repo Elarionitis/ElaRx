@@ -46,7 +46,7 @@ export default function Home() {
     <div className="sheet pb-4">
       <HeroSignalField>
       <section className="pt-14 sm:pt-20 lg:pt-24">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.85fr)_minmax(13.75rem,1fr)] lg:items-center lg:gap-12">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.85fr)_minmax(13.75rem,1fr)] lg:items-start lg:gap-12">
           <div className="max-w-4xl">
             <p className="hero-reveal hero-reveal-1 label flex items-center gap-3">
               <span className="inline-block size-1.5 rounded-full bg-accent" />
@@ -88,9 +88,9 @@ export default function Home() {
               </MagneticLink>
             </div>
           </div>
-          <aside className="hero-portrait-assembly">
+          <aside className="hero-portrait-assembly lg:pt-24">
             <div className="hero-portrait" data-lens-target>
-              <Image alt={siteConfig.name} height={400} priority sizes="(min-width: 1024px) 200px, 128px" src={siteConfig.profileImage} width={400} />
+              <Image alt={siteConfig.name} height={400} priority sizes="(min-width: 1024px) 256px, 128px" src={siteConfig.profileImage} width={400} />
               <span aria-hidden="true" className="hero-portrait-orbit" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-one" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-two" />
