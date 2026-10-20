@@ -269,7 +269,10 @@
     height: 100%;
     border: 1px solid var(--rule-2);
     border-radius: 50%;
+    clip-path: circle(50%);
+    filter: brightness(1.08) contrast(1.08) saturate(1.08);
     object-fit: cover;
+    transform: scale(1.08);
   }
 
   .hero-portrait-orbit {

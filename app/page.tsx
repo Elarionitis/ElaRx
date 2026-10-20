@@ -90,7 +90,7 @@ export default function Home() {
           </div>
           <aside className="hero-portrait-assembly lg:pt-24">
             <div className="hero-portrait" data-lens-target>
-              <Image alt={siteConfig.name} height={400} priority sizes="(min-width: 1024px) 256px, 128px" src={siteConfig.profileImage} width={400} />
+              <Image alt={siteConfig.name} height={400} priority quality={90} sizes="(min-width: 1024px) 256px, 128px" src={siteConfig.profileImage} width={400} />
               <span aria-hidden="true" className="hero-portrait-orbit" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-one" />
               <span aria-hidden="true" className="hero-portrait-node hero-portrait-node-two" />
