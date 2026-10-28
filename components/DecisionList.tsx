@@ -15,12 +15,14 @@ import type { Decision } from "@/lib/data/decisions";
 function DecisionRow({
   copied,
   decision,
+  index,
   onCopy,
   onToggle,
   open,
 }: {
   copied: boolean;
   decision: Decision;
+  index: number;
   onCopy: () => void;
   onToggle: () => void;
   open: boolean;
@@ -28,7 +30,14 @@ function DecisionRow({
   const panelId = `${decision.id}-body`;
 
   return (
-    <li className={`thinking-row scroll-mt-24 ${open ? "is-open" : ""}`} id={decision.id}>
+    <li
+      className={`thinking-row scroll-mt-24 ${open ? "is-open" : ""}`}
+      data-reveal
+      id={decision.id}
+      // Only the first few rows stagger. Fifteen cumulative delays would make
+      // the bottom of the list arrive a second and a half after the top.
+      style={{ "--reveal-delay": `${Math.min(index, 4) * 60}ms` } as React.CSSProperties}
+    >
       <button
         aria-controls={panelId}
         aria-expanded={open}
@@ -95,7 +104,12 @@ export function DecisionList({ items }: { items: Decision[] }) {
     setDomain(nextDomain);
     setOpenId(nextOpenId);
     if (nextOpenId && scroll) {
-      window.requestAnimationFrame(() => document.getElementById(nextOpenId)?.scrollIntoView({ block: "start" }));
+      // Instant, not smooth. A shared decision link opens at the top of the
+      // document, and the inherited smooth scroll made arriving at D-12 mean
+      // watching two seconds of the page you did not ask for.
+      window.requestAnimationFrame(() =>
+        document.getElementById(nextOpenId)?.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" }),
+      );
     }
   }, [domains, items]);
 
@@ -171,10 +185,11 @@ export function DecisionList({ items }: { items: Decision[] }) {
         </button>
       </div>
       <ul className="thinking-list">
-        {visibleItems.map((decision) => (
+        {visibleItems.map((decision, index) => (
           <DecisionRow
             copied={copiedId === decision.id}
             decision={decision}
+            index={index}
             key={decision.id}
             onCopy={() => copy(decision.id)}
             onToggle={() => toggle(decision.id)}

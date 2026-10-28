@@ -87,11 +87,22 @@ export function SelectedWork({ projects }: { projects: Project[] }) {
       <p className="work-transition label"><span aria-hidden="true" />Systems, in practice</p>
       <div className="selected-work-grid">
         {projects.map((project, index) => (
+          /*
+            The reveal lives on a shell rather than on the card. Both want to
+            own `transform`, and the finished reveal state is the more
+            specific rule — put them on one element and the card loses its
+            hover lift the moment it has been seen.
+          */
+          <div
+            className="project-card-shell"
+            data-reveal
+            key={project.slug}
+            style={{ "--reveal-delay": `${index * 90}ms` } as React.CSSProperties}
+          >
           <Link
             className={`project-card project-card-${project.slug} focus-ring ${activeSlug === project.slug ? "is-active" : ""}`}
             data-lens-target
             href={`/projects#${project.slug}`}
-            key={project.slug}
             onFocus={() => setActiveSlug(project.slug)}
             onMouseEnter={() => setActiveSlug(project.slug)}
             onMouseLeave={() => setActiveSlug(null)}
@@ -108,20 +119,30 @@ export function SelectedWork({ projects }: { projects: Project[] }) {
               event.currentTarget.style.setProperty("--tilt-y", "0deg");
             }}
           >
+            <span aria-hidden="true" className="project-frame" />
             <div className="project-card-top">
               <span className="ref">/{String(index + 1).padStart(2, "0")}</span>
-              <span className="label">{project.domain}</span>
+              <span className="label project-status" data-status={project.status}>
+                {project.domain}
+              </span>
             </div>
             <div className="project-visual"><ProjectDiagram><Visual slug={project.slug} /></ProjectDiagram></div>
             <div className="project-card-copy">
               <h3>{project.name}</h3>
               <p className="project-value">{project.tagline}</p>
+              {project.results?.[0] ? (
+                <p className="project-metric">
+                  <span className="num">{project.results[0].value}</span>
+                  {project.results[0].label}
+                </p>
+              ) : null}
               <ul aria-label={`${project.name} technologies`} className="project-stack">
                 {project.stack.slice(0, 4).map((item) => <li key={item}>{item}</li>)}
               </ul>
             </div>
             <span className="project-card-link">Explore the system <span aria-hidden="true">→</span></span>
           </Link>
+          </div>
         ))}
       </div>
     </div>

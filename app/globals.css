@@ -545,9 +545,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .project-card-shell { display: grid; }
+
   .project-card {
     position: relative;
     display: flex;
+    height: 100%;
     min-height: 30rem;
     flex-direction: column;
     overflow: hidden;
@@ -597,12 +600,103 @@
   .project-card:hover::before,
   .project-card:focus-visible::before { transform: scaleX(1); }
 
+  /*
+    Corner brackets, the way an instrument marks the channel it is reading.
+    They are drawn on a dedicated span because both pseudo-elements of the
+    card itself are already spoken for — the top rule and the spotlight.
+  */
+  .project-frame {
+    position: absolute;
+    inset: 0.55rem;
+    pointer-events: none;
+  }
+
+  .project-frame::before,
+  .project-frame::after {
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 0 solid var(--accent);
+    content: "";
+    opacity: 0;
+    transition: opacity 260ms var(--ease-out), transform 420ms var(--ease-out);
+  }
+
+  .project-frame::before {
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    transform: translate(-0.35rem, 0.35rem);
+  }
+
+  .project-frame::after {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    transform: translate(0.35rem, -0.35rem);
+  }
+
+  .project-card:hover .project-frame::before,
+  .project-card:hover .project-frame::after,
+  .project-card:focus-visible .project-frame::before,
+  .project-card:focus-visible .project-frame::after {
+    opacity: 1;
+    transform: none;
+  }
+
   .project-card-top {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
   }
+
+  /* A shipped thing and a sketch should not look identical on the shelf. */
+  .project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .project-status::before {
+    width: 0.3rem;
+    height: 0.3rem;
+    border: 1px solid var(--ink-3);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .project-status[data-status="live"]::before { border-color: var(--accent); background: var(--accent); }
+  .project-status[data-status="source"]::before { border-color: var(--accent-2); }
+
+  /*
+    The one figure the project is willing to be judged on. Projects without
+    results simply do not render a line here.
+  */
+  .project-metric {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    max-width: 28rem;
+    margin-top: 0.9rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-3);
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .project-metric .num {
+    flex: none;
+    color: var(--ink);
+    font-size: 1.05rem;
+    letter-spacing: -0.03em;
+    transition: color 180ms ease;
+  }
+
+  .project-card:hover .project-metric .num { color: var(--accent); }
 
   .project-visual {
     position: relative;
@@ -752,8 +846,32 @@
   .thinking-random { flex: none; }
 
   .thinking-list { border-bottom: 1px solid var(--rule-2); }
-  .thinking-row { border-top: 1px solid var(--rule); }
+  .thinking-row { position: relative; border-top: 1px solid var(--rule); transition: background-color 220ms ease; }
   .thinking-row:first-child { border-top: 0; }
+  .thinking-row:hover { background: color-mix(in srgb, var(--accent-wash) 26%, transparent); }
+
+  /*
+    A rail in the margin marks the row the pointer is on and stays for the one
+    that is open, so a long list always says where you are without needing a
+    heavier highlight inside the text column.
+  */
+  .thinking-row::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -0.75rem;
+    width: 1px;
+    background: var(--accent);
+    content: "";
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 320ms var(--ease-out);
+  }
+
+  .thinking-row:hover::before,
+  .thinking-row.is-open::before { transform: scaleY(1); }
+
+  .thinking-row:hover .ref { color: var(--accent); }
 
   .thinking-trigger {
     display: grid;
@@ -776,10 +894,33 @@
   }
 
   .thinking-source { display: none; }
-  .thinking-toggle { grid-column: 3; grid-row: 1 / span 2; justify-self: end; color: var(--ink-3); font-size: 1.2rem; line-height: 1; transition: color 160ms ease, transform 180ms ease; }
+  /* The toggle is a control, so it is given the outline of one. */
+  .thinking-toggle {
+    display: grid;
+    width: 1.55rem;
+    height: 1.55rem;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    place-items: center;
+    justify-self: end;
+    border: 1px solid var(--rule-2);
+    border-radius: 50%;
+    color: var(--ink-3);
+    font-size: 0.95rem;
+    line-height: 1;
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, transform 320ms var(--ease-out);
+  }
+
   .thinking-row:hover .thinking-title, .thinking-row.is-open .thinking-title { color: var(--accent); }
   .thinking-row:hover .thinking-title { transform: translateX(3px); }
-  .thinking-row.is-open .thinking-toggle { color: var(--accent); transform: rotate(45deg); }
+  .thinking-row:hover .thinking-toggle { border-color: var(--accent); color: var(--accent); }
+
+  .thinking-row.is-open .thinking-toggle {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
+    transform: rotate(135deg);
+  }
 
   .thinking-panel-frame {
     display: grid;
