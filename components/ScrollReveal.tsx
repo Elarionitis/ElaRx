@@ -6,11 +6,15 @@ import { useEffect } from "react";
 /*
   One observer for every `data-reveal` element on the page.
 
-  The hidden state is applied by CSS only while `html[data-reveal-ready]` is
-  set, and that attribute is written by the blocking script in the layout head
-  — before first paint, and never under reduced motion. Without JavaScript the
-  attribute never appears and every section renders at full opacity, so a
-  reveal that will not arrive can never swallow the content.
+  This component owns the decision, not the inline script in the layout. The
+  script is only an optimisation: it sets `data-reveal-ready` before first
+  paint so nothing flashes in and back out. If it has not run yet — or at all —
+  this effect sets the attribute itself.
+
+  The distinction matters more than it looks. An earlier version read the
+  attribute to decide whether to run, which meant that any ordering where the
+  effect went first left every observer unarmed and every section below the
+  fold hidden for good. A reveal must fail towards showing the content.
 
   A MutationObserver picks up rows that appear later: filtered decisions, an
   opened panel, anything a client component swaps in after the first paint.
@@ -19,7 +23,17 @@ export function ScrollReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!document.documentElement.dataset.revealReady) return;
+    const root = document.documentElement;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // No animation wanted, or no way to tell when an element arrives: drop the
+    // hidden state entirely and leave the document as written.
+    if (reduced || typeof IntersectionObserver === "undefined") {
+      delete root.dataset.revealReady;
+      return;
+    }
+
+    root.dataset.revealReady = "true";
 
     const observer = new IntersectionObserver(
       (entries) => {

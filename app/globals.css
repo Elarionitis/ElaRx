@@ -1382,11 +1382,18 @@
     border: 1px solid var(--ink);
     border-radius: var(--radius-sheet);
     background: var(--paper);
+    /* It arrives from just above its resting place, not from nowhere. */
+    animation: palette-in 220ms var(--ease-out) both;
   }
 
   @keyframes fade {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+
+  @keyframes palette-in {
+    from { opacity: 0; transform: translateY(-0.5rem) scale(0.985); }
+    to { opacity: 1; transform: none; }
   }
 }
 

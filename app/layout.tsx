@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome } from "@/components/Chrome";
@@ -118,21 +119,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       suppressHydrationWarning
     >
-      <head>
+      <body className="min-h-screen bg-paper text-ink antialiased">
         {/*
           Arms the reveal animations before first paint. Gating them on an
           attribute set here means a visitor who blocks scripts, or who asked
           for reduced motion, gets the document at full opacity rather than a
           page of sections waiting for an observer that will never run.
         */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              'try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.revealReady="true"}catch(e){}',
-          }}
-        />
-      </head>
-      <body className="min-h-screen bg-paper text-ink antialiased">
+        <Script id="reveal-gate" strategy="beforeInteractive">
+          {'try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.revealReady="true"}catch(e){}'}
+        </Script>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
           <CursorLens />
           <ScrollReveal />
