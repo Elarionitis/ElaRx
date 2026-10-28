@@ -81,7 +81,7 @@ export function Chrome() {
     <header
       className={`sticky top-0 z-40 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
         scrolled
-          ? "border-rule-2 bg-paper shadow-[0_8px_28px_-24px_color-mix(in_srgb,var(--ink)_60%,transparent)]"
+          ? "border-rule-2 bg-paper/80 shadow-[0_8px_28px_-24px_color-mix(in_srgb,var(--ink)_60%,transparent)] backdrop-blur-xl"
           : "border-transparent bg-paper"
       }`}
     >
@@ -102,7 +102,7 @@ export function Chrome() {
                 <li key={route.href}>
                   <Link
                     aria-current={active(pathname, route.href) ? "page" : undefined}
-                    className={`focus-ring relative block py-1 text-sm transition-colors hover:text-ink ${
+                    className={`focus-ring group relative block py-1 text-sm transition-colors hover:text-ink ${
                       active(pathname, route.href) ? "text-ink" : "text-ink-2"
                     }`}
                     href={route.href}
@@ -110,7 +110,7 @@ export function Chrome() {
                     {route.label}
                     <span
                       aria-hidden="true"
-                      className={`absolute -bottom-px left-0 h-px w-full bg-accent transition-transform duration-150 ${
+                      className={`absolute -bottom-px left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 ${
                         active(pathname, route.href) ? "scale-x-100" : "scale-x-0"
                       }`}
                     />
@@ -165,7 +165,7 @@ export function Chrome() {
               ) : (
                 <Link
                   aria-current={active(pathname, route.href) ? "page" : undefined}
-                  className={`focus-ring relative block py-1 text-sm transition-colors ${
+                  className={`focus-ring group relative block py-1 text-sm transition-colors ${
                     active(pathname, route.href) ? "text-ink" : "text-ink-2"
                   }`}
                   href={route.href}
@@ -173,7 +173,7 @@ export function Chrome() {
                   {route.label}
                   <span
                     aria-hidden="true"
-                    className={`absolute -bottom-px left-0 h-px w-full bg-accent transition-transform duration-150 ${
+                    className={`absolute -bottom-px left-0 h-px w-full origin-left bg-accent transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 ${
                       active(pathname, route.href) ? "scale-x-100" : "scale-x-0"
                     }`}
                   />

@@ -358,7 +358,16 @@
     .hero-stage .hero-system-grid { transform: translate(calc(var(--hero-x) * 6px), calc(var(--hero-y) * 6px)); transition: transform 180ms ease-out; }
     .hero-stage .hero-system-lines { transform: translate(calc(var(--hero-x) * -4px), calc(var(--hero-y) * -4px)); transition: transform 180ms ease-out; }
     .hero-stage .hero-portrait { transform: translate(calc(var(--hero-x) * 5px), calc(var(--hero-y) * 5px)); transition: transform 180ms ease-out; }
-    .magnetic-link { transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)); transition: transform 220ms cubic-bezier(.16, 1, .3, 1); }
+  }
+
+  /*
+    Magnetism is published as two offsets rather than as a finished transform,
+    so anything that also wants to move — a button lifting on hover — can add
+    its own term instead of overwriting the pull.
+  */
+  .magnetic-link {
+    transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
+    transition: transform 320ms var(--ease-out);
   }
 
   .hero-system-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -961,22 +970,40 @@
     .project-card .project-signal { animation: none; opacity: 0.8; }
   }
 
-  /* Text link with an underline that thickens rather than appears. */
+  /*
+    Text link with an underline that is traced rather than switched on: an
+    accent rule sweeps across the hairline that was already there. Two
+    backgrounds instead of `text-decoration`, because only background-size is
+    animatable.
+  */
   .tlink {
-    text-decoration: underline;
-    text-decoration-color: var(--rule-2);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.22em;
-    transition: text-decoration-color 140ms ease, color 140ms ease;
+    padding-bottom: 0.22em;
+    background-image: linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--rule-2), var(--rule-2));
+    background-position: 0 100%, 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px, 100% 1px;
+    transition: background-size 380ms var(--ease-out), color 160ms ease;
   }
 
-  .tlink:hover {
+  .tlink:hover,
+  .tlink:focus-visible {
     color: var(--accent);
-    text-decoration-color: currentColor;
+    background-size: 100% 1px, 100% 1px;
   }
 
+  /*
+    A button carries up to three movements at once — the magnetic pull, the
+    hover lift, and the press — so all three are kept as separate custom
+    properties and summed in one transform. Writing them as competing
+    `transform` declarations means the last rule to match silently cancels the
+    others, which is how magnetism stops working at exactly the moment the
+    pointer is close enough to use it.
+  */
   .btn {
+    position: relative;
+    isolation: isolate;
     display: inline-flex;
+    overflow: hidden;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
@@ -987,20 +1014,41 @@
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.005em;
-    transition: transform 160ms ease, background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+    transform: translate(var(--magnet-x, 0px), calc(var(--magnet-y, 0px) + var(--btn-lift, 0px))) scale(var(--btn-press, 1));
+    transition: transform 320ms var(--ease-out), color 180ms ease, border-color 180ms ease;
     white-space: nowrap;
   }
+
+  /* The fill wipes up from the bottom edge instead of swapping in place. */
+  .btn::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 340ms var(--ease-out);
+  }
+
+  .btn:hover,
+  .btn:focus-visible { --btn-lift: -2px; }
+
+  .btn:hover::before,
+  .btn:focus-visible::before { transform: scaleY(1); }
+
+  .btn:active { --btn-lift: 0px; --btn-press: 0.975; transition-duration: 110ms; }
 
   .btn-solid {
     background: var(--ink);
     color: var(--paper);
   }
 
-  .btn-solid:hover {
-    background: var(--accent);
+  .btn-solid::before { background: var(--accent); }
+
+  .btn-solid:hover,
+  .btn-solid:focus-visible {
     border-color: var(--accent);
     color: var(--on-accent);
-    transform: translateY(-1px);
   }
 
   .btn-line {
@@ -1008,9 +1056,11 @@
     color: var(--ink);
   }
 
-  .btn-line:hover {
-    border-color: var(--ink);
-    transform: translateY(-1px);
+  .btn-line::before { background: var(--accent-wash); }
+
+  .btn-line:hover,
+  .btn-line:focus-visible {
+    border-color: var(--accent);
   }
 
   .kbd {
