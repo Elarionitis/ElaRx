@@ -2,9 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
+import { HeroHeadline } from "@/components/HeroHeadline";
 import { HeroSignalField } from "@/components/HeroSignalField";
 import { HeroSystem } from "@/components/HeroSystem";
 import { MagneticLink } from "@/components/MagneticLink";
+import { ProofStrip } from "@/components/ProofStrip";
 import { SelectedWork } from "@/components/SelectedWork";
 import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
@@ -24,7 +26,7 @@ function Clause({
   moreHref?: string;
 }) {
   return (
-    <section className="pt-14 sm:pt-20">
+    <section className="pt-14 sm:pt-20" data-reveal>
       <div className="clause flex items-baseline justify-between gap-4">
         <h2 className="label">{label}</h2>
         {more && moreHref ? (
@@ -55,9 +57,10 @@ export default function Home() {
             <p className="hero-reveal hero-reveal-2 mt-6 text-[clamp(2rem,3.5vw,2.75rem)] font-semibold leading-none tracking-[-0.05em] text-ink">
               {siteConfig.name}
             </p>
-            <h1 className="hero-reveal hero-reveal-3 lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink" data-lens-copy="Software Engineer" data-lens-target>
-              Software Engineer
-            </h1>
+            <HeroHeadline
+              className="lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink"
+              text="Software Engineer"
+            />
             <p className="hero-reveal hero-reveal-4 mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
               Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
             </p>
@@ -101,6 +104,7 @@ export default function Home() {
         <div className="mt-12 sm:mt-16">
           <HeroSystem />
         </div>
+        <ProofStrip stats={siteConfig.stats} />
         <div className="mt-6 grid gap-5 border-t border-rule pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] sm:gap-12">
           <p className="text-[0.95rem] leading-[1.6] text-ink-2">
             Make the constraint visible. Prefer the smaller moving part. Leave behind a trail someone else can follow.

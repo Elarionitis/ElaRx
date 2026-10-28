@@ -21,6 +21,10 @@
   --lens-y: -30rem;
   --lens-radius: 12rem;
 
+  /* Motion. Two curves only: things arriving, and things swapping state. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
   --paper: #f7f7f4;
   --paper-2: #efefea;
   --paper-3: #e5e5df;
@@ -161,6 +165,45 @@
     max-width: 34rem;
   }
 
+  /*
+    ── Scroll reveal ──────────────────────────────────────────────────────────
+    The hidden state applies only once ScrollReveal has written
+    `data-reveal-ready` onto <html>, which it refuses to do under reduced
+    motion and cannot do without JavaScript. Content is therefore never hidden
+    by a reveal that will not arrive.
+
+    Shift and delay are per-element knobs so a grid can stagger without needing
+    a rule per child.
+  */
+  html[data-reveal-ready] [data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift, 1.1rem));
+    transition:
+      opacity 620ms var(--ease-out) var(--reveal-delay, 0ms),
+      transform 760ms var(--ease-out) var(--reveal-delay, 0ms);
+  }
+
+  html[data-reveal-ready] [data-reveal][data-reveal-in] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* A clause rule draws itself rather than appearing all at once. */
+  html[data-reveal-ready] [data-reveal] .clause,
+  html[data-reveal-ready] .clause[data-reveal] {
+    background-image: linear-gradient(var(--rule-2), var(--rule-2));
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    border-top-color: transparent;
+    transition: background-size 900ms var(--ease-out) 90ms;
+  }
+
+  html[data-reveal-ready] [data-reveal][data-reveal-in] .clause,
+  html[data-reveal-ready] .clause[data-reveal][data-reveal-in] {
+    background-size: 100% 1px;
+  }
+
   .writing-empty { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-wash) 42%, var(--paper-2)), var(--paper-2)); }
 
   .hero-system {
@@ -173,8 +216,8 @@
   }
 
   .hero-stage { --hero-x: 0; --hero-y: 0; }
-  .hero-reveal { opacity: 0; transform: translateY(0.65rem); }
-  .hero-stage.is-revealed .hero-reveal { animation: hero-reveal 560ms cubic-bezier(.16, 1, .3, 1) both; }
+  html[data-reveal-ready] .hero-reveal { opacity: 0; transform: translateY(0.65rem); }
+  .hero-stage.is-revealed .hero-reveal { animation: hero-reveal 560ms var(--ease-out) both; }
   .hero-stage.is-revealed .hero-reveal-1 { animation-delay: 20ms; }
   .hero-stage.is-revealed .hero-reveal-2 { animation-delay: 70ms; }
   .hero-stage.is-revealed .hero-reveal-3 { animation-delay: 120ms; }
@@ -182,6 +225,125 @@
   .hero-stage.is-revealed .hero-reveal-5 { animation-delay: 220ms; }
   .hero-stage.is-revealed .hero-reveal-6 { animation-delay: 270ms; }
   @keyframes hero-reveal { to { opacity: 1; transform: none; } }
+
+  /*
+    Word-by-word rise. The clip box has to lend the descender some room back,
+    or `overflow: hidden` shears the tail off the g in "Engineer".
+  */
+  .hero-word {
+    display: inline-block;
+    overflow: hidden;
+    margin-bottom: -0.16em;
+    padding-bottom: 0.16em;
+    vertical-align: bottom;
+  }
+
+  html[data-reveal-ready] .hero-word-inner {
+    display: inline-block;
+    transform: translateY(100%);
+  }
+
+  .hero-stage.is-revealed .hero-word-inner {
+    animation: hero-word 820ms var(--ease-out) both;
+    animation-delay: calc(120ms + var(--word-index) * 90ms);
+  }
+
+  @keyframes hero-word {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* Four readings, divided the way a spec sheet divides its figures. */
+  .proof-strip {
+    display: grid;
+    margin: 0;
+    margin-top: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .proof-cell {
+    position: relative;
+    padding: 1rem 0.25rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .proof-cell + .proof-cell { border-left: 1px solid var(--rule); padding-left: 1.1rem; }
+
+  /* The figure's own rule brightens on hover, so the row answers the pointer. */
+  .proof-cell::before {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 420ms var(--ease-out);
+  }
+
+  .proof-cell:hover::before { transform: scaleX(1); }
+
+  .proof-value {
+    color: var(--ink);
+    font-size: clamp(1.45rem, 3vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    transition: color 180ms ease;
+  }
+
+  .proof-cell:hover .proof-value { color: var(--accent); }
+
+  .proof-label {
+    margin: 0;
+    margin-top: 0.55rem;
+    letter-spacing: 0.08em;
+  }
+
+  @media (min-width: 48rem) {
+    .proof-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .proof-cell { padding-block: 1.15rem 1.3rem; }
+  }
+
+  /* A standing invitation to keep going, drawn rather than animated at you. */
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: 0.8rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.57rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-scroll-cue span {
+    position: relative;
+    display: block;
+    width: 2.75rem;
+    height: 1px;
+    overflow: hidden;
+    background: var(--rule-2);
+  }
+
+  .hero-scroll-cue span::after {
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: var(--accent);
+    content: "";
+    animation: scroll-cue 2.6s var(--ease-in-out) infinite;
+  }
+
+  @keyframes scroll-cue {
+    0% { transform: translateX(-120%); }
+    60%, 100% { transform: translateX(280%); }
+  }
 
   .hero-system-grid {
     position: absolute;
@@ -228,8 +390,33 @@
   .hero-node-three { left: 67%; top: 28%; }
   .hero-node-four { left: 84%; top: 66%; }
 
+  /*
+    Three signals cross the field on offset schedules. One alone read as a
+    loading indicator; three at different speeds read as traffic.
+  */
   .hero-signal { width: 0.25rem; height: 0.25rem; background: var(--accent); opacity: 0; }
   .hero-signal-one { animation: signal-one 6s linear infinite; }
+  .hero-signal-two { animation: signal-two 8.5s linear infinite 1.4s; }
+  .hero-signal-three { width: 0.2rem; height: 0.2rem; background: var(--accent-2); animation: signal-three 7.2s linear infinite 3.1s; }
+
+  /* The nodes answer the lens with a breathing ring instead of a hard glow. */
+  .hero-system[data-lens-active] .hero-node::after {
+    position: absolute;
+    inset: -0.35rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: 50%;
+    content: "";
+    animation: node-pulse 2.4s var(--ease-in-out) infinite;
+  }
+
+  .hero-system[data-lens-active] .hero-node-two::after { animation-delay: 0.3s; }
+  .hero-system[data-lens-active] .hero-node-three::after { animation-delay: 0.6s; }
+  .hero-system[data-lens-active] .hero-node-four::after { animation-delay: 0.9s; }
+
+  @keyframes node-pulse {
+    0%, 100% { opacity: 0.25; transform: scale(0.82); }
+    50% { opacity: 0.9; transform: scale(1.12); }
+  }
 
   .hero-system-key {
     position: absolute;
@@ -249,6 +436,8 @@
   .hero-system[data-lens-active] .hero-system-key { color: color-mix(in srgb, var(--ink-2) 82%, var(--accent)); }
 
   @keyframes signal-one { 0% { left: 18%; top: 31%; opacity: 0; } 5%, 78% { opacity: 1; } 100% { left: 84%; top: 66%; opacity: 0; } }
+  @keyframes signal-two { 0% { left: 2%; top: 30%; opacity: 0; } 6%, 80% { opacity: 1; } 48% { left: 45%; top: 48%; } 100% { left: 98%; top: 36%; opacity: 0; } }
+  @keyframes signal-three { 0% { left: 15%; top: 87%; opacity: 0; } 8%, 76% { opacity: 1; } 52% { left: 52%; top: 46%; } 100% { left: 92%; top: 58%; opacity: 0; } }
 
   .hero-portrait-assembly {
     display: flex;

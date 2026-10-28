@@ -4,6 +4,7 @@ import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome } from "@/components/Chrome";
 import { Colophon } from "@/components/Colophon";
 import { CursorLens } from "@/components/CursorLens";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
@@ -117,9 +118,24 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       suppressHydrationWarning
     >
+      <head>
+        {/*
+          Arms the reveal animations before first paint. Gating them on an
+          attribute set here means a visitor who blocks scripts, or who asked
+          for reduced motion, gets the document at full opacity rather than a
+          page of sections waiting for an observer that will never run.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.revealReady="true"}catch(e){}',
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-paper text-ink antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
           <CursorLens />
+          <ScrollReveal />
           <a
             className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-rule-2 focus:bg-paper-2 focus:px-4 focus:py-2 focus:text-sm"
             href="#main"

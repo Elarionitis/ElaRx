@@ -18,6 +18,12 @@ export function HeroSystem() {
       <span className="hero-node hero-node-three" />
       <span className="hero-node hero-node-four" />
       <span className="hero-signal hero-signal-one" />
+      <span className="hero-signal hero-signal-two" />
+      <span className="hero-signal hero-signal-three" />
+      <p className="hero-scroll-cue">
+        <span aria-hidden="true" />
+        SCROLL
+      </p>
       <div className="hero-system-key">
         <span>PRODUCT</span>
         <span>INTELLIGENCE</span>
