@@ -188,6 +188,20 @@
     transform: none;
   }
 
+  /*
+    Route change. Kept to opacity and a few pixels so the new page is readable
+    almost immediately — long enough to register as a change of place, short
+    enough that it never stands between a click and what was clicked.
+  */
+  html[data-reveal-ready] .route-frame {
+    animation: route-in 420ms var(--ease-out) both;
+  }
+
+  @keyframes route-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: none; }
+  }
+
   /* A clause rule draws itself rather than appearing all at once. */
   html[data-reveal-ready] [data-reveal] .clause,
   html[data-reveal-ready] .clause[data-reveal] {
@@ -804,6 +818,69 @@
     .hero-portrait-signal { transform-origin: 0.12rem 8.42rem; }
   }
 
+  /* Case-study figures, set as a readout rather than as a row of badges. */
+  .result-grid {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+    margin: 0;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .result-cell {
+    padding: 0.85rem 0.95rem 0.95rem;
+    background: color-mix(in srgb, var(--paper-2) 55%, var(--paper));
+    transition: background-color 220ms ease;
+  }
+
+  .result-cell:hover { background: color-mix(in srgb, var(--accent-wash) 45%, var(--paper-2)); }
+
+  .result-value {
+    color: var(--ink);
+    font-size: 1.25rem;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .result-label {
+    margin: 0;
+    margin-top: 0.5rem;
+    color: var(--ink-3);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  /* One statement, set at the size it deserves, with its own note beside it. */
+  .why-build {
+    display: grid;
+    gap: 1.75rem;
+    padding: 1.75rem 0 0;
+    border-top: 1px solid var(--rule-2);
+  }
+
+  .why-build-statement {
+    position: relative;
+    max-width: 30rem;
+    color: var(--ink);
+    font-size: clamp(1.35rem, 2.9vw, 1.95rem);
+    letter-spacing: -0.03em;
+    line-height: 1.18;
+    text-wrap: pretty;
+  }
+
+  .why-build-note {
+    max-width: 22rem;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 48rem) {
+    .why-build { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 3rem; }
+    .why-build-note { padding-top: 0.4rem; }
+  }
+
   .thinking-intro {
     display: grid;
     align-items: end;
@@ -1118,6 +1195,12 @@
     animatable.
   */
   .tlink {
+    /*
+      A grid stretches its items, and a stretched anchor draws the underline
+      across the whole column rather than under the words. Shrink back to the
+      text; flex containers and ordinary inline context ignore this.
+    */
+    justify-self: start;
     padding-bottom: 0.22em;
     background-image: linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--rule-2), var(--rule-2));
     background-position: 0 100%, 0 100%;
@@ -1203,6 +1286,64 @@
   .btn-line:focus-visible {
     border-color: var(--accent);
   }
+
+  /*
+    The address is the last thing on the page and the only thing on it worth
+    acting on, so it is set large and underlines itself as the pointer arrives.
+  */
+  .contact-address {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    padding-bottom: 0.3rem;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    color: var(--ink);
+    font-size: clamp(1.25rem, 3.2vw, 1.9rem);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    transition: background-size 420ms var(--ease-out), color 200ms ease;
+    word-break: break-word;
+  }
+
+  .contact-address:hover,
+  .contact-address:focus-visible {
+    background-size: 100% 1px;
+    color: var(--accent);
+  }
+
+  .contact-address-arrow {
+    flex: none;
+    font-size: 0.7em;
+    transition: transform 360ms var(--ease-out);
+  }
+
+  .contact-address:hover .contact-address-arrow,
+  .contact-address:focus-visible .contact-address-arrow {
+    transform: translate(0.22em, -0.22em);
+  }
+
+  .back-to-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink-3);
+    transition: color 180ms ease;
+  }
+
+  .back-to-top-rule {
+    display: block;
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    transition: width 320ms var(--ease-out);
+  }
+
+  .back-to-top:hover { color: var(--accent); }
+  .back-to-top:hover .back-to-top-rule { width: 2.75rem; }
 
   .kbd {
     display: inline-flex;

@@ -15,7 +15,7 @@ export default function WritingPage() {
 
   return (
     <div className="sheet pb-4">
-      <header className="pt-16 sm:pt-20">
+      <header className="pt-16 sm:pt-20" data-reveal>
         <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
           Writing
         </h1>
@@ -28,7 +28,7 @@ export default function WritingPage() {
         ) : null}
       </header>
 
-      <div className="mt-12">
+      <div className="mt-12" data-reveal>
         {posts.length === 0 ? (
           <p className="clause pt-8 text-[0.95rem] text-ink-2">Nothing published yet.</p>
         ) : (

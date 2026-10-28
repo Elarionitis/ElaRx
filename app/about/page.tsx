@@ -15,7 +15,7 @@ const selectedPositions = siteConfig.positions.slice(0, 3);
 export default function AboutPage() {
   return (
     <div className="sheet pb-4">
-      <header className="grid max-w-[54rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-14">
+      <header className="grid max-w-[54rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-14" data-reveal>
         <div className="min-w-0">
           <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
             About
@@ -102,7 +102,7 @@ export default function AboutPage() {
         </aside>
       </header>
 
-      <section className="pt-16">
+      <section className="pt-16" data-reveal>
         <h2 className="clause label">Experience</h2>
         <ul className="mt-8 border-b border-rule">
           {experience.map((item) => (
@@ -125,20 +125,27 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="pt-16">
+      <section className="pt-16" data-reveal>
         <h2 className="clause label">Why I build</h2>
-        <div className="mt-8 grid gap-6 border border-rule p-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:p-7">
-          <div aria-label="Campus photo placeholder" className="grid min-h-40 place-items-center border border-dashed border-rule-2 bg-paper-2 p-4 text-center">
-            <span className="label">Campus photo<br />placeholder</span>
-          </div>
-          <div className="measure self-center text-[1rem] leading-[1.7] text-ink-2">
-            <p className="text-ink">I like building because it turns a vague, shared frustration into something another person can actually use.</p>
-            <p className="mt-4">The best part is usually the moment a rough idea stops being a conversation and becomes a tool: a person tries it, something unexpected happens, and the next useful question appears.</p>
-          </div>
+        {/*
+          This was a dashed box reading "campus photo placeholder", which is
+          the one thing a published page should never say about itself. The
+          statement is strong enough to be the whole block, so it is set as
+          one, with the second paragraph as its annotation.
+        */}
+        <div className="why-build mt-8">
+          <p className="why-build-statement">
+            I like building because it turns a vague, shared frustration into something another person can
+            actually use.
+          </p>
+          <p className="why-build-note">
+            The best part is usually the moment a rough idea stops being a conversation and becomes a tool:
+            a person tries it, something unexpected happens, and the next useful question appears.
+          </p>
         </div>
       </section>
 
-      <section className="pt-16">
+      <section className="pt-16" data-reveal>
         <h2 className="clause label">Education</h2>
         <ul className="mt-8 border-b border-rule">
           {siteConfig.education.map((item) => (
@@ -160,7 +167,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="pt-16">
+      <section className="pt-16" data-reveal>
         <h2 className="clause label">Outside the code</h2>
         <ul className="mt-8 border-b border-rule">
           {selectedPositions.map((item) => (

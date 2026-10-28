@@ -189,6 +189,22 @@ export function ProjectIndex({
               </div>
             ) : null}
 
+            {/*
+              These figures were already in the project data and had nowhere
+              to appear. They are the most specific thing a case study can say,
+              so they go above the stack rather than below it.
+            */}
+            {active.results && active.results.length > 0 ? (
+              <dl className="result-grid mt-7">
+                {active.results.map((result) => (
+                  <div className="result-cell" key={result.label}>
+                    <dt className="result-value num">{result.value}</dt>
+                    <dd className="result-label">{result.label}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+
             <div className="mt-7">
               <p className="label">Built with</p>
               <ul className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.75rem] text-ink-3">

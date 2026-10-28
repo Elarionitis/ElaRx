@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <div className="sheet pb-4">
-      <header className="pt-16 sm:pt-20">
+      <header className="pt-16 sm:pt-20" data-reveal>
         <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
           Projects
         </h1>
@@ -23,7 +23,7 @@ export default function ProjectsPage() {
         </p>
       </header>
 
-      <div className="mt-12">
+      <div className="mt-12" data-reveal>
         <ProjectIndex decisions={decisions} projects={projects} />
       </div>
     </div>
