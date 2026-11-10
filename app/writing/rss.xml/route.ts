@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, hasPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/data/site";
 
 function escapeXml(value: string) {
@@ -13,6 +13,10 @@ function escapeXml(value: string) {
 export const dynamic = "force-static";
 
 export function GET() {
+  // No posts, no feed. An empty channel is something readers subscribe to and
+  // then quietly stop checking.
+  if (!hasPosts()) return new Response("Not found", { status: 404 });
+
   const posts = getAllPosts();
   const updated = posts[0]?.date ? new Date(`${posts[0].date}T00:00:00Z`) : new Date();
 

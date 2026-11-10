@@ -9,14 +9,7 @@ import { flushSync } from "react-dom";
 import { OPEN_PALETTE_EVENT } from "@/components/CommandPalette";
 import { siteConfig } from "@/lib/data/site";
 
-const routes = [
-  { label: "Work", href: "/projects" },
-  { label: "Thinking", href: "/#decisions" },
-  { label: "Writing", href: "/writing" },
-  { label: "About", href: "/about" },
-];
-
-const mobileRoutes = [...routes, { label: "Contact", href: `mailto:${siteConfig.email}` }];
+export type Route = { label: string; href: string };
 
 function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -27,9 +20,10 @@ function active(pathname: string, href: string) {
   set as a wordmark, routes as plain text with the current one marked by a
   vermillion rule rather than a filled pill.
 */
-export function Chrome() {
+export function Chrome({ routes }: { routes: Route[] }) {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
+  const mobileRoutes = [...routes, { label: "Contact", href: `mailto:${siteConfig.email}` }];
   const themeButtonRef = useRef<HTMLButtonElement>(null);
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);

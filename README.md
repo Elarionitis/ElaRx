@@ -38,7 +38,7 @@ slash). It overrides everything above.
 | --- | --- |
 | `/` | The decision log, plus selected work, writing and background. |
 | `/projects` | Every project. One filterable index that expands in place. |
-| `/writing` | Post index. |
+| `/writing` | Post index. Returns 404 until `content/blog/` has a post. |
 | `/writing/[slug]` | Article. Its own measure and type scale. |
 | `/about` | Background, experience, education, selected positions. |
 | `/resume` | PDF viewer with zoom, open-in-tab and download. |
@@ -46,6 +46,13 @@ slash). It overrides everything above.
 `/blog` and `/blog/:slug` permanently redirect to `/writing`. There are no
 per-project routes: a project expands inline on `/projects`, and deep links
 like `/projects#signease` open the row they name.
+
+The writing section is derived from the content directory rather than declared
+anywhere: `hasPosts()` in `lib/blog.ts` decides whether the nav entry, the RSS
+feed, the sitemap entries and the routes themselves exist. Add the first file
+to `content/blog/` and all of it appears; there is no flag to flip. Drafts
+count in development, so a post in progress is previewable before it is
+public.
 
 ## The decision log
 
@@ -98,9 +105,9 @@ post is one file in `content/blog/` — see [WRITING.md](WRITING.md).
 ```
 app/
   page.tsx                     home
-  blog/page.tsx                post index
-  blog/[slug]/page.tsx         post, statically generated
-  blog/rss.xml/route.ts        feed
+  writing/page.tsx             post index
+  writing/[slug]/page.tsx      post, statically generated
+  writing/rss.xml/route.ts     feed
   opengraph-image.tsx          link preview, drawn at build time
   sitemap.ts  robots.ts        SEO routes
   not-found.tsx  error.tsx

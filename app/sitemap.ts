@@ -1,9 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, hasPosts } from "@/lib/blog";
 import { siteConfig } from "@/lib/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // /writing 404s until the first post exists, so it is not listed until then.
+  const writingIsPublic = hasPosts();
+
   const posts = getAllPosts().map((post) => ({
     url: `${siteConfig.url}/writing/${post.slug}`,
     lastModified: post.date ? new Date(post.date) : new Date(),
@@ -11,13 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const routes = ["/projects", "/writing", "/about", "/resume"].map((route) => ({
-    url: `${siteConfig.url}${route}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
-
+  const routes = ["/projects", ...(writingIsPublic ? ["/writing"] : []), "/about", "/resume"].map(
+    (route) => ({
+      url: `${siteConfig.url}${route}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }),
+  );
 
   return [
     { url: siteConfig.url, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },

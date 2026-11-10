@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
-import { Chrome } from "@/components/Chrome";
+import { Chrome, type Route } from "@/components/Chrome";
 import { Colophon } from "@/components/Colophon";
 import { CursorLens } from "@/components/CursorLens";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, hasPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
@@ -16,6 +16,20 @@ import { body, display, mono } from "./fonts";
 import "./globals.css";
 
 const description = siteConfig.tagline;
+
+/*
+  Writing is derived, not declared: see hasPosts in lib/blog.ts. Until the
+  first post exists there is no nav entry, no feed, and no link anywhere that
+  leads to an empty index.
+*/
+const writingIsPublic = hasPosts();
+
+const routes: Route[] = [
+  { label: "Work", href: "/projects" },
+  { label: "Thinking", href: "/#decisions" },
+  ...(writingIsPublic ? [{ label: "Writing", href: "/writing" }] : []),
+  { label: "About", href: "/about" },
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -26,7 +40,9 @@ export const metadata: Metadata = {
   description,
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": `${siteConfig.url}/writing/rss.xml` },
+    ...(writingIsPublic
+      ? { types: { "application/rss+xml": `${siteConfig.url}/writing/rss.xml` } }
+      : {}),
   },
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
@@ -76,7 +92,7 @@ function buildCommandItems(): CommandItem[] {
   return [
     { group: "Pages", label: "Home", href: "/" },
     { group: "Pages", label: "Projects", href: "/projects" },
-    { group: "Pages", label: "Writing", href: "/writing" },
+    ...(writingIsPublic ? [{ group: "Pages", label: "Writing", href: "/writing" }] : []),
     { group: "Pages", label: "About", href: "/about" },
     { group: "Pages", label: "Resume", href: "/resume" },
     ...decisions.map((decision) => ({
@@ -94,12 +110,14 @@ function buildCommandItems(): CommandItem[] {
       keywords: `${project.summary} ${project.domain} ${project.stack.join(" ")}`,
       href: `/projects#${project.slug}`,
     })),
-    ...getAllPosts().map((post) => ({
-      group: "Writing",
-      label: post.title,
-      hint: post.date,
-      href: `/writing/${post.slug}`,
-    })),
+    ...(writingIsPublic
+      ? getAllPosts().map((post) => ({
+          group: "Writing",
+          label: post.title,
+          hint: post.date,
+          href: `/writing/${post.slug}`,
+        }))
+      : []),
     { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
     { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
     { group: "Actions", label: "Surprise me", hint: "Open a decision", action: "surprise" as const, href: "/#D-04" },
@@ -140,11 +158,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </a>
           <CommandPalette email={siteConfig.email} items={buildCommandItems()} />
           <div className="relative z-10 flex min-h-screen flex-col">
-            <Chrome />
+            <Chrome routes={routes} />
             <main className="flex-1" id="main">
               {children}
             </main>
-            <Colophon />
+            <Colophon showFeed={writingIsPublic} />
           </div>
         </ThemeProvider>
         <script

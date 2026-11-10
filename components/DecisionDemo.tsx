@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 
 import type { DecisionDemo as DecisionDemoData } from "@/lib/data/decisions";
 

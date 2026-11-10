@@ -79,6 +79,22 @@ export function getAllPosts(): PostMeta[] {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+/*
+  Whether the writing section exists at all.
+
+  There is nothing published yet, and a Writing link that leads to "Nothing
+  published yet" is worse than no link: it advertises an empty room. So the
+  section is derived rather than declared — the nav entry, the feed, the
+  sitemap entries and the homepage block all appear the moment the first post
+  lands in content/blog/, and the routes 404 until then.
+
+  Drafts count in development, so a post in progress is fully previewable
+  before it is public.
+*/
+export function hasPosts(): boolean {
+  return getAllPosts().length > 0;
+}
+
 export function getAllTags(): string[] {
   const tags = new Set<string>();
   for (const post of getAllPosts()) {

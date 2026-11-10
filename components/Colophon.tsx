@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/data/site";
 
 const elsewhere = [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.links.x];
 
-export function Colophon() {
+export function Colophon({ showFeed }: { showFeed: boolean }) {
   return (
     <footer className="mt-24 border-t border-rule-2">
       <div className="sheet grid gap-10 py-12 md:grid-cols-[minmax(0,1fr)_auto] md:gap-16">
@@ -47,11 +47,13 @@ export function Colophon() {
                   </a>
                 </li>
               ))}
-              <li>
-                <a className="focus-ring tlink text-ink-2" href="/writing/rss.xml">
-                  RSS
-                </a>
-              </li>
+              {showFeed ? (
+                <li>
+                  <a className="focus-ring tlink text-ink-2" href="/writing/rss.xml">
+                    RSS
+                  </a>
+                </li>
+              ) : null}
             </ul>
           </div>
           <BackToTop />

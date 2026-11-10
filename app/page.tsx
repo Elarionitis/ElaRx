@@ -8,7 +8,6 @@ import { HeroSystem } from "@/components/HeroSystem";
 import { MagneticLink } from "@/components/MagneticLink";
 import { ProofStrip } from "@/components/ProofStrip";
 import { SelectedWork } from "@/components/SelectedWork";
-import { formatPostDate, getAllPosts } from "@/lib/blog";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
@@ -41,7 +40,6 @@ function Clause({
 }
 
 export default function Home() {
-  const posts = getAllPosts().slice(0, 3);
   const selected = projects.filter((project) => project.category === "featured");
 
   return (
@@ -138,41 +136,6 @@ export default function Home() {
         <div className="mt-8">
           <DecisionList items={decisions} />
         </div>
-      </Clause>
-
-      <Clause label="Latest writing" more="All writing" moreHref="/writing">
-        {posts.length === 0 ? (
-          <div className="writing-empty measure border border-rule bg-paper-2 p-5">
-            <p className="label text-accent">In the notebook</p>
-            <p className="mt-2 text-[1.05rem] leading-[1.45] text-ink">The first field notes are being prepared.</p>
-            <p className="mt-2 text-[0.92rem] leading-[1.6] text-ink-2">They will expand the decisions above: what broke, what changed, and why the smaller system won.</p>
-          </div>
-        ) : (
-          <ul className="border-b border-rule">
-            {posts.map((post) => (
-              <li className="border-t border-rule first:border-t-0" key={post.slug}>
-                <Link
-                  className="focus-ring group grid gap-x-5 gap-y-1 py-5 sm:grid-cols-[6.5rem_minmax(0,1fr)]"
-                  href={`/writing/${post.slug}`}
-                >
-                  <time className="label pt-1" dateTime={post.date}>
-                    {formatPostDate(post.date)}
-                  </time>
-                  <span className="min-w-0">
-                    <span className="block text-[1.05rem] leading-tight tracking-[-0.015em] text-ink transition-colors group-hover:text-accent">
-                      {post.title}
-                    </span>
-                    {post.summary ? (
-                      <span className="measure mt-1.5 block text-[0.95rem] leading-[1.55] text-ink-2">
-                        {post.summary}
-                      </span>
-                    ) : null}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
       </Clause>
 
       <Clause label="Background" more="More about me" moreHref="/about">

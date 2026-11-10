@@ -218,7 +218,6 @@
     background-size: 100% 1px;
   }
 
-  .writing-empty { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-wash) 42%, var(--paper-2)), var(--paper-2)); }
 
   .hero-system {
     position: relative;
