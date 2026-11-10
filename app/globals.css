@@ -1060,6 +1060,128 @@
   .thinking-more:hover { color: var(--accent); }
   .thinking-more span { font-size: 0.9rem; }
 
+  /*
+    ── Guestbook ──────────────────────────────────────────────────────────────
+    A form that reads as part of the document: hairline rules, mono apparatus,
+    no boxes inside boxes. The inputs are underlines rather than fields, which
+    is the only treatment that does not import a different design language.
+  */
+  .guestbook { border-top: 1px solid var(--rule-2); }
+
+  .guestbook-form {
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .guestbook-fields { display: grid; gap: 1.25rem; }
+
+  @media (min-width: 42rem) {
+    .guestbook-fields { grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 1.75rem; }
+  }
+
+  .guestbook-field { display: grid; gap: 0.5rem; }
+
+  .guestbook-field :is(input, textarea) {
+    width: 100%;
+    padding: 0.35rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--rule-2);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    outline: 0;
+    resize: none;
+    transition: border-color 160ms ease;
+  }
+
+  .guestbook-field :is(input, textarea)::placeholder { color: var(--ink-3); }
+
+  .guestbook-field :is(input, textarea):focus { border-bottom-color: var(--accent); }
+
+  /* Off-screen rather than display:none, which bots skip. */
+  .guestbook-trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .guestbook-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .guestbook-note {
+    margin: 0;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .guestbook-error { color: var(--accent); }
+
+  .guestbook-actions button[disabled] { cursor: not-allowed; opacity: 0.45; }
+  .guestbook-actions button[disabled]:hover { --btn-lift: 0px; }
+
+  .guestbook-empty {
+    padding-block: 1.6rem;
+    color: var(--ink-3);
+    font-size: 0.95rem;
+  }
+
+  /*
+    Separators are borders on the entries rather than a background showing
+    through 1px gaps. The gap version drew a filled grey cell wherever the
+    last row was short, which is most of the time with two columns.
+  */
+  .guestbook-list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .guestbook-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .guestbook-entry:nth-child(odd) { border-right: 1px solid var(--rule); }
+  }
+
+  .guestbook-entry {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 1.15rem 1.25rem 1.15rem 0;
+    border-bottom: 1px solid var(--rule);
+    transition: background-color 180ms ease;
+  }
+
+  @media (min-width: 48rem) {
+    .guestbook-entry:nth-child(even) { padding-left: 1.25rem; }
+  }
+
+  .guestbook-entry:hover { background: color-mix(in srgb, var(--accent-wash) 34%, transparent); }
+
+  .guestbook-message {
+    margin: 0;
+    color: var(--ink);
+    font-size: 0.98rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .guestbook-byline { margin: 0; color: var(--ink-3); }
+
   .decision-demo {
     margin: 1rem 0 0 3.6rem;
     padding: 1rem 1.1rem;

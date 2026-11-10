@@ -78,7 +78,7 @@ function DecisionRow({
           </div>
           {decision.demo ? <DecisionDemo demo={decision.demo} /> : null}
           <div className="thinking-links">
-            <Link className="focus-ring tlink" href={`/projects#${decision.source}`}>
+            <Link className="focus-ring tlink" href={decision.sourceHref ?? `/projects#${decision.source}`}>
               See {decision.sourceLabel}
             </Link>
             <button className="focus-ring" onClick={onCopy} type="button">

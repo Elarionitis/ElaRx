@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // The hero portrait asks for 90. Next refuses any quality not listed here.
+    qualities: [75, 90],
     remotePatterns: [{ protocol: "https", hostname: "i.scdn.co" }],
   },
   async redirects() {

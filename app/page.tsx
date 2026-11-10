@@ -2,12 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DecisionList } from "@/components/DecisionList";
+import { Guestbook } from "@/components/Guestbook";
 import { HeroHeadline } from "@/components/HeroHeadline";
 import { HeroSignalField } from "@/components/HeroSignalField";
 import { HeroSystem } from "@/components/HeroSystem";
 import { MagneticLink } from "@/components/MagneticLink";
 import { ProofStrip } from "@/components/ProofStrip";
 import { SelectedWork } from "@/components/SelectedWork";
+import { guestbookIsConfigured } from "@/lib/guestbook-store";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
@@ -15,17 +17,19 @@ import { siteConfig } from "@/lib/data/site";
 /* The homepage is a document. Each clause opens with a rule and a label. */
 function Clause({
   children,
+  id,
   label,
   more,
   moreHref,
 }: {
   children: React.ReactNode;
+  id?: string;
   label: string;
   more?: string;
   moreHref?: string;
 }) {
   return (
-    <section className="pt-14 sm:pt-20" data-reveal>
+    <section className="scroll-mt-24 pt-14 sm:pt-20" data-reveal id={id}>
       <div className="clause flex items-baseline justify-between gap-4">
         <h2 className="label">{label}</h2>
         {more && moreHref ? (
@@ -125,7 +129,7 @@ export default function Home() {
         <SelectedWork projects={selected} />
       </Clause>
 
-      <Clause label="How I think">
+      <Clause id="decisions" label="How I think">
         <div className="thinking-intro">
           <div>
             <p className="label text-accent">Engineering decisions</p>
@@ -142,6 +146,27 @@ export default function Home() {
         </div>
       </Clause>
 
+      {/*
+        Rendered only where there is somewhere to put what people write — see
+        lib/guestbook-store.ts. A sign-in box that silently drops a message is
+        worse than no sign-in box.
+      */}
+      {guestbookIsConfigured ? (
+        <Clause id="guestbook" label="Guestbook">
+          <div className="thinking-intro">
+            <div>
+              <p className="label text-accent">Leave a mark</p>
+              <p className="mt-3 max-w-2xl text-[clamp(1.35rem,2.6vw,2rem)] leading-[1.12] tracking-[-0.035em] text-ink">
+                You have read mine. Say something back.
+              </p>
+            </div>
+            <p>No account, no email, no newsletter. Just a name and a line.</p>
+          </div>
+          <div className="mt-8">
+            <Guestbook />
+          </div>
+        </Clause>
+      ) : null}
     </div>
   );
 }

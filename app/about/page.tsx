@@ -99,7 +99,8 @@ export default function AboutPage() {
         </aside>
       </header>
 
-      <section className="pt-16" data-reveal>
+      {/* Decisions that came out of a job link straight to this section. */}
+      <section className="scroll-mt-24 pt-16" data-reveal id="experience">
         <h2 className="clause label">Experience</h2>
         <ul className="mt-8 border-b border-rule">
           {experience.map((item) => (

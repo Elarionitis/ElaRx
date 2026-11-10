@@ -54,6 +54,31 @@ to `content/blog/` and all of it appears; there is no flag to flip. Drafts
 count in development, so a post in progress is previewable before it is
 public.
 
+## Guestbook
+
+`/` carries a guestbook. There is no account, no sign-in and no email field —
+the defences are on the server: a length limit, a ban on links, a honeypot
+field and one signature per address per ten minutes, keyed on a salted hash so
+the store never holds anything that identifies a visitor.
+
+Storage is a Redis list, trimmed to the most recent 200 entries. Credentials
+come from either naming convention, so whichever way the database was created
+works without renaming anything:
+
+| Source | Variables |
+| --- | --- |
+| Vercel -> Storage -> Upstash for Redis | `KV_REST_API_URL`, `KV_REST_API_TOKEN` (injected automatically) |
+| A database created at upstash.com | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
+
+With neither pair set, `npm run dev` keeps entries in memory so the form is
+testable immediately, and the section does not render in production at all. A
+sign-in box that silently drops what someone wrote is worse than no sign-in
+box.
+
+See [.env.example](.env.example). `lib/guestbook.ts` holds the shared types and
+limits, `lib/guestbook-store.ts` the storage, and `app/api/guestbook/route.ts`
+the validation.
+
 ## The decision log
 
 The spine of the site is `lib/data/decisions.ts`. Each entry is a real
@@ -114,6 +139,8 @@ app/
   globals.css                  design tokens and prose styles
 components/                    the sections of the home page
 lib/blog.ts                    markdown loading and rendering
+lib/guestbook.ts               guestbook types and limits
+lib/guestbook-store.ts         guestbook storage
 lib/og.tsx                     shared link-preview card
 assets/                        Instrument Serif, vendored for OG rendering
 ```

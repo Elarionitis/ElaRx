@@ -45,6 +45,14 @@ export type Decision = {
   sourceLabel: string;
   /** System-design lens used by the archive filters. */
   domain: string;
+  /*
+    Where "See <source>" goes. Defaults to the project's row on /projects,
+    which is right for every decision that came out of a project. The ones
+    that came out of a job have no row there — before this, those linked to
+    `/projects#Webify Design`, a fragment with a space in it and no element
+    to match it.
+  */
+  sourceHref?: string;
   /** A compact, qualitative proof for decisions whose mechanism benefits from interaction. */
   demo?: DecisionDemo;
 };
@@ -121,6 +129,7 @@ export const decisions: Decision[] = [
     outcome: "Around 35% lower data-retrieval latency.",
     source: "Webify Design",
     sourceLabel: "Webify Design",
+    sourceHref: "/about#experience",
     domain: "Data access",
   },
   {
@@ -131,6 +140,7 @@ export const decisions: Decision[] = [
       "The work was almost entirely waiting — on the embedding API and on the vector store — so threads were sitting idle rather than computing. Async I/O in FastAPI let the streams interleave their waiting, which is where the bottleneck actually was.",
     source: "SQORA",
     sourceLabel: "SQORA",
+    sourceHref: "/about#experience",
     domain: "Pipeline reliability",
   },
   {
@@ -142,6 +152,7 @@ export const decisions: Decision[] = [
     outcome: "Every observed embedding failure eliminated in testing.",
     source: "SQORA",
     sourceLabel: "SQORA",
+    sourceHref: "/about#experience",
     domain: "Pipeline reliability",
   },
   {

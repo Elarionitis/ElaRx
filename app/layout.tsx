@@ -8,6 +8,7 @@ import { CursorLens } from "@/components/CursorLens";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts, hasPosts } from "@/lib/blog";
+import { guestbookIsConfigured } from "@/lib/guestbook-store";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
@@ -117,6 +118,9 @@ function buildCommandItems(): CommandItem[] {
           hint: post.date,
           href: `/writing/${post.slug}`,
         }))
+      : []),
+    ...(guestbookIsConfigured
+      ? [{ group: "Actions", label: "Sign the guestbook", hint: "No account needed", href: "/#guestbook" }]
       : []),
     { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
     { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
