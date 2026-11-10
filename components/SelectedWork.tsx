@@ -6,6 +6,29 @@ import { useState } from "react";
 import { ProjectDiagram } from "@/components/ProjectDiagram";
 import type { Project } from "@/lib/data/projects";
 
+function OrbitVisual() {
+  return (
+    <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
+      <path className="project-route" d="M52 90h38m34 0h30m34 0 34-28m-34 28 34 28m0-28h40m-40 56h40" />
+      <circle className="project-shape" cx="40" cy="90" r="11" />
+      <rect className="project-shape" height="38" rx="2" width="34" x="90" y="71" />
+      <rect className="project-shape" height="38" rx="2" width="34" x="154" y="71" />
+      <path className="project-shape" d="M158 118h26m-26 10h26" />
+      <rect className="project-shape" height="26" rx="2" width="34" x="222" y="49" />
+      <rect className="project-shape" height="26" rx="2" width="34" x="222" y="105" />
+      <circle className="project-shape" cx="304" cy="62" r="8" />
+      <circle className="project-shape" cx="334" cy="62" r="8" />
+      <circle className="project-shape" cx="304" cy="118" r="8" />
+      <circle className="project-shape" cx="334" cy="118" r="8" />
+      <path className="project-result" d="m362 85 9 9 17-19" />
+      <circle className="project-signal project-signal-orbit" cx="40" cy="90" r="4" />
+      <g className="project-visual-labels">
+        <text x="26" y="150">PUBLISH</text><text x="88" y="150">INGRESS</text><text x="152" y="162">LOG</text><text x="218" y="36">SHARDS</text><text x="296" y="150">ROOM</text>
+      </g>
+    </svg>
+  );
+}
+
 function SignEaseVisual() {
   return (
     <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
@@ -24,20 +47,20 @@ function SignEaseVisual() {
   );
 }
 
-function SpendlyVisual() {
+function TradStratVisual() {
   return (
     <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
-      <path className="project-route" d="M71 55 178 90 71 125M178 90l109-35m-109 35 109 35" />
-      <circle className="project-shape" cx="71" cy="55" r="15" />
-      <circle className="project-shape" cx="71" cy="125" r="15" />
-      <circle className="project-shape" cx="178" cy="90" r="25" />
-      <path className="project-shape" d="M164 82h28m-28 8h28m-28 8h28" />
-      <circle className="project-shape" cx="287" cy="55" r="15" />
-      <circle className="project-shape" cx="287" cy="125" r="15" />
-      <path className="project-route project-route-accent" d="M304 90h65" />
-      <path className="project-result" d="m355 82 9 8 17-18" />
-      <circle className="project-signal project-signal-spendly" cx="71" cy="55" r="4" />
-      <g className="project-visual-labels"><text x="42" y="160">USERS</text><text x="145" y="160">LEDGER</text><text x="253" y="160">NET POSITIONS</text><text x="344" y="160">SETTLE</text></g>
+      <path className="project-axis" d="M40 128h252M40 36v92" />
+      <path className="project-shape project-window" d="M40 36h104v92H40z" />
+      <path className="project-forecast" d="M44 118c22-20 34-8 52-30s30-26 48-38" />
+      <path className="project-forecast project-forecast-dashed" d="M144 50c24 14 32 2 50 16s32 8 52 20" />
+      <path className="project-route project-route-accent" d="M292 82h26" />
+      <path className="project-bars" d="M326 112V62m22 50V98" />
+      <path className="project-result" d="m364 94 9 9 17-19" />
+      <circle className="project-signal project-signal-tradstrat" cx="44" cy="118" r="4" />
+      <g className="project-visual-labels">
+        <text x="40" y="152">TUNED</text><text x="150" y="152">UNSEEN</text><text x="312" y="152">DEFLATED</text><text x="316" y="30">SHARPE</text>
+      </g>
     </svg>
   );
 }
@@ -57,26 +80,16 @@ function CareQueueVisual() {
   );
 }
 
-function AerisVisual() {
-  return (
-    <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
-      <path className="project-axis" d="M42 132h218M42 39v93" />
-      <path className="project-forecast" d="M48 116c24-15 31-42 53-37s26 21 47 5 29-45 50-33 25 35 55 10" />
-      <path className="project-forecast project-forecast-dashed" d="M48 124c26-12 34-30 54-26s28 20 45 9 30-30 54-26 28 20 52 7" />
-      <path className="project-route project-route-accent" d="M280 90h80" />
-      <path className="project-bars" d="M284 112V81m17 31V61m17 51V73m17 39V48" />
-      <path className="project-result" d="m356 90 9 8 17-18" />
-      <circle className="project-signal project-signal-aeris" cx="48" cy="116" r="4" />
-      <g className="project-visual-labels"><text x="40" y="157">SIGNALS</text><text x="168" y="157">FORECAST</text><text x="280" y="157">ATTRIBUTION</text><text x="346" y="157">ACTION</text></g>
-    </svg>
-  );
-}
-
+/*
+  One diagram per featured project, drawn rather than screenshotted so it
+  carries the theme and stays legible at card size. A project without one
+  falls back to the pipeline it most resembles.
+*/
 function Visual({ slug }: { slug: string }) {
+  if (slug === "orbit") return <OrbitVisual />;
   if (slug === "signease") return <SignEaseVisual />;
-  if (slug === "spendly") return <SpendlyVisual />;
-  if (slug === "carequeue") return <CareQueueVisual />;
-  return <AerisVisual />;
+  if (slug === "tradstrat") return <TradStratVisual />;
+  return <CareQueueVisual />;
 }
 
 export function SelectedWork({ projects }: { projects: Project[] }) {

@@ -3,9 +3,11 @@
   renders the sections it actually has material for, so a thin entry reads as
   brief rather than as unfinished.
 
-  Everything here comes from the resume or the repositories. Where a section is
-  absent it is because the information does not exist yet, not because it was
-  skipped — see README for which projects still need write-ups.
+  Everything here traces to a repository. Where a section is absent it is
+  because the write-up does not exist yet, not because it was skipped.
+
+  Numbers are the ones the repository reports, stated with the conditions that
+  produced them. A figure without its conditions is marketing.
 */
 
 import type { Decision } from "@/lib/data/decisions";
@@ -50,6 +52,163 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "orbit",
+    name: "Orbit",
+    tagline: "A sharded, durable chat server written from the socket up",
+    summary:
+      "A real-time chat server in modern C++ with its own event loop, wire protocol and write-ahead log. Every member of a room sees the same messages in the same order, and an acknowledged message survives kill -9.",
+    category: "featured",
+    status: "source",
+    domain: "Systems",
+    role: "Solo",
+    stack: ["C++20", "epoll / kqueue", "OpenSSL", "CMake"],
+    links: { github: "https://github.com/Elarionitis/Orbit" },
+    problem:
+      "A chat server has two promises that are easy to state and hard to keep together: everyone in a room reads the same history in the same order, and a message the server acknowledged is still there after the power goes out. The usual way to get the first is a lock around the room, which costs you the throughput, and the usual way to get the second is to fsync everything, which costs you the latency.",
+    approach:
+      "Make the ordering a property of the structure rather than of a lock, and make durability a policy the operator chooses rather than a default somebody has to live with. No frameworks: the reactor, the protocol, the log and the load generator are all in the repository, so every layer is one you can read.",
+    architecture: [
+      {
+        title: "One event loop per thread, no locks on the message path",
+        body: "A reactor over epoll on Linux and kqueue on macOS, with a hashed timing wheel giving O(1) connection and handshake deadlines. Writes are vectored and coalesced once per loop iteration, and the frame sent to a room is built once and shared by every recipient on that shard.",
+      },
+      {
+        title: "Rooms sharded across threads, one writer each",
+        body: "Each thread owns a set of connections and the rooms that hash to it. Exactly one thread ever writes to a room, and everything crossing shards travels through FIFO queues — so a total order per room falls out of the design and there is nothing to lock. Joining travels the same queues, which is what makes the handover from replayed history to the live stream exact rather than approximate.",
+      },
+      {
+        title: "Segmented write-ahead log with group commit",
+        body: "CRC-32C records in segments, three fsync policies from fastest to strictly durable, and recovery that truncates a torn final write and survives damage in older segments. TLS 1.2+ sits on a sans-IO layer so the reactor never blocks inside OpenSSL.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Why sharding instead of a lock per room",
+        body: "A mutex around a room makes ordering a runtime property you have to keep getting right. Giving a room exactly one writer thread makes it a structural one: two members cannot disagree because no second writer exists. The cost is that a hot room cannot spread across cores, which is a trade worth making for a server where fan-out, not per-room ingest, is the scarce resource.",
+      },
+      {
+        title: "Why one slow client is disconnected",
+        body: "Output queues are bounded. When a client stops reading, the choice is to buffer it (and let one dead connection consume the memory of the whole shard) or to cut it off. Orbit cuts it off, so a stalled reader is a problem for that reader alone and nobody else notices.",
+      },
+      {
+        title: "Why the benchmark generator is open-loop",
+        body: "A closed-loop generator waits for the server before sending the next request, so a stall quietly reduces the offered load instead of showing up as latency. Given a rate, the generator keeps to it, which means coordinated omission cannot hide behind the throughput number. A run exits non-zero if any message went missing.",
+      },
+    ],
+    results: [
+      { value: "17.4M/s", label: "Peak deliveries, 100 clients in one room" },
+      { value: "0.20ms", label: "p99 at 1,000 clients, 200k deliveries/s" },
+      { value: "0", label: "Acknowledged messages lost across repeated SIGKILL" },
+      { value: "185", label: "Tests, with ASan, TSan, UBSan and fuzzing" },
+    ],
+  },
+  {
+    slug: "signease",
+    name: "SignEase",
+    tagline: "Sign language recognition that runs the hard part in your browser",
+    summary:
+      "Record a sign with a webcam and read it back. Landmark tracking happens client-side on every frame, so the model sees the full frame rate and the server does almost no work.",
+    category: "featured",
+    status: "live",
+    domain: "Machine learning",
+    role: "Solo",
+    stack: ["Next.js", "TypeScript", "MediaPipe", "Flask", "TensorFlow Lite"],
+    links: { github: "https://github.com/Elarionitis/SignEase", live: "https://sign-ease-eight.vercel.app" },
+    problem:
+      "The model was trained on portrait phone video of people signing. A visitor arrives with a 4:3 laptop webcam, sits too close, and raises their hands before the sign starts. Each of those is a mismatch between the recording and the training data, and together they were costing far more accuracy than the model itself was.",
+    approach:
+      "Treat the gap between a webcam and the training set as the engineering problem, not as a modelling one. Fix the recording to look like what the model expects, then make the confidence it reports mean what it says.",
+    architecture: [
+      {
+        title: "Landmark tracking in the browser",
+        body: "MediaPipe Holistic runs on every camera frame over WebAssembly and WebGL, self-hosted rather than fetched from a CDN. What crosses the network is 94 rows of landmark coordinates — about six times less data than full frames, with identical predictions.",
+      },
+      {
+        title: "A backend that only classifies",
+        body: "Flask resamples the uploaded sequence to the 30fps the model was trained on, finds the part of the recording where the sign actually happens — leaving out raising, holding and lowering the hands — and runs the TensorFlow Lite classifier.",
+      },
+      {
+        title: "Backpressure instead of timeouts",
+        body: "Several copies of the model take requests in parallel, each with a bounded queue. When they are all busy the server answers 503 with Retry-After immediately rather than holding the connection, and the page retries with jittered backoff and says so. The slow video fallback has its own small queue so it cannot starve the fast path.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Why tracking moved to the browser",
+        body: "Running MediaPipe server-side was the bottleneck in production: a starter CPU had to sample only a few frames to avoid timing out, and the model's confidence collapsed on those sparse sequences — 30% against 74% on the same Kaggle sample. Tracking client-side gives the model the full frame rate, as it has locally, at no server cost.",
+      },
+      {
+        title: "Why the backend re-expresses the frame shape",
+        body: "MediaPipe coordinates are fractions of the frame's width and height, and the training videos are roughly 3:4. A 4:3 webcam therefore squeezes every hand shape to about half its width before the model ever sees it. The browser sends its aspect ratio and the backend re-expresses the landmarks as a 3:4 frame.",
+      },
+      {
+        title: "Why the signing hand is chosen by confidence",
+        body: "The model reads one hand, the one tracked in more frames — which in a two-handed sign is often the still base hand. Scoring each hand separately and keeping the more confident result fixed 6 predictions and broke none on the 120 dictionary videos, and held on the 127 added later, which it was not tuned on.",
+      },
+      {
+        title: "Why the confidence shown is not the model's",
+        body: "The model was trained with smoothed labels, so its raw scores rarely pass about 75% even when it is right. A number that never reaches certainty teaches people to ignore it. Temperature scaling fitted on held-out video makes the displayed confidence match how often predictions are actually correct.",
+      },
+    ],
+    results: [
+      { value: "250", label: "Signs in the vocabulary" },
+      { value: "60% / 68%", label: "Top-1 / top-3 on 120 unseen videos" },
+      { value: "6x", label: "Smaller uploads than sending frames" },
+      { value: "2x", label: "Throughput from parallel model copies" },
+    ],
+  },
+  {
+    slug: "tradstrat",
+    name: "TradStrat",
+    tagline: "A backtester that tries to prove your strategy wrong",
+    summary:
+      "Most backtesters tell you what a strategy would have made. This one asks whether you should believe it: parameters tuned without hindsight, confidence intervals on the result, and a correction for how many configurations you tried.",
+    category: "featured",
+    status: "research",
+    domain: "Quantitative research",
+    role: "Solo",
+    stack: ["Python", "pandas", "NumPy", "Streamlit", "Plotly"],
+    links: { github: "https://github.com/Elarionitis/TradStrat" },
+    problem:
+      "A backtest that is subtly wrong is worse than no backtest, because it produces confident, wrong numbers. Fill a signal at the price that generated it, tune parameters on the whole history, and compare the result against zero, and almost any strategy looks like a discovery.",
+    approach:
+      "Build the engine so the mistakes are impossible rather than discouraged — fills happen at the next bar's open, parameters are chosen on past data only — and then report the result with the statistics that survive the search you ran to find it.",
+    architecture: [
+      {
+        title: "An event-driven engine, in the order a live system would act",
+        body: "At the open it acts on the signal formed at the previous close; during the bar it checks stops against the low; at the close it marks the position to market. Commission, slippage and whole-share sizing are charged, and the benchmark runs through the same simulator and pays the same costs.",
+      },
+      {
+        title: "Walk-forward validation",
+        body: "Parameters are chosen on one window and traded on the next, then the window rolls forward. Joining the unseen windows gives an equity curve built only from decisions that could have been made at the time.",
+      },
+      {
+        title: "Statistics that account for the search",
+        body: "Deflated and probabilistic Sharpe ratios, block bootstrap confidence intervals, and the probability of beating the benchmark rather than of beating zero.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Why the benchmark is buy and hold, not zero",
+        body: "On ten years of SPY the best moving-average crossover reaches a deflated Sharpe of 98.4% against zero, which reads as a discovery. Against buy and hold it is 2.5%. A long-only strategy clears the first bar simply by owning a rising market, so that bar measures the market, not the strategy.",
+      },
+      {
+        title: "Why look-ahead bias is a property test",
+        body: "A property-based test runs against every registered strategy and asserts that signals computed on a truncated history match the full-history signals exactly. Other tests rewrite a bar's high, low and close and assert that what was bought at its open does not change. Writing a new strategy gets you that coverage for free.",
+      },
+      {
+        title: "Why the test suite is itself tested",
+        body: "A script injects 20 realistic bugs into the engine and confirms the suite catches each one. A green suite over code that cannot fail is the most expensive kind of false confidence, and the only way to know the difference is to break something on purpose.",
+      },
+    ],
+    results: [
+      { value: "0.86 → 0.31", label: "Mean Sharpe, in-sample to out-of-sample" },
+      { value: "1 of 30", label: "Runs beating buy and hold on Sharpe" },
+      { value: "0 of 30", label: "Significant against buy and hold" },
+      { value: "20 of 30", label: "Runs with a shallower drawdown" },
+    ],
+  },
+  {
     slug: "carequeue",
     name: "CareQueue",
     tagline: "Continuous triage and queue surveillance for emergency departments",
@@ -71,59 +230,12 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "signease",
-    name: "SignEase",
-    tagline: "Real-time ASL recognition over WebSocket",
-    summary:
-      "A sequence-aware Transformer that reads American Sign Language from a webcam, served by a low-latency inference microservice and streamed back to the browser frame by frame.",
-    category: "featured",
-    status: "live",
-    domain: "Machine learning",
-    role: "Solo",
-    stack: ["Python", "TensorFlow", "FastAPI", "React", "MediaPipe", "WebSocket"],
-    links: { github: "https://github.com/Elarionitis/SignEase", live: "https://sign-ease-eight.vercel.app" },
-    problem:
-      "Sign language is sequential. Classifying single frames throws away the movement that distinguishes one gesture from another, and anything that recognises a sign after it has finished is too slow to feel like a conversation.",
-    approach:
-      "Extract hand landmarks in the browser, send sequences rather than frames to a dedicated inference service, and keep the round trip under the threshold where the delay becomes noticeable.",
-    architecture: [
-      {
-        title: "Landmark extraction in the browser",
-        body: "MediaPipe pulls hand landmarks client-side, so what crosses the network is a small vector of coordinates rather than video. Features are normalised, which decouples accuracy from lighting conditions.",
-      },
-      {
-        title: "Sequence-aware Transformer",
-        body: "The model is trained on 30,000+ landmark frames across 26 ASL gesture classes and reads a window of frames rather than one, so it can tell apart gestures that differ only in movement.",
-      },
-      {
-        title: "Streaming inference service",
-        body: "A FastAPI microservice holds the model and talks to the React frontend over a WebSocket, which keeps the connection open instead of paying handshake cost on every frame.",
-      },
-    ],
-    decisions: [
-      {
-        title: "Why WebSocket rather than HTTP polling",
-        body: "At sub-100ms per frame, HTTP request overhead is a meaningful fraction of the budget. A persistent connection removes it and makes the latency predictable rather than bursty.",
-      },
-      {
-        title: "Why quantise the model",
-        body: "Batch processing and quantisation lifted throughput 40% and cut model size 4x, at under 2% accuracy loss. For an interactive demo, responsiveness was worth more than the last two points of accuracy.",
-      },
-    ],
-    results: [
-      { value: "96%+", label: "Accuracy, 26 classes" },
-      { value: "<100ms", label: "Per frame" },
-      { value: "+40%", label: "Throughput" },
-      { value: "4x", label: "Smaller model" },
-    ],
-  },
-  {
     slug: "spendly",
     name: "Spendly",
     tagline: "Event-sourced shared expense ledger",
     summary:
       "A group expense tracker built as an append-only ledger, so concurrent edits from several people cannot conflict, and a settlement algorithm that minimises the number of payments.",
-    category: "featured",
+    category: "work",
     status: "source",
     domain: "Concurrency",
     role: "Solo",
@@ -165,7 +277,7 @@ export const projects: Project[] = [
     tagline: "Air-quality intelligence platform",
     summary:
       "Ward-level AQI forecasting with source attribution and inspection ranking, served by a FastAPI backend behind a React dashboard.",
-    category: "featured",
+    category: "work",
     status: "source",
     domain: "Machine learning",
     role: "Solo",
@@ -180,23 +292,10 @@ export const projects: Project[] = [
       "An MCP server that hands a coding agent repository metadata, README content and stack signals as structured data, instead of making it ask.",
     category: "work",
     status: "source",
-    domain: "Systems",
+    domain: "Developer tooling",
     role: "Solo",
     stack: ["TypeScript", "Node.js", "MCP SDK", "GitHub REST API"],
     links: { github: "https://github.com/Elarionitis/repo-context-mcp" },
-  },
-  {
-    slug: "orbit",
-    name: "Orbit",
-    tagline: "Multi-client TCP chat server",
-    summary:
-      "A threaded chat server in C++17 that holds many clients at once, one thread per connection, with a terminal client to talk to it.",
-    category: "experiment",
-    status: "source",
-    domain: "Concurrency",
-    role: "Solo",
-    stack: ["C++17", "POSIX Sockets", "Multithreading", "CMake"],
-    links: { github: "https://github.com/Elarionitis/Orbit" },
   },
 ];
 

@@ -4,40 +4,6 @@ import { useId, useState } from "react";
 
 import type { DecisionDemo as DecisionDemoData } from "@/lib/data/decisions";
 
-function LatencyBudget({ demo }: { demo: Extract<DecisionDemoData, { kind: "latency-budget" }> }) {
-  const [latency, setLatency] = useState(72);
-  const id = useId();
-  const withinBudget = latency < demo.budget;
-
-  return (
-    <section aria-labelledby={id} className="decision-demo">
-      <div className="decision-demo-heading">
-        <p className="label" id={id}>{demo.label}</p>
-        <output aria-live="polite" className={withinBudget ? "is-good" : "is-over"} htmlFor={`${id}-input`}>
-          {latency}ms <span>{withinBudget ? "within budget" : "over budget"}</span>
-        </output>
-      </div>
-      <input
-        aria-describedby={`${id}-hint`}
-        id={`${id}-input`}
-        max="140"
-        min="20"
-        onChange={(event) => setLatency(Number(event.target.value))}
-        step="1"
-        type="range"
-        value={latency}
-      />
-      <div aria-hidden="true" className="decision-budget-track">
-        <span className="decision-budget-fill" style={{ width: `${(latency / 140) * 100}%` }} />
-        <span className="decision-budget-limit" style={{ left: `${(demo.budget / 140) * 100}%` }} />
-      </div>
-      <p className="decision-demo-note" id={`${id}-hint`}>
-        Drag the frame time across the sub-{demo.budget}ms target. The decision favors a stable interaction budget over unnecessary model precision.
-      </p>
-    </section>
-  );
-}
-
 function EventFold({ demo }: { demo: Extract<DecisionDemoData, { kind: "event-fold" }> }) {
   const [visible, setVisible] = useState(1);
   const shownEvents = demo.events.slice(0, visible);
@@ -90,7 +56,6 @@ function BaselineGate({ demo }: { demo: Extract<DecisionDemoData, { kind: "basel
 }
 
 export function DecisionDemo({ demo }: { demo: DecisionDemoData }) {
-  if (demo.kind === "latency-budget") return <LatencyBudget demo={demo} />;
   if (demo.kind === "event-fold") return <EventFold demo={demo} />;
   return <BaselineGate demo={demo} />;
 }

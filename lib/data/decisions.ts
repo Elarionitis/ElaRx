@@ -8,14 +8,15 @@
 
   Adding work means adding decisions. A project with no decision worth writing
   down does not belong on the homepage.
+
+  An entry is rewritten when the system it describes changes, which is why
+  D-01 to D-03 and D-15 no longer match what they said in earlier versions:
+  SignEase moved its landmark tracking into the browser, and Orbit was rebuilt
+  as a sharded server. A decision that documents deleted code is worse than no
+  decision at all.
 */
 
 export type DecisionDemo =
-  | {
-      kind: "latency-budget";
-      label: string;
-      budget: number;
-    }
   | {
       kind: "event-fold";
       label: string;
@@ -51,40 +52,37 @@ export type Decision = {
 export const decisions: Decision[] = [
   {
     id: "D-01",
-    title: "Move feature extraction to the edge",
-    constraint: "Streaming webcam frames to a server for inference puts the whole video payload on the network path.",
+    title: "Move landmark tracking into the browser",
+    constraint:
+      "Extracting hand landmarks on the server meant a shared CPU had to sample a few frames per clip to avoid timing out.",
     reasoning:
-      "MediaPipe can extract hand landmarks in the browser, so what actually crosses the network is a small vector of coordinates rather than an image. Normalising those features also decouples accuracy from lighting, which a server-side pipeline would have had to correct for anyway.",
+      "The obvious reading was that the model had got worse in production. It had not — it was being handed a sparse, stuttering version of the recording. Running MediaPipe client-side gives it the full frame rate, as it has locally, and what crosses the network is 94 rows of coordinates rather than video. The server stops doing the expensive part, which is also the part it was worst at.",
+    outcome: "Confidence on the same sample went from 30% back to 74%, with roughly 6x less data uploaded.",
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Real-time systems",
   },
   {
     id: "D-02",
-    title: "Use a persistent stream for real-time inference",
-    constraint: "At a sub-100ms per-frame budget, HTTP request overhead is a meaningful fraction of the budget.",
+    title: "Re-express the webcam as the camera the model was trained on",
+    constraint:
+      "MediaPipe coordinates are fractions of the frame, and the training videos are portrait phone recordings at roughly 3:4.",
     reasoning:
-      "Every polled request pays connection setup again, which makes latency bursty rather than predictable. A persistent WebSocket removes that cost entirely and makes the frame budget something you can actually reason about, which matters more for an interactive demo than raw throughput does.",
-    outcome: "Under 100ms per frame, end to end.",
+      "A 4:3 laptop webcam therefore squeezes every hand shape to about half its width before the model sees it — a mismatch that looks like a model problem and is entirely a recording problem. Rather than retrain on webcam video there is none of, the browser reports its aspect ratio and the backend re-expresses the landmarks in a 3:4 frame. Fixing the input is cheaper than teaching the model a second geometry.",
     source: "signease",
     sourceLabel: "SignEase",
-    domain: "Real-time systems",
-    demo: {
-      kind: "latency-budget",
-      label: "Latency budget",
-      budget: 100,
-    },
+    domain: "Model behaviour",
   },
   {
     id: "D-03",
-    title: "Spend the accuracy budget on latency",
-    constraint: "The model was accurate enough and too slow to feel responsive.",
+    title: "Show calibrated confidence, not the model's score",
+    constraint:
+      "The model was trained with smoothed labels, so its raw score rarely passes about 75% even when the prediction is right.",
     reasoning:
-      "Batch processing and quantisation lifted throughput 40% and cut the model to a quarter of its size, at under 2% accuracy loss. For something a person interacts with in real time, the delay is the thing they notice; the last two points of accuracy are not.",
-    outcome: "96%+ across 26 classes, 40% more throughput, 4x smaller.",
+      "A confidence that never reaches certainty teaches people to ignore it, which quietly removes the one signal telling them when to trust the answer. Temperature scaling, fitted on held-out video, makes the displayed number mean what it says: 60% confident should be right about 60% of the time. The scaling is refitted whenever the model changes, because a calibration from an older model is a lie with a decimal point.",
     source: "signease",
     sourceLabel: "SignEase",
-    domain: "Real-time systems",
+    domain: "Model behaviour",
   },
   {
     id: "D-04",
@@ -189,7 +187,7 @@ export const decisions: Decision[] = [
       "Ordinary least squares will happily produce that, and it fits better for it. Non-negative least squares constrains every coefficient at or above zero, so the breakdown stays physically interpretable and can be defended when it sends someone somewhere. Fit quality is worth less here than being able to explain the answer.",
     source: "aeris",
     sourceLabel: "Aeris",
-    domain: "ML platform",
+    domain: "Model behaviour",
   },
   {
     id: "D-13",
@@ -199,7 +197,7 @@ export const decisions: Decision[] = [
       "Persistence is the honest baseline for anything time-series, so it is in the test suite: mean RMSE has to come in at least 10% under it or the build fails. The evaluation report leads with the caveat that the holdout is synthetic rather than with the headline improvement, because a number nobody qualified is a number that will be quoted back wrongly.",
     source: "aeris",
     sourceLabel: "Aeris",
-    domain: "ML platform",
+    domain: "Honest measurement",
     demo: {
       kind: "baseline-gate",
       label: "Compare to persistence",
@@ -218,13 +216,66 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-15",
-    title: "Encode socket ownership in the type system",
-    constraint: "A copied server object means two objects holding the same file descriptor, and the second destructor closes a socket that is already gone.",
+    title: "Give every room exactly one writer",
+    constraint: "Members of a chat room have to agree on the order of messages, and a mutex around the room makes that a runtime property you have to keep getting right.",
     reasoning:
-      "The copy constructor and copy assignment are deleted outright and move semantics provided instead, so ownership transfers rather than duplicates. The compiler then refuses the bug at the point it would be written, which is cheaper than finding it as an intermittent failure once several clients are connected.",
+      "Rooms are hashed onto threads, and a thread owns the rooms that land on it; everything crossing threads travels through FIFO queues. Two members cannot disagree about the order because there is no second writer to disagree with — ordering stops being something the code defends and becomes something the structure guarantees. Joining travels the same queues, which is what makes the handover from replayed history to the live stream exact. The price is that one very hot room cannot spread across cores.",
+    outcome: "A total order per room with no locks on the message path, and 17.4M deliveries/s peak fan-out over loopback.",
+    source: "orbit",
+    sourceLabel: "Orbit",
+    domain: "Distributed state",
+  },
+  {
+    id: "D-16",
+    title: "Cut the stalled client instead of buffering it",
+    constraint: "A client that stops reading does not stop the server from having messages to send it.",
+    reasoning:
+      "Buffering without a bound lets one dead connection consume the memory of every connection sharing its thread, so a single bad client becomes everyone's outage. Output queues are bounded and an over-full one is disconnected. One reader loses its session, which is a cost paid by the party that caused it, and nobody else notices.",
     source: "orbit",
     sourceLabel: "Orbit",
     domain: "Service reliability",
+  },
+  {
+    id: "D-17",
+    title: "Benchmark open-loop, so a stall cannot hide",
+    constraint: "A load generator that waits for the server before sending the next request lowers its own offered load whenever the server slows down.",
+    reasoning:
+      "That is coordinated omission, and it is why so many benchmarks report a good p99 for a server that periodically stops answering: the stall never appears, because during it nothing was being measured. Given a rate the generator keeps to it regardless, so a pause shows up as latency where it belongs. Every run also audits sequence numbers and delivery counts, and exits non-zero if a message went missing — a throughput figure from a run that lost messages is not a throughput figure.",
+    outcome: "p50 0.08ms and p99 0.20ms at 1,000 clients and 200k deliveries/s, with zero messages lost.",
+    source: "orbit",
+    sourceLabel: "Orbit",
+    domain: "Honest measurement",
+  },
+  {
+    id: "D-18",
+    title: "Measure a strategy against buy and hold, not against zero",
+    constraint: "A long-only strategy spends most of its time owning a market that trends upward, so beating zero is not evidence that the strategy does anything.",
+    reasoning:
+      "On ten years of SPY the best moving-average crossover reaches a deflated Sharpe of 98.4% against zero, which reads as a discovery worth trading. Against buy and hold the same result is 2.5%. The first number measures the market; only the second measures the strategy. So the benchmark runs through the same simulator and pays the same commission and slippage, and the significance that gets reported is the one against it.",
+    outcome: "Across 5 strategies and 6 ETFs from 2007 to 2025: 0 of 30 runs significant against buy and hold.",
+    source: "tradstrat",
+    sourceLabel: "TradStrat",
+    domain: "Honest measurement",
+  },
+  {
+    id: "D-19",
+    title: "Make look-ahead bias a property test",
+    constraint: "Look-ahead bias is a class of bug, not a bug — there is a new way to introduce it in every strategy anyone adds.",
+    reasoning:
+      "Reviewing each strategy for it by hand works until the reviewer is tired. Instead a property-based test runs against every registered strategy and asserts that signals computed on a truncated history match the full-history signals exactly, and other tests rewrite a bar's high, low and close and assert that what was bought at its open does not change. Writing a new strategy gets that coverage without asking for it, so the honest version is the default rather than the disciplined one.",
+    source: "tradstrat",
+    sourceLabel: "TradStrat",
+    domain: "Honest measurement",
+  },
+  {
+    id: "D-20",
+    title: "Check that the test suite is able to fail",
+    constraint: "A green suite over code the tests never actually exercise is indistinguishable from a green suite over correct code.",
+    reasoning:
+      "That is the most expensive kind of false confidence, because it is the kind you act on. A script injects 20 realistic bugs — an off-by-one in a fill, a leaked future price, a sign flip in the accounting — and confirms the suite catches each one. The result is evidence about the tests rather than about the code, which is the thing a backtester most needs and almost never has.",
+    source: "tradstrat",
+    sourceLabel: "TradStrat",
+    domain: "Honest measurement",
   },
 ];
 

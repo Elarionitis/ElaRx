@@ -743,6 +743,7 @@
   .project-bars { stroke: var(--ink-2); stroke-width: 4; vector-effect: non-scaling-stroke; }
   .project-forecast { stroke-width: 1.5; vector-effect: non-scaling-stroke; }
   .project-forecast-dashed { opacity: 0.46; stroke-dasharray: 4 5; }
+  .project-window { stroke: var(--rule-2); stroke-dasharray: 3 4; fill: color-mix(in srgb, var(--accent-wash) 40%, transparent); }
   .project-visual-labels { fill: var(--ink-3); font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.8px; }
   .project-signal { fill: var(--accent); opacity: 0; }
 
@@ -789,9 +790,9 @@
   .project-card:hover .project-card-link span, .project-card:focus-visible .project-card-link span { transform: translateX(4px); }
 
   .project-diagram.is-running .project-signal-signease { animation: project-signease 3s var(--ease-in-out, ease-in-out) infinite; }
-  .project-diagram.is-running .project-signal-spendly { animation: project-spendly 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-diagram.is-running .project-signal-orbit { animation: project-orbit 3s var(--ease-in-out, ease-in-out) infinite; }
+  .project-diagram.is-running .project-signal-tradstrat { animation: project-tradstrat 3.4s var(--ease-in-out, ease-in-out) infinite; }
   .project-diagram.is-running .project-signal-carequeue { animation: project-carequeue 3s var(--ease-in-out, ease-in-out) infinite; }
-  .project-diagram.is-running .project-signal-aeris { animation: project-aeris 3s var(--ease-in-out, ease-in-out) infinite; }
   .project-card.is-active .project-diagram.is-running .project-signal { animation-duration: 2s; }
 
   @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -799,9 +800,9 @@
   }
 
   @keyframes project-signease { 0% { cx: 61px; opacity: 0; } 9%, 78% { opacity: 1; } 100% { cx: 330px; opacity: 0; } }
-  @keyframes project-spendly { 0% { cx: 71px; cy: 55px; opacity: 0; } 10%, 76% { opacity: 1; } 55% { cx: 178px; cy: 90px; } 100% { cx: 364px; cy: 90px; opacity: 0; } }
+  @keyframes project-orbit { 0% { cx: 40px; cy: 90px; opacity: 0; } 10%, 74% { opacity: 1; } 42% { cx: 171px; cy: 90px; } 62% { cx: 239px; cy: 62px; } 100% { cx: 356px; cy: 62px; opacity: 0; } }
+  @keyframes project-tradstrat { 0% { cx: 44px; cy: 118px; opacity: 0; } 10%, 78% { opacity: 1; } 42% { cx: 144px; cy: 50px; } 72% { cx: 246px; cy: 86px; } 100% { cx: 356px; cy: 86px; opacity: 0; } }
   @keyframes project-carequeue { 0% { cx: 60px; cy: 114px; opacity: 0; } 10%, 78% { opacity: 1; } 55% { cx: 234px; cy: 114px; } 75% { cx: 289px; cy: 63px; } 100% { cx: 362px; cy: 63px; opacity: 0; } }
-  @keyframes project-aeris { 0% { cx: 48px; cy: 116px; opacity: 0; } 10%, 80% { opacity: 1; } 60% { cx: 253px; cy: 61px; } 100% { cx: 365px; cy: 80px; opacity: 0; } }
 
   @media (max-width: 42rem) {
     .selected-work-grid { grid-template-columns: 1fr; }
@@ -1047,14 +1048,7 @@
     background: color-mix(in srgb, var(--paper-2) 65%, var(--paper));
   }
   .decision-demo-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-  .decision-demo-heading output, .decision-demo-status { margin: 0; color: var(--ink-2); font-family: var(--font-mono); font-size: 0.7rem; }
-  .decision-demo-heading output.is-good { color: var(--accent); }
-  .decision-demo-heading output.is-over { color: var(--ink); }
-  .decision-demo-heading output span { color: var(--ink-3); }
-  .decision-demo input[type="range"] { width: 100%; margin-top: 1rem; accent-color: var(--accent); }
-  .decision-budget-track { position: relative; height: 0.25rem; margin-top: 0.25rem; background: var(--rule); }
-  .decision-budget-fill { display: block; height: 100%; background: var(--accent); transition: width 120ms linear; }
-  .decision-budget-limit { position: absolute; top: -0.3rem; height: 0.85rem; border-left: 1px solid var(--ink); }
+  .decision-demo-status { margin: 0; color: var(--ink-2); font-family: var(--font-mono); font-size: 0.7rem; }
   .decision-demo-note { max-width: 40rem; margin-top: 0.8rem; color: var(--ink-2); font-size: 0.82rem; line-height: 1.55; }
   .decision-event-log { display: grid; gap: 0.4rem; margin-top: 0.9rem; }
   .decision-event-log li { display: flex; gap: 0.7rem; align-items: baseline; color: var(--ink-2); font-size: 0.83rem; }
