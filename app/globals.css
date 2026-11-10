@@ -1182,6 +1182,93 @@
 
   .guestbook-byline { margin: 0; color: var(--ink-3); }
 
+  /*
+    ── Ship log ───────────────────────────────────────────────────────────────
+    Rows of a log, not cards: one hairline between each, the repository set in
+    mono as a reference, the message as the only prose.
+  */
+  .ship-pulse {
+    position: relative;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  .ship-pulse::after {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    animation: ship-pulse 2.6s var(--ease-out) infinite;
+    content: "";
+  }
+
+  @keyframes ship-pulse {
+    0% { opacity: 0.7; transform: scale(1); }
+    70%, 100% { opacity: 0; transform: scale(3.4); }
+  }
+
+  .ship-log {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ship-log li { border-top: 1px solid var(--rule); }
+  .ship-log li:first-child { border-top: 0; }
+
+  .ship-row {
+    display: grid;
+    gap: 0.25rem 1.25rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    transition: color 160ms ease;
+  }
+
+  @media (min-width: 42rem) {
+    .ship-row { grid-template-columns: 9rem minmax(0, 1fr) 7rem; }
+  }
+
+  .ship-repo {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    transition: color 160ms ease;
+  }
+
+  .ship-row:hover .ship-repo { color: var(--accent); }
+
+  .ship-message {
+    min-width: 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .ship-row:hover .ship-message { color: var(--ink); }
+
+  .ship-when { color: var(--ink-3); }
+
+  @media (min-width: 42rem) {
+    .ship-when { text-align: right; }
+  }
+
+  .ship-note {
+    max-width: 34rem;
+    margin-top: 0.9rem;
+    color: var(--ink-3);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ship-pulse::after { animation: none; }
+  }
+
   .decision-demo {
     margin: 1rem 0 0 3.6rem;
     padding: 1rem 1.1rem;

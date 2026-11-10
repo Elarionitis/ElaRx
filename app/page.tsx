@@ -9,6 +9,7 @@ import { HeroSystem } from "@/components/HeroSystem";
 import { MagneticLink } from "@/components/MagneticLink";
 import { ProofStrip } from "@/components/ProofStrip";
 import { SelectedWork } from "@/components/SelectedWork";
+import { ShipLog } from "@/components/ShipLog";
 import { guestbookIsConfigured } from "@/lib/guestbook-store";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
@@ -128,6 +129,9 @@ export default function Home() {
       <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">
         <SelectedWork projects={selected} />
       </Clause>
+
+      {/* Live, and the only thing here that is true this week. */}
+      <ShipLog />
 
       <Clause id="decisions" label="How I think">
         <div className="thinking-intro">

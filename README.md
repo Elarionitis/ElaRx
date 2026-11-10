@@ -54,6 +54,19 @@ to `content/blog/` and all of it appears; there is no flag to flip. Drafts
 count in development, so a post in progress is previewable before it is
 public.
 
+## Ship log
+
+`/` also carries a short "Lately" list: the newest commit in each of the four
+most recently pushed repositories, read from GitHub's public API when the page
+is built and revalidated hourly. No token — everything it reads is public, and
+five requests an hour sits far inside the unauthenticated rate limit.
+
+Forks and the profile README repository are skipped, merge commits are passed
+over in favour of the most recent commit that says what changed, and the rows
+are sorted by commit date rather than by repository. If GitHub is unreachable
+or rate limited the list comes back empty and the section does not render:
+`lib/ship-log.ts`.
+
 ## Guestbook
 
 `/` carries a guestbook. There is no account, no sign-in and no email field —
