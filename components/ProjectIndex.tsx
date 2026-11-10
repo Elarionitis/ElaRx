@@ -205,6 +205,33 @@ export function ProjectIndex({
               </dl>
             ) : null}
 
+            {active.approach ? (
+              <div className="mt-7">
+                <p className="label">The approach</p>
+                <p className="measure mt-3 text-[0.95rem] leading-[1.65] text-ink-2">{active.approach}</p>
+              </div>
+            ) : null}
+
+            {/*
+              The architecture notes were written into the project data and
+              then rendered nowhere, which made every case study stop at the
+              problem — the part a reader already believed — and skip the part
+              that answers it.
+            */}
+            {active.architecture && active.architecture.length > 0 ? (
+              <div className="mt-7">
+                <p className="label">How it works</p>
+                <ul className="detail-list mt-3">
+                  {active.architecture.map((item) => (
+                    <li key={item.title}>
+                      <p className="detail-title">{item.title}</p>
+                      <p className="detail-body">{item.body}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
             <div className="mt-7">
               <p className="label">Built with</p>
               <ul className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.75rem] text-ink-3">

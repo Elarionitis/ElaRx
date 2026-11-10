@@ -288,6 +288,18 @@ export const decisions: Decision[] = [
     sourceLabel: "TradStrat",
     domain: "Honest measurement",
   },
+  {
+    id: "D-21",
+    title: "Pick the signing hand by confidence, not by frame count",
+    constraint: "The model reads one hand, and the obvious choice — the hand tracked in more frames — is in a two-handed sign often the still base hand.",
+    reasoning:
+      "Tracking quality and relevance are not the same signal, and the first was standing in for the second. When both hands are tracked the backend now scores each on its own and keeps the more confident result. The guard against fooling myself was holding back video: the change was tuned on 120 dictionary clips and then checked on 127 added later, which it had never seen.",
+    outcome:
+      "6 predictions fixed and none broken on the tuning set, and the same shape on the unseen set — 6 fixed, none broken.",
+    source: "signease",
+    sourceLabel: "SignEase",
+    domain: "Model behaviour",
+  },
 ];
 
 export const domains = [...new Set(decisions.map((decision) => decision.domain))].sort();

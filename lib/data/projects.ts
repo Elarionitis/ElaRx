@@ -8,6 +8,10 @@
 
   Numbers are the ones the repository reports, stated with the conditions that
   produced them. A figure without its conditions is marketing.
+
+  The reasoning behind a project lives in decisions.ts, not here. These entries
+  carry what a thing is and how it works; why it is built that way is one
+  decision log with permalinks, rather than the same argument written twice.
 */
 
 import type { Decision } from "@/lib/data/decisions";
@@ -44,8 +48,6 @@ export type Project = {
   problem?: string;
   approach?: string;
   architecture?: Detail[];
-  decisions?: Detail[];
-  challenges?: Detail[];
   results?: Metric[];
   relatedWriting?: string;
 };
@@ -79,20 +81,6 @@ export const projects: Project[] = [
       {
         title: "Segmented write-ahead log with group commit",
         body: "CRC-32C records in segments, three fsync policies from fastest to strictly durable, and recovery that truncates a torn final write and survives damage in older segments. TLS 1.2+ sits on a sans-IO layer so the reactor never blocks inside OpenSSL.",
-      },
-    ],
-    decisions: [
-      {
-        title: "Why sharding instead of a lock per room",
-        body: "A mutex around a room makes ordering a runtime property you have to keep getting right. Giving a room exactly one writer thread makes it a structural one: two members cannot disagree because no second writer exists. The cost is that a hot room cannot spread across cores, which is a trade worth making for a server where fan-out, not per-room ingest, is the scarce resource.",
-      },
-      {
-        title: "Why one slow client is disconnected",
-        body: "Output queues are bounded. When a client stops reading, the choice is to buffer it (and let one dead connection consume the memory of the whole shard) or to cut it off. Orbit cuts it off, so a stalled reader is a problem for that reader alone and nobody else notices.",
-      },
-      {
-        title: "Why the benchmark generator is open-loop",
-        body: "A closed-loop generator waits for the server before sending the next request, so a stall quietly reduces the offered load instead of showing up as latency. Given a rate, the generator keeps to it, which means coordinated omission cannot hide behind the throughput number. A run exits non-zero if any message went missing.",
       },
     ],
     results: [
@@ -132,24 +120,6 @@ export const projects: Project[] = [
         body: "Several copies of the model take requests in parallel, each with a bounded queue. When they are all busy the server answers 503 with Retry-After immediately rather than holding the connection, and the page retries with jittered backoff and says so. The slow video fallback has its own small queue so it cannot starve the fast path.",
       },
     ],
-    decisions: [
-      {
-        title: "Why tracking moved to the browser",
-        body: "Running MediaPipe server-side was the bottleneck in production: a starter CPU had to sample only a few frames to avoid timing out, and the model's confidence collapsed on those sparse sequences — 30% against 74% on the same Kaggle sample. Tracking client-side gives the model the full frame rate, as it has locally, at no server cost.",
-      },
-      {
-        title: "Why the backend re-expresses the frame shape",
-        body: "MediaPipe coordinates are fractions of the frame's width and height, and the training videos are roughly 3:4. A 4:3 webcam therefore squeezes every hand shape to about half its width before the model ever sees it. The browser sends its aspect ratio and the backend re-expresses the landmarks as a 3:4 frame.",
-      },
-      {
-        title: "Why the signing hand is chosen by confidence",
-        body: "The model reads one hand, the one tracked in more frames — which in a two-handed sign is often the still base hand. Scoring each hand separately and keeping the more confident result fixed 6 predictions and broke none on the 120 dictionary videos, and held on the 127 added later, which it was not tuned on.",
-      },
-      {
-        title: "Why the confidence shown is not the model's",
-        body: "The model was trained with smoothed labels, so its raw scores rarely pass about 75% even when it is right. A number that never reaches certainty teaches people to ignore it. Temperature scaling fitted on held-out video makes the displayed confidence match how often predictions are actually correct.",
-      },
-    ],
     results: [
       { value: "250", label: "Signs in the vocabulary" },
       { value: "60% / 68%", label: "Top-1 / top-3 on 120 unseen videos" },
@@ -185,20 +155,6 @@ export const projects: Project[] = [
       {
         title: "Statistics that account for the search",
         body: "Deflated and probabilistic Sharpe ratios, block bootstrap confidence intervals, and the probability of beating the benchmark rather than of beating zero.",
-      },
-    ],
-    decisions: [
-      {
-        title: "Why the benchmark is buy and hold, not zero",
-        body: "On ten years of SPY the best moving-average crossover reaches a deflated Sharpe of 98.4% against zero, which reads as a discovery. Against buy and hold it is 2.5%. A long-only strategy clears the first bar simply by owning a rising market, so that bar measures the market, not the strategy.",
-      },
-      {
-        title: "Why look-ahead bias is a property test",
-        body: "A property-based test runs against every registered strategy and asserts that signals computed on a truncated history match the full-history signals exactly. Other tests rewrite a bar's high, low and close and assert that what was bought at its open does not change. Writing a new strategy gets you that coverage for free.",
-      },
-      {
-        title: "Why the test suite is itself tested",
-        body: "A script injects 20 realistic bugs into the engine and confirms the suite catches each one. A green suite over code that cannot fail is the most expensive kind of false confidence, and the only way to know the difference is to break something on purpose.",
       },
     ],
     results: [
@@ -255,16 +211,6 @@ export const projects: Project[] = [
         body: "16 concurrent Firestore listeners are orchestrated with Riverpod, so screens update from the same source of truth without each one running its own query.",
       },
     ],
-    decisions: [
-      {
-        title: "Why event sourcing over locking",
-        body: "Locking assumes connectivity and a coordinator. An append-only log gives synchronisation guarantees equivalent to CRDT patterns without either, which suits a mobile client that may be offline mid-edit.",
-      },
-      {
-        title: "Minimising settlements",
-        body: "Naively, n members settling pairwise generates far more transfers than necessary. A Minimize Cash Flow pass runs in O(n log n) and reduces a group to at most n-1 transactions, up to 70% fewer payments than the naive approach.",
-      },
-    ],
     results: [
       { value: "0", label: "Data conflicts in testing" },
       { value: "n-1", label: "Max settlements for n members" },
@@ -299,13 +245,6 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((project) => project.category === "featured");
-
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug) ?? null;
-}
-
-/** True when there is enough written up to justify a case-study page. */
-export function hasCaseStudy(project: Project) {
-  return Boolean(project.problem || project.architecture?.length || project.decisions?.length);
 }
