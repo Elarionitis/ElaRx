@@ -18,22 +18,49 @@ import { MAX_MESSAGE, MAX_NAME, type Entry } from "@/lib/guestbook";
   section and nothing else.
 */
 
-const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
-  ["year", 31536000],
-  ["month", 2592000],
-  ["day", 86400],
-  ["hour", 3600],
-  ["minute", 60],
-];
+/*
+  The wall of notes is two rows drifting in opposite directions.
 
-function relative(at: number): string {
-  const seconds = Math.round((Date.now() - at) / 1000);
-  const format = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  A row loops seamlessly because it is rendered twice end to end and moved by
+  exactly half its own width, so the second copy arrives where the first
+  began. That only works if one copy is wider than the screen, so a short row
+  is repeated until it is: three notes still fill the track instead of
+  leaving a gap that chases itself across the page.
+*/
+const MIN_PER_ROW = 8;
+/** Seconds each note takes to cross, which keeps speed constant as rows grow. */
+const SECONDS_PER_NOTE = 7;
 
-  for (const [unit, size] of UNITS) {
-    if (seconds >= size) return format.format(-Math.round(seconds / size), unit);
-  }
-  return "just now";
+function fill(entries: Entry[]): Entry[] {
+  if (entries.length === 0) return [];
+  const row: Entry[] = [];
+  while (row.length < MIN_PER_ROW) row.push(...entries);
+  return row;
+}
+
+function Row({ direction, entries }: { direction: "left" | "right"; entries: Entry[] }) {
+  const row = fill(entries);
+  if (row.length === 0) return null;
+
+  return (
+    <div className="marquee" data-direction={direction}>
+      <div className="marquee-track" style={{ animationDuration: `${row.length * SECONDS_PER_NOTE}s` }}>
+        {[0, 1].map((copy) => (
+          // The second copy exists only to close the loop; it is the same
+          // notes again, so assistive technology is told to skip it.
+          <ul aria-hidden={copy === 1} className="marquee-group" key={copy}>
+            {row.map((entry, index) => (
+              // Notes past the first pass are padding for the loop.
+              <li className="note" data-repeat={index >= entries.length || undefined} key={`${entry.id}-${index}`}>
+                <p className="note-message">{entry.message}</p>
+                <p className="note-name">{entry.name}</p>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 type Status = "loading" | "ready" | "sending" | "unreachable";
@@ -176,18 +203,20 @@ export function Guestbook() {
       ) : entries.length === 0 ? (
         <p className="guestbook-empty">Nobody has signed yet. You could be first.</p>
       ) : (
-        <ul className="guestbook-list">
-          {entries.map((entry) => (
-            <li className="guestbook-entry" key={entry.id}>
-              <p className="guestbook-message">{entry.message}</p>
-              <p className="guestbook-byline label">
-                {entry.name}
-                <span aria-hidden="true"> · </span>
-                <time dateTime={new Date(entry.at).toISOString()}>{relative(entry.at)}</time>
-              </p>
-            </li>
-          ))}
-        </ul>
+        /*
+          Two rows once there are enough notes to make two different ones.
+          Below that a second row would only be the first one backwards.
+        */
+        <div className="guestbook-wall">
+          {entries.length >= 4 ? (
+            <>
+              <Row direction="left" entries={entries.filter((_, index) => index % 2 === 0)} />
+              <Row direction="right" entries={entries.filter((_, index) => index % 2 === 1)} />
+            </>
+          ) : (
+            <Row direction="left" entries={entries} />
+          )}
+        </div>
       )}
     </div>
   );
