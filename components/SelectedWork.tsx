@@ -9,21 +9,22 @@ import type { Project } from "@/lib/data/projects";
 function OrbitVisual() {
   return (
     <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
-      <path className="project-route" d="M52 90h38m34 0h30m34 0 34-28m-34 28 34 28m0-28h40m-40 56h40" />
+      <path className="project-route" d="M51 90H90M124 90h30M188 90l34-28M188 90l34 28M256 62h40M256 118h40M312 62h14M312 118h14" />
+      <path className="project-route project-route-accent" d="M342 62l14 28M342 118l14-28" />
       <circle className="project-shape" cx="40" cy="90" r="11" />
       <rect className="project-shape" height="38" rx="2" width="34" x="90" y="71" />
       <rect className="project-shape" height="38" rx="2" width="34" x="154" y="71" />
-      <path className="project-shape" d="M158 118h26m-26 10h26" />
+      <path className="project-shape" d="M160 118h22m-22 9h22" />
       <rect className="project-shape" height="26" rx="2" width="34" x="222" y="49" />
       <rect className="project-shape" height="26" rx="2" width="34" x="222" y="105" />
       <circle className="project-shape" cx="304" cy="62" r="8" />
       <circle className="project-shape" cx="334" cy="62" r="8" />
       <circle className="project-shape" cx="304" cy="118" r="8" />
       <circle className="project-shape" cx="334" cy="118" r="8" />
-      <path className="project-result" d="m362 85 9 9 17-19" />
+      <path className="project-result" d="m362 85 8 8 16-18" />
       <circle className="project-signal project-signal-orbit" cx="40" cy="90" r="4" />
       <g className="project-visual-labels">
-        <text x="26" y="150">PUBLISH</text><text x="88" y="150">INGRESS</text><text x="152" y="162">LOG</text><text x="218" y="36">SHARDS</text><text x="296" y="150">ROOM</text>
+        <text x="22" y="152">PUBLISH</text><text x="86" y="152">INGRESS</text><text x="156" y="152">LOG</text><text x="218" y="38">SHARDS</text><text x="294" y="152">MEMBERS</text>
       </g>
     </svg>
   );
@@ -47,6 +48,12 @@ function SignEaseVisual() {
   );
 }
 
+/*
+  The whole TradStrat result in one picture: a curve that climbs on the data
+  it was tuned on, falls on the data it was not, and a deflated Sharpe that
+  does not reach the line it would have to clear to mean anything. An earlier
+  version ended on a tick, which told the opposite of the story.
+*/
 function TradStratVisual() {
   return (
     <svg aria-hidden="true" className="project-visual-svg" fill="none" viewBox="0 0 420 180">
@@ -54,12 +61,12 @@ function TradStratVisual() {
       <path className="project-shape project-window" d="M40 36h104v92H40z" />
       <path className="project-forecast" d="M44 118c22-20 34-8 52-30s30-26 48-38" />
       <path className="project-forecast project-forecast-dashed" d="M144 50c24 14 32 2 50 16s32 8 52 20" />
-      <path className="project-route project-route-accent" d="M292 82h26" />
-      <path className="project-bars" d="M326 112V62m22 50V98" />
-      <path className="project-result" d="m364 94 9 9 17-19" />
+      <path className="project-route" d="M292 94h22" />
+      <path className="project-bars" d="M330 118V64m30 54V100" />
+      <path className="project-forecast project-forecast-dashed" d="M316 72h76" />
       <circle className="project-signal project-signal-tradstrat" cx="44" cy="118" r="4" />
       <g className="project-visual-labels">
-        <text x="40" y="152">TUNED</text><text x="150" y="152">UNSEEN</text><text x="312" y="152">DEFLATED</text><text x="316" y="30">SHARPE</text>
+        <text x="40" y="152">TUNED</text><text x="150" y="152">UNSEEN</text><text x="316" y="152">DEFLATED</text><text x="316" y="30">THRESHOLD</text>
       </g>
     </svg>
   );

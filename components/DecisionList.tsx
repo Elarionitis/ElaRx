@@ -63,10 +63,18 @@ function DecisionRow({
               <p className="label">Decision</p>
               <p>{decision.reasoning}</p>
             </div>
-            <div className="thinking-step thinking-consequence">
-              <p className="label">Consequence</p>
-              <p>{decision.outcome ?? "Implementation detail documented in the linked project."}</p>
-            </div>
+            {/*
+              Only when there is one. The placeholder that used to stand in
+              here — "implementation detail documented in the linked project"
+              — said nothing, and said it in the slot reserved for the part
+              that matters most.
+            */}
+            {decision.outcome ? (
+              <div className="thinking-step thinking-consequence">
+                <p className="label">Consequence</p>
+                <p>{decision.outcome}</p>
+              </div>
+            ) : null}
           </div>
           {decision.demo ? <DecisionDemo demo={decision.demo} /> : null}
           <div className="thinking-links">
@@ -83,12 +91,23 @@ function DecisionRow({
   );
 }
 
-export function DecisionList({ items }: { items: Decision[] }) {
+/*
+  `initialLimit` shortens the unfiltered list to its first few entries. The
+  homepage uses it: twenty rows there is an archive, and an archive is
+  something a first-time visitor scrolls past rather than reads. Filtered
+  lists are never shortened — they are already short, and hiding part of a
+  filter's results makes the filter look broken.
+*/
+export function DecisionList({ initialLimit, items }: { initialLimit?: number; items: Decision[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [domain, setDomain] = useState("All");
+  const [expanded, setExpanded] = useState(false);
   const domains = useMemo(() => [...new Set(items.map((item) => item.domain))], [items]);
-  const visibleItems = domain === "All" ? items : items.filter((item) => item.domain === domain);
+  const matching = domain === "All" ? items : items.filter((item) => item.domain === domain);
+  const truncated = Boolean(initialLimit) && !expanded && domain === "All" && matching.length > initialLimit!;
+  const visibleItems = truncated ? matching.slice(0, initialLimit) : matching;
+  const hiddenCount = matching.length - visibleItems.length;
 
   const applyUrlState = useCallback((scroll: boolean) => {
     const params = new URLSearchParams(window.location.search);
@@ -103,6 +122,9 @@ export function DecisionList({ items }: { items: Decision[] }) {
 
     setDomain(nextDomain);
     setOpenId(nextOpenId);
+    // A shared link to a decision below the fold has to reveal it, or the
+    // page scrolls to a row that is not being rendered.
+    if (nextOpenId) setExpanded(true);
     if (nextOpenId && scroll) {
       // Instant, not smooth. A shared decision link opens at the top of the
       // document, and the inherited smooth scroll made arriving at D-12 mean
@@ -158,13 +180,14 @@ export function DecisionList({ items }: { items: Decision[] }) {
   }, []);
 
   const surprise = useCallback(() => {
-    const pool = visibleItems.filter((item) => item.id !== openId);
-    const next = pool[Math.floor(Math.random() * pool.length)] ?? visibleItems[0];
+    const pool = matching.filter((item) => item.id !== openId);
+    const next = pool[Math.floor(Math.random() * pool.length)] ?? matching[0];
     if (!next) return;
+    setExpanded(true);
     setOpenId(next.id);
     updateUrl(domain, next.id);
     window.setTimeout(() => document.getElementById(next.id)?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
-  }, [domain, openId, updateUrl, visibleItems]);
+  }, [domain, matching, openId, updateUrl]);
 
   return (
     <div>
@@ -197,6 +220,11 @@ export function DecisionList({ items }: { items: Decision[] }) {
           />
         ))}
       </ul>
+      {truncated ? (
+        <button className="thinking-more focus-ring" onClick={() => setExpanded(true)} type="button">
+          Show the other {hiddenCount} decisions <span aria-hidden="true">↓</span>
+        </button>
+      ) : null}
     </div>
   );
 }

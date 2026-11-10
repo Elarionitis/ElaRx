@@ -9,9 +9,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-/* Selected, not exhaustive. The resume is the complete record. */
-const selectedPositions = siteConfig.positions.slice(0, 3);
-
 export default function AboutPage() {
   return (
     <div className="sheet pb-4">
@@ -145,53 +142,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="pt-16" data-reveal>
-        <h2 className="clause label">Education</h2>
-        <ul className="mt-8 border-b border-rule">
-          {siteConfig.education.map((item) => (
-            <li className="border-t border-rule first:border-t-0" key={item.institution}>
-              <div className="grid gap-x-5 gap-y-2 py-6 sm:grid-cols-[13rem_minmax(0,1fr)]">
-                <div>
-                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.institution}</p>
-                  <p className="label mt-1.5">
-                    <span className="num">{item.dates}</span>
-                  </p>
-                </div>
-                <p className="measure text-[0.95rem] leading-[1.65] text-ink-2">
-                  {item.qualification}
-                  {item.detail ? `. ${item.detail}` : ""}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/*
+        The page used to end with two more tables — education, then every
+        society position with its dates. Both are on the resume, and
+        reprinting them here made this read as a document to be processed
+        rather than as a person to be met. One line is enough to say where
+        the full record lives.
+      */}
+      <p className="measure clause pt-16 text-[0.9rem] leading-[1.6] text-ink-3">
+        Every position, result and date is on the{" "}
+        <a className="tlink text-ink-2" href="/resume">
+          resume
+        </a>
+        .
+      </p>
 
-      <section className="pt-16" data-reveal>
-        <h2 className="clause label">Outside the code</h2>
-        <ul className="mt-8 border-b border-rule">
-          {selectedPositions.map((item) => (
-            <li className="border-t border-rule first:border-t-0" key={item.org}>
-              <div className="grid gap-x-5 gap-y-2 py-6 sm:grid-cols-[13rem_minmax(0,1fr)]">
-                <div>
-                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.org}</p>
-                  <p className="label mt-1.5">
-                    <span className="num">{item.dates}</span>
-                  </p>
-                </div>
-                <p className="measure text-[0.95rem] leading-[1.65] text-ink-2">{item.detail}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <p className="measure mt-6 text-[0.9rem] leading-[1.6] text-ink-3">
-          The complete record — every position, every result, every date — is on the{" "}
-          <a className="tlink text-ink-2" href="/resume">
-            resume
-          </a>
-          .
-        </p>
-      </section>
     </div>
   );
 }

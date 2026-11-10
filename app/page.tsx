@@ -59,14 +59,18 @@ export default function Home() {
               className="lens-heading mt-4 text-[clamp(3rem,8vw,6.5rem)] font-medium leading-[0.92] tracking-[-0.065em] text-ink"
               text="Software Engineer"
             />
+            {/*
+              One claim, then the evidence. The hero used to carry a tagline,
+              a keyword line and a paragraph of philosophy stacked on top of
+              each other, which asked a first-time visitor to read three
+              descriptions of the same person before reaching anything they
+              could click.
+            */}
             <p className="hero-reveal hero-reveal-4 mt-7 max-w-3xl text-[clamp(1.2rem,2vw,1.65rem)] leading-[1.16] tracking-[-0.035em] text-ink">
-              Building full-stack products, intelligent systems <span className="text-ink-2">&amp; things that ship.</span>
+              I build systems that stay correct when they get busy
+              <span className="text-ink-2"> — and write down why they are built that way.</span>
             </p>
-            <p className="hero-reveal hero-reveal-5 label mt-7 text-accent">Full-stack · AI/ML · Systems</p>
-            <p className="hero-reveal hero-reveal-5 measure mt-6 text-[1.02rem] leading-[1.7] text-ink-2">
-              I care about the moment an idea becomes useful: the interface people touch, the intelligence behind it,
-              and the engineering that keeps it working when reality arrives.
-            </p>
+            <p className="hero-reveal hero-reveal-5 label mt-6 text-accent">Full-stack · AI/ML · Systems</p>
 
             <div className="hero-reveal hero-reveal-6 mt-8 flex flex-wrap gap-2">
               <MagneticLink className="focus-ring btn btn-solid" href="/resume">Resume</MagneticLink>
@@ -103,17 +107,17 @@ export default function Home() {
           <HeroSystem />
         </div>
         <ProofStrip stats={siteConfig.stats} />
-        <div className="mt-6 grid gap-5 border-t border-rule pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] sm:gap-12">
-          <p className="text-[0.95rem] leading-[1.6] text-ink-2">
-            Make the constraint visible. Prefer the smaller moving part. Leave behind a trail someone else can follow.
-          </p>
-          <div>
-            <p className="label">Currently</p>
-            <p className="mt-1 text-sm leading-[1.55] text-ink-2">
-              Leading Anand Rathi Tinkerers&rsquo; Lab, reading consensus protocols, and building.
-            </p>
-          </div>
-        </div>
+        {/*
+          The whole of "who is this" in one line. Everything it used to say at
+          length — the education, the internships, the campus roles — is on
+          /about and in the resume, where someone who wants it will look.
+        */}
+        <p className="mt-6 border-t border-rule pt-5 text-[0.95rem] leading-[1.6] text-ink-2">
+          CS undergrad at IIT Jodhpur, two internships in, currently leading the campus makerspace.{" "}
+          <Link className="focus-ring tlink text-ink" href="/about">
+            More about me
+          </Link>
+        </p>
       </section>
       </HeroSignalField>
 
@@ -130,24 +134,14 @@ export default function Home() {
             </p>
           </div>
           <p>
-            Open an entry for the constraint, the decision, and what it changed.
+            Open one for the constraint, the call, and what it changed.
           </p>
         </div>
         <div className="mt-8">
-          <DecisionList items={decisions} />
+          <DecisionList initialLimit={6} items={decisions} />
         </div>
       </Clause>
 
-      <Clause label="Background" more="More about me" moreHref="/about">
-        <div className="measure text-[0.95rem] leading-[1.65] text-ink-2">
-          <p>
-            Two internships so far: a web agency where I spent most of my time on query shapes and
-            production incidents, and an AI learning platform where I built the retrieval pipeline. On
-            campus I coordinate the Tinkerers&rsquo; Lab, set problems for the programming society, and help
-            run placement outreach.
-          </p>
-        </div>
-      </Clause>
     </div>
   );
 }
