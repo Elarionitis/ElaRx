@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { hasPoster, ProjectPoster } from "@/components/ProjectPoster";
 import type { Decision } from "@/lib/data/decisions";
 import type { Project } from "@/lib/data/projects";
 
@@ -179,6 +180,12 @@ export function ProjectIndex({
               </h2>
               <p className="label shrink-0">{statusLabel[active.status]}</p>
             </div>
+
+            {hasPoster(active.slug) ? (
+              <div className="project-poster mt-6">
+                <ProjectPoster slug={active.slug} />
+              </div>
+            ) : null}
 
             <p className="measure mt-5 text-[1.05rem] leading-[1.65] text-ink-2">{active.summary}</p>
 

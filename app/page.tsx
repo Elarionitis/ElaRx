@@ -8,8 +8,8 @@ import { HeroSignalField } from "@/components/HeroSignalField";
 import { HeroSystem } from "@/components/HeroSystem";
 import { MagneticLink } from "@/components/MagneticLink";
 import { ProofStrip } from "@/components/ProofStrip";
-import { SelectedWork } from "@/components/SelectedWork";
 import { ShipLog } from "@/components/ShipLog";
+import { WorkList } from "@/components/WorkList";
 import { guestbookIsConfigured } from "@/lib/guestbook-store";
 import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
@@ -45,8 +45,6 @@ function Clause({
 }
 
 export default function Home() {
-  const selected = projects.filter((project) => project.category === "featured");
-
   return (
     <div className="sheet pb-4">
       <HeroSignalField>
@@ -126,8 +124,8 @@ export default function Home() {
       </section>
       </HeroSignalField>
 
-      <Clause label="Work" more={`All ${projects.length} projects`} moreHref="/projects">
-        <SelectedWork projects={selected} />
+      <Clause label="Work" more="Read the case studies" moreHref="/projects">
+        <WorkList projects={projects} />
       </Clause>
 
       {/* Live, and the only thing here that is true this week. */}
