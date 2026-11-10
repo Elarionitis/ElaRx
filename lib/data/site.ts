@@ -78,7 +78,7 @@ export const siteConfig = {
     { value: "17.4M/s", label: "Peak chat fan-out, Orbit" },
     { value: "<500ms", label: "RAG retrieval over 500+ docs" },
     { value: "250", label: "Signs recognised, SignEase" },
-    { value: "AIR 397", label: "JEE Advanced 2024" },
+    { value: "0 of 30", label: "Strategies that beat buy and hold" },
   ] satisfies Stat[],
 
   /** Longer form, /about only. */
@@ -131,7 +131,9 @@ export const siteConfig = {
   ] satisfies Position[],
 
   achievements: [
-    { title: "JEE Advanced 2024", detail: "AIR 397 (General-EWS)" },
+    // A category rank, and always labelled as one. Printed bare it reads as
+    // the common rank list, which it is not.
+    { title: "JEE Advanced 2024", detail: "Rank 397 in the GEN-EWS category list" },
     { title: "JEE Main 2024", detail: "99.55 percentile" },
     { title: "GUJCET 2024", detail: "State rank 3 in Gujarat" },
     {

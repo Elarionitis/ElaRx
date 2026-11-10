@@ -73,6 +73,19 @@ export default function AboutPage() {
                 <span className="text-ink-3">Anand Rathi Tinkerers&rsquo; Lab</span>
               </dd>
             </div>
+            {/*
+              The JEE figure is a category rank, so it is stated as one, here,
+              with its category beside it. It used to sit on the homepage as a
+              bare "AIR 397", which a reader takes for the common rank list.
+            */}
+            <div>
+              <dt className="label">Entrance exams</dt>
+              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+                GUJCET 2024 &middot; state rank 3
+                <br />
+                <span className="text-ink-3">JEE Advanced 2024 &middot; GEN-EWS rank 397</span>
+              </dd>
+            </div>
             <div>
               <dt className="label">Find me</dt>
               <dd className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.95rem]">
