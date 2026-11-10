@@ -113,7 +113,7 @@ export function CommandPalette({ email, items }: { email: string; items: Command
   if (!open) {
     return copied ? (
       <div
-        className="fixed bottom-5 left-1/2 z-[70] -translate-x-1/2 rounded-full border border-line-strong bg-surface px-4 py-2 font-mono text-xs text-foreground shadow-lg"
+        className="fixed bottom-5 left-1/2 z-[70] -translate-x-1/2 rounded-full border border-rule-2 bg-paper-2 px-4 py-2 font-mono text-xs text-ink shadow-lg"
         role="status"
       >
         Email copied
@@ -133,14 +133,14 @@ export function CommandPalette({ email, items }: { email: string; items: Command
       role="presentation"
     >
       <div aria-label="Command palette" aria-modal="true" className="palette" role="dialog">
-        <div className="flex items-center gap-3 border-b border-line px-4">
-          <span aria-hidden="true" className="font-mono text-sm text-faint">
+        <div className="flex items-center gap-3 border-b border-rule px-4">
+          <span aria-hidden="true" className="font-mono text-sm text-ink-3">
             &#8250;
           </span>
           <input
             aria-label="Search pages, projects and writing"
             autoFocus
-            className="h-12 w-full bg-transparent text-[0.95rem] text-foreground outline-none placeholder:text-faint"
+            className="h-12 w-full bg-transparent text-[0.95rem] text-ink outline-none placeholder:text-ink-3"
             onChange={(event) => {
               setQuery(event.target.value);
               setCursor(0);
@@ -167,13 +167,13 @@ export function CommandPalette({ email, items }: { email: string; items: Command
 
         <div className="min-h-0 flex-1 overflow-y-auto p-2" ref={listRef}>
           {flat.length === 0 ? (
-            <p className="px-3 py-8 text-center text-sm text-muted">
+            <p className="px-3 py-8 text-center text-sm text-ink-2">
               Nothing matches &ldquo;{query}&rdquo;.
             </p>
           ) : (
             grouped.map((section) => (
               <div className="mb-1" key={section.group}>
-                <p className="eyebrow px-3 py-2">{section.group}</p>
+                <p className="label px-3 py-2">{section.group}</p>
                 {section.items.map((item) => {
                   const index = flat.indexOf(item);
                   const isActive = index === activeIndex;
@@ -181,7 +181,7 @@ export function CommandPalette({ email, items }: { email: string; items: Command
                   return (
                     <button
                       className={`flex w-full min-w-0 items-center justify-between gap-4 overflow-hidden rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                        isActive ? "bg-surface-2 text-foreground" : "text-muted hover:bg-surface-2"
+                        isActive ? "bg-accent-wash text-ink" : "text-ink-2 hover:bg-paper-2"
                       }`}
                       data-active={isActive}
                       key={`${item.group}-${item.label}`}
@@ -191,7 +191,7 @@ export function CommandPalette({ email, items }: { email: string; items: Command
                     >
                       <span className="min-w-0 flex-1 truncate">{item.label}</span>
                       {item.hint ? (
-                        <span className="hidden max-w-[45%] shrink truncate font-mono text-[0.7rem] text-faint sm:block">
+                        <span className="hidden max-w-[45%] shrink truncate font-mono text-[0.7rem] text-ink-3 sm:block">
                           {item.hint}
                         </span>
                       ) : null}
@@ -203,7 +203,7 @@ export function CommandPalette({ email, items }: { email: string; items: Command
           )}
         </div>
 
-        <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 font-mono text-[0.68rem] text-faint">
+        <div className="flex items-center gap-4 border-t border-rule px-4 py-2.5 font-mono text-[0.68rem] text-ink-3">
           <span className="flex items-center gap-1.5">
             <span className="kbd">&uarr;</span>
             <span className="kbd">&darr;</span> navigate

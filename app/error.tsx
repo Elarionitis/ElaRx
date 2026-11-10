@@ -10,7 +10,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <div className="sheet flex min-h-[60vh] flex-col justify-center py-20">
       <p className="label">Error</p>
-      <h1 className="mt-3 font-display text-[clamp(2.5rem,8vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-foreground">
+      <h1 className="mt-3 text-[clamp(2.5rem,8vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-ink">
         Something broke
       </h1>
       <p className="measure mt-5 text-[1.05rem] leading-[1.6] text-ink-2">
