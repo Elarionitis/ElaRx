@@ -27,7 +27,6 @@ const writingIsPublic = hasPosts();
 
 const routes: Route[] = [
   { label: "Work", href: "/projects" },
-  { label: "Thinking", href: "/#decisions" },
   ...(writingIsPublic ? [{ label: "Writing", href: "/writing" }] : []),
   { label: "About", href: "/about" },
 ];
@@ -102,7 +101,8 @@ function buildCommandItems(): CommandItem[] {
       hint: decision.id,
       // Searching "locking" or "cache" should find the decision about it.
       keywords: `${decision.constraint} ${decision.reasoning} ${decision.domain} ${decision.sourceLabel}`,
-      href: `/#${decision.id}`,
+      // A decision is read inside the project or job it came from.
+      href: decision.sourceHref ?? `/projects#${decision.source}`,
     })),
     ...projects.map((project) => ({
       group: "Projects",
@@ -124,7 +124,7 @@ function buildCommandItems(): CommandItem[] {
       : []),
     { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
     { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
-    { group: "Actions", label: "Surprise me", hint: "Open a decision", action: "surprise" as const, href: "/#D-04" },
+    { group: "Actions", label: "Surprise me", hint: "Open a project", action: "surprise" as const, href: "/projects#tradstrat" },
     { group: "Actions", label: "Download resume", hint: "PDF", href: siteConfig.resumePath },
     { group: "Elsewhere", label: "GitHub", href: siteConfig.links.github.url },
     { group: "Elsewhere", label: "LinkedIn", href: siteConfig.links.linkedin.url },

@@ -1,4 +1,3 @@
-export type Stat = { value: string; label: string };
 export type SiteLink = { label: string; url: string; visible: boolean };
 
 export type EducationItem = {
@@ -68,18 +67,6 @@ export const siteConfig = {
   intro: "Distributed systems, retrieval pipelines, and the queries that get slow first.",
   contact: "Open to SDE and AI/ML internships.",
   writingIntro: "What I am building, and what broke while I built it.",
-
-  /*
-    Four figures for the homepage. Each is stated again in context elsewhere,
-    with the conditions that produced it — a number is only evidence if the
-    reader can get to the measurement behind it.
-  */
-  stats: [
-    { value: "17.4M/s", label: "Peak chat fan-out, Orbit" },
-    { value: "<500ms", label: "RAG retrieval over 500+ docs" },
-    { value: "250", label: "Signs recognised, SignEase" },
-    { value: "0 of 30", label: "Strategies that beat buy and hold" },
-  ] satisfies Stat[],
 
   /** Longer form, /about only. */
   bio: [],

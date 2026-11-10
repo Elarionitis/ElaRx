@@ -222,345 +222,120 @@
     background-size: 100% 1px;
   }
 
-
-  .hero-system {
-    position: relative;
-    isolation: isolate;
-    height: clamp(12rem, 24vw, 17rem);
-    overflow: hidden;
-    border: 1px solid var(--rule);
-    background: linear-gradient(115deg, color-mix(in srgb, var(--paper-2) 76%, transparent), transparent 72%);
-  }
-
-  .hero-stage { --hero-x: 0; --hero-y: 0; }
-  html[data-reveal-ready] .hero-reveal { opacity: 0; transform: translateY(0.65rem); }
-  .hero-stage.is-revealed .hero-reveal { animation: hero-reveal 560ms var(--ease-out) both; }
-  .hero-stage.is-revealed .hero-reveal-1 { animation-delay: 20ms; }
-  .hero-stage.is-revealed .hero-reveal-2 { animation-delay: 70ms; }
-  .hero-stage.is-revealed .hero-reveal-3 { animation-delay: 120ms; }
-  .hero-stage.is-revealed .hero-reveal-4 { animation-delay: 170ms; }
-  .hero-stage.is-revealed .hero-reveal-5 { animation-delay: 220ms; }
-  .hero-stage.is-revealed .hero-reveal-6 { animation-delay: 270ms; }
-  @keyframes hero-reveal { to { opacity: 1; transform: none; } }
-
-  /*
-    Word-by-word rise. The clip box has to lend the descender some room back,
-    or `overflow: hidden` shears the tail off the g in "Engineer".
-  */
-  .hero-word {
-    display: inline-block;
-    overflow: hidden;
-    margin-bottom: -0.16em;
-    padding-bottom: 0.16em;
-    vertical-align: bottom;
-  }
-
-  html[data-reveal-ready] .hero-word-inner {
-    display: inline-block;
-    transform: translateY(100%);
-  }
-
-  .hero-stage.is-revealed .hero-word-inner {
-    animation: hero-word 820ms var(--ease-out) both;
-    animation-delay: calc(120ms + var(--word-index) * 90ms);
-  }
-
-  @keyframes hero-word {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  /* Four readings, divided the way a spec sheet divides its figures. */
-  .proof-strip {
-    display: grid;
-    margin: 0;
-    margin-top: 1.5rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-top: 1px solid var(--rule-2);
-  }
-
-  .proof-cell {
-    position: relative;
-    padding: 1rem 0.25rem 1.1rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .proof-cell + .proof-cell { border-left: 1px solid var(--rule); padding-left: 1.1rem; }
-
-  /* The figure's own rule brightens on hover, so the row answers the pointer. */
-  .proof-cell::before {
-    position: absolute;
-    top: -1px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: var(--accent);
-    content: "";
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 420ms var(--ease-out);
-  }
-
-  .proof-cell:hover::before { transform: scaleX(1); }
-
-  .proof-value {
-    color: var(--ink);
-    font-size: clamp(1.45rem, 3vw, 2.1rem);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    transition: color 180ms ease;
-  }
-
-  .proof-cell:hover .proof-value { color: var(--accent); }
-
-  .proof-label {
-    margin: 0;
-    margin-top: 0.55rem;
-    letter-spacing: 0.08em;
-  }
-
-  @media (min-width: 48rem) {
-    .proof-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .proof-cell { padding-block: 1.15rem 1.3rem; }
-  }
-
-  /* A standing invitation to keep going, drawn rather than animated at you. */
-  .hero-scroll-cue {
-    position: absolute;
-    bottom: 0.8rem;
-    left: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    color: var(--ink-3);
-    font-family: var(--font-mono);
-    font-size: 0.57rem;
-    letter-spacing: 0.1em;
-  }
-
-  .hero-scroll-cue span {
-    position: relative;
-    display: block;
-    width: 2.75rem;
-    height: 1px;
-    overflow: hidden;
-    background: var(--rule-2);
-  }
-
-  .hero-scroll-cue span::after {
-    position: absolute;
-    inset: 0;
-    width: 40%;
-    background: var(--accent);
-    content: "";
-    animation: scroll-cue 2.6s var(--ease-in-out) infinite;
-  }
-
-  @keyframes scroll-cue {
-    0% { transform: translateX(-120%); }
-    60%, 100% { transform: translateX(280%); }
-  }
-
-  .hero-system-grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.55;
-    background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-    background-size: 2.75rem 2.75rem;
-    mask-image: linear-gradient(90deg, transparent, black 18%, black 82%, transparent);
-  }
-
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-    .hero-stage .hero-system-grid { transform: translate(calc(var(--hero-x) * 6px), calc(var(--hero-y) * 6px)); transition: transform 180ms ease-out; }
-    .hero-stage .hero-system-lines { transform: translate(calc(var(--hero-x) * -4px), calc(var(--hero-y) * -4px)); transition: transform 180ms ease-out; }
-    .hero-stage .hero-portrait { transform: translate(calc(var(--hero-x) * 5px), calc(var(--hero-y) * 5px)); transition: transform 180ms ease-out; }
-  }
-
-  /*
-    Magnetism is published as two offsets rather than as a finished transform,
-    so anything that also wants to move — a button lifting on hover — can add
-    its own term instead of overwriting the pull.
-  */
-  .magnetic-link {
-    transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
-    transition: transform 320ms var(--ease-out);
-  }
-
-  .hero-system-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-  .hero-system-path {
-    stroke: color-mix(in srgb, var(--ink-3) 55%, transparent);
-    stroke-width: 0.8;
-    vector-effect: non-scaling-stroke;
-  }
-
-  .hero-system-path-2 { stroke: color-mix(in srgb, var(--accent) 48%, transparent); }
-
-  .hero-node,
-  .hero-signal {
-    position: absolute;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .hero-node {
-    width: 0.55rem;
-    height: 0.55rem;
-    border: 1px solid var(--accent);
-    background: var(--paper);
-  }
-
-  .hero-node-one { left: 20%; top: 31%; }
-  .hero-node-two { left: 43%; top: 62%; }
-  .hero-node-three { left: 67%; top: 28%; }
-  .hero-node-four { left: 84%; top: 66%; }
-
-  /*
-    Three signals cross the field on offset schedules. One alone read as a
-    loading indicator; three at different speeds read as traffic.
-  */
-  .hero-signal { width: 0.25rem; height: 0.25rem; background: var(--accent); opacity: 0; }
-  .hero-signal-one { animation: signal-one 6s linear infinite; }
-  .hero-signal-two { animation: signal-two 8.5s linear infinite 1.4s; }
-  .hero-signal-three { width: 0.2rem; height: 0.2rem; background: var(--accent-2); animation: signal-three 7.2s linear infinite 3.1s; }
-
-  /* The nodes answer the lens with a breathing ring instead of a hard glow. */
-  .hero-system[data-lens-active] .hero-node::after {
-    position: absolute;
-    inset: -0.35rem;
-    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-    border-radius: 50%;
-    content: "";
-    animation: node-pulse 2.4s var(--ease-in-out) infinite;
-  }
-
-  .hero-system[data-lens-active] .hero-node-two::after { animation-delay: 0.3s; }
-  .hero-system[data-lens-active] .hero-node-three::after { animation-delay: 0.6s; }
-  .hero-system[data-lens-active] .hero-node-four::after { animation-delay: 0.9s; }
-
-  @keyframes node-pulse {
-    0%, 100% { opacity: 0.25; transform: scale(0.82); }
-    50% { opacity: 0.9; transform: scale(1.12); }
-  }
-
-  .hero-system-key {
-    position: absolute;
-    right: 1rem;
-    bottom: 0.8rem;
-    display: flex;
-    gap: 1rem;
-    color: var(--ink-3);
-    font-family: var(--font-mono);
-    font-size: 0.57rem;
-    letter-spacing: 0.1em;
-  }
-
-  .hero-system[data-lens-active] .hero-system-grid { opacity: 0.82; }
-  .hero-system[data-lens-active] .hero-system-path { stroke: color-mix(in srgb, var(--accent) 44%, var(--ink-3)); }
-  .hero-system[data-lens-active] .hero-node { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
-  .hero-system[data-lens-active] .hero-system-key { color: color-mix(in srgb, var(--ink-2) 82%, var(--accent)); }
-
-  @keyframes signal-one { 0% { left: 18%; top: 31%; opacity: 0; } 5%, 78% { opacity: 1; } 100% { left: 84%; top: 66%; opacity: 0; } }
-  @keyframes signal-two { 0% { left: 2%; top: 30%; opacity: 0; } 6%, 80% { opacity: 1; } 48% { left: 45%; top: 48%; } 100% { left: 98%; top: 36%; opacity: 0; } }
-  @keyframes signal-three { 0% { left: 15%; top: 87%; opacity: 0; } 8%, 76% { opacity: 1; } 52% { left: 52%; top: 46%; } 100% { left: 92%; top: 58%; opacity: 0; } }
-
-  .hero-portrait-assembly {
-    display: flex;
-    justify-content: flex-start;
-  }
-
-  .hero-portrait {
-    position: relative;
-    width: 8rem;
-    height: 8rem;
-  }
-
-  .hero-portrait img {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 100%;
-    height: 100%;
-    border: 1px solid var(--rule-2);
-    border-radius: 50%;
-    clip-path: circle(50%);
-    filter: brightness(1.08) contrast(1.08) saturate(1.08);
-    object-fit: cover;
-    transform: scale(1.08);
-  }
-
-  .hero-portrait-orbit {
-    position: absolute;
-    z-index: 0;
-    inset: -0.65rem;
-    border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
-    border-radius: 50%;
-  }
-
-  .hero-portrait[data-lens-active] .hero-portrait-orbit { border-color: color-mix(in srgb, var(--accent) 72%, var(--rule)); }
-  .hero-portrait[data-lens-active] img { border-color: color-mix(in srgb, var(--accent) 45%, var(--rule-2)); }
-
-  .lens-heading { position: relative; isolation: isolate; }
-  .lens-heading::after {
-    position: absolute;
-    inset: 0;
-    color: color-mix(in srgb, var(--accent) 42%, var(--ink));
-    content: attr(data-lens-copy);
-    opacity: 0;
-    pointer-events: none;
-    mask-image: radial-gradient(circle 12rem at var(--lens-local-x, -30rem) var(--lens-local-y, -30rem), black 0%, transparent 72%);
-    transition: opacity 160ms ease;
-  }
-  .lens-heading[data-lens-active]::after { opacity: 0.74; }
-
-  .hero-portrait-node,
-  .hero-portrait-signal {
-    position: absolute;
-    z-index: 2;
-    border-radius: 50%;
-  }
-
-  .hero-portrait-node {
-    width: 0.3rem;
-    height: 0.3rem;
-    border: 1px solid var(--accent);
-    background: var(--paper);
-  }
-
-  .hero-portrait-node-one { top: -0.55rem; left: 50%; transform: translateX(-50%); }
-  .hero-portrait-node-two { right: -0.55rem; bottom: 1.3rem; }
-
-  .hero-portrait-signal {
-    top: -0.42rem;
-    left: calc(50% - 0.12rem);
-    width: 0.24rem;
-    height: 0.24rem;
-    background: var(--accent);
-    animation: portrait-orbit 9s linear infinite;
-    transform-origin: 0.12rem 3.8rem;
-  }
-
-  @keyframes portrait-orbit { to { transform: rotate(360deg); } }
-
   .btn[data-lens-active] { border-color: color-mix(in srgb, var(--accent) 64%, var(--rule-2)); }
 
   /*
-    ── Work list ──────────────────────────────────────────────────────────────
-    Names set large enough to be the design. Pointing at one dims the others,
-    so the list itself says which project the floating poster belongs to.
+    ── Introduction ───────────────────────────────────────────────────────────
+    The first screen is one sentence, set large. There is no panel, no strip
+    of figures and no row of buttons competing with it: the sentence names
+    three projects, and the names are the things to touch.
   */
-  .work-list ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-2); }
+  .intro { padding-top: clamp(2.75rem, 8vw, 6rem); }
+
+  .intro-id { display: flex; align-items: center; gap: 1rem; }
+
+  .intro-name {
+    margin: 0;
+    color: var(--ink);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  /* Soft when prodded, on the same curve as the posters. */
+  .intro-portrait {
+    flex: none;
+    width: 4.5rem;
+    height: 4.5rem;
+    overflow: hidden;
+    border: 1px solid var(--rule-2);
+    border-radius: 999px;
+    transition: transform 620ms cubic-bezier(0.34, 1.7, 0.5, 1);
+  }
+
+  .intro-portrait:hover { transform: rotate(-6deg) scale(1.12, 1.06); }
+  .intro-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .intro-statement {
+    margin: clamp(1.75rem, 4vw, 2.75rem) 0 0;
+    color: var(--ink);
+    font-size: clamp(1.7rem, 4.4vw, 3.3rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1.12;
+    max-width: 58rem;
+    text-wrap: pretty;
+  }
+
+  .intro-quiet { color: var(--ink-3); }
+
+  /*
+    A project named in running text. The underline is the only signal that it
+    does something, so it is drawn in the accent and thick enough to notice.
+  */
+  .poster-link {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.14em;
+    transition: color 200ms ease, text-decoration-color 200ms ease;
+  }
+
+  .poster-link:hover,
+  .poster-link.is-active,
+  .poster-link:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
+
+  .intro-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: clamp(2rem, 5vw, 3.25rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .intro-now {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.6rem;
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .intro-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin: 0;
+    padding: 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    list-style: none;
+  }
+
+  /*
+    ── Project list ───────────────────────────────────────────────────────────
+    A name and a sentence per row. Pointing at one dims the others, so the
+    list itself says which project the floating poster belongs to.
+  */
+  .work-list { margin: 0; padding: 0; list-style: none; }
   .work-list li { border-bottom: 1px solid var(--rule); }
 
   .work-row {
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 0.35rem 1rem;
-    padding: clamp(1rem, 2.2vw, 1.6rem) 0;
-    transition: opacity 260ms ease, padding 420ms var(--ease-out);
+    gap: 0.3rem 1rem;
+    padding: clamp(1.1rem, 2.2vw, 1.6rem) 0;
+    transition: opacity 260ms ease;
   }
 
   .work-row::after {
@@ -581,35 +356,30 @@
 
   .work-list.has-active .work-row:not(.is-active) { opacity: 0.32; }
 
-  .work-index { align-self: start; padding-top: 0.75em; }
-
-  .work-title { display: grid; gap: 0.3rem; min-width: 0; }
-
   .work-name {
+    grid-column: 2;
     color: var(--ink);
-    font-size: clamp(1.9rem, 5.2vw, 3.6rem);
+    font-size: clamp(1.45rem, 2.7vw, 2.1rem);
     font-weight: 500;
-    letter-spacing: -0.05em;
-    line-height: 1;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
     transition: color 220ms ease, transform 520ms var(--ease-out);
   }
 
-  .work-tagline {
+  .work-intro {
+    grid-column: 2;
+    max-width: 34rem;
     color: var(--ink-2);
-    font-size: 0.95rem;
-    line-height: 1.45;
-    transition: transform 520ms var(--ease-out) 30ms;
+    font-size: 0.98rem;
+    line-height: 1.5;
   }
 
-  .work-row.is-active .work-name { color: var(--accent); transform: translateX(0.7rem); }
-  .work-row.is-active .work-tagline { transform: translateX(0.7rem); }
-
-  .work-meta { display: none; justify-items: end; gap: 0.3rem; text-align: right; }
-  .work-figure { color: var(--ink); font-size: 1.05rem; }
+  .work-row.is-active .work-name { color: var(--accent); transform: translateX(0.5rem); }
 
   .work-arrow {
+    display: none;
     color: var(--accent);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     opacity: 0;
     transform: translateX(-0.6rem);
     transition: opacity 220ms ease, transform 420ms var(--ease-out);
@@ -617,14 +387,10 @@
 
   .work-row.is-active .work-arrow { opacity: 1; transform: none; }
 
-  @media (min-width: 48rem) {
-    .work-row { grid-template-columns: 3rem minmax(0, 1fr) auto 2rem; }
-    .work-meta { display: grid; }
-  }
-
   /* Touch has no hover, so the poster sits in the row instead. */
   .work-thumb {
     display: none;
+    grid-row: 1 / span 2;
     width: 4.25rem;
     aspect-ratio: 4 / 5;
     overflow: hidden;
@@ -633,18 +399,23 @@
 
   @media (hover: none), (pointer: coarse) {
     .work-thumb { display: block; }
-    .work-index { display: none; }
-    .work-arrow { display: none; }
+  }
+
+  /* With room, the sentence moves beside the name and the row is one line. */
+  @media (min-width: 52rem) and (hover: hover) and (pointer: fine) {
+    .work-row { grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) 2rem; gap: 2rem; }
+    .work-name, .work-intro { grid-column: auto; }
+    .work-arrow { display: block; }
   }
 
   .poster { display: block; width: 100%; height: 100%; }
 
   /*
     The floating card. Position, lean, squash and scale all arrive as one
-    transform from the spring in WorkList, so there is deliberately no
+    transform from the spring in PosterCard, so there is deliberately no
     transition here: a transition on top of a spring fights it.
   */
-  .work-float {
+  .poster-card {
     position: fixed;
     z-index: 30;
     top: 0;
@@ -665,11 +436,27 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .work-float { display: block; }
+    .poster-card { display: block; }
   }
 
-  .work-float-poster { position: absolute; inset: 0; opacity: 0; transition: opacity 180ms ease; }
-  .work-float-poster.is-active { opacity: 1; }
+  /*
+    The incoming poster appears at once, on top, and the outgoing one fades
+    out beneath it. Fading both left a moment where neither was opaque and
+    the card flashed empty between two projects.
+  */
+  .poster-card-face { position: absolute; inset: 0; opacity: 0; transition: opacity 220ms ease; }
+  .poster-card-face.is-active { z-index: 1; opacity: 1; transition: none; }
+
+  .guestbook-invite {
+    max-width: 40rem;
+    margin: 1.75rem 0 0;
+    color: var(--ink);
+    font-size: clamp(1.2rem, 2.3vw, 1.65rem);
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+
+  .guestbook-invite span { color: var(--ink-3); }
 
   /*
     The poster on /projects: pinned at a slight angle, and soft when prodded.
@@ -694,18 +481,11 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .project-poster, .work-row, .work-name, .work-tagline, .work-arrow, .work-row::after { transition: none; }
-  }
-
-  @media (max-width: 42rem) {
-    .hero-signal { display: none; }
-    .hero-portrait-signal { animation: none; }
-  }
-
-  @media (min-width: 64rem) {
-    .hero-portrait-assembly { justify-content: flex-end; }
-    .hero-portrait { width: 16rem; height: 16rem; }
-    .hero-portrait-signal { transform-origin: 0.12rem 8.42rem; }
+        .project-poster,
+    .work-row,
+    .work-name,
+    .work-arrow,
+    .work-row::after { transition: none; }
   }
 
   /* Architecture notes: a title that reads as a claim, then its explanation. */
@@ -798,47 +578,6 @@
     .why-build-note { padding-top: 0.4rem; }
   }
 
-  .thinking-intro {
-    display: grid;
-    align-items: end;
-    gap: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--rule-2);
-  }
-
-  .thinking-intro > p {
-    max-width: 18rem;
-    color: var(--ink-2);
-    font-size: 0.88rem;
-    line-height: 1.6;
-  }
-
-  .thinking-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-block: 0.85rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .thinking-filters { display: flex; flex-wrap: wrap; gap: 0.25rem 0.85rem; }
-
-  .thinking-filters button,
-  .thinking-random {
-    color: var(--ink-3);
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.04em;
-    line-height: 1.5;
-    transition: color 150ms ease;
-  }
-
-  .thinking-filters button:hover,
-  .thinking-random:hover,
-  .thinking-filters button.is-active { color: var(--accent); }
-  .thinking-random { flex: none; }
-
   .thinking-list { border-bottom: 1px solid var(--rule-2); }
   .thinking-row { position: relative; border-top: 1px solid var(--rule); transition: background-color 220ms ease; }
   .thinking-row:first-child { border-top: 0; }
@@ -886,8 +625,6 @@
     line-height: 1.2;
     transition: color 160ms ease, transform 180ms ease;
   }
-
-  .thinking-source { display: none; }
   /* The toggle is a control, so it is given the outline of one. */
   .thinking-toggle {
     display: grid;
@@ -952,30 +689,6 @@
   .thinking-step > p:last-child { max-width: 47rem; margin-top: 0.42rem; color: var(--ink-2); font-size: 0.9rem; line-height: 1.58; }
   .thinking-consequence { background: color-mix(in srgb, var(--accent-wash) 32%, transparent); }
   .thinking-consequence > p:last-child { color: var(--ink); }
-
-  .thinking-links { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; margin: 0.85rem 0 0 3.6rem; }
-  .thinking-links :is(a, button) { color: var(--ink-3); font-size: 0.78rem; transition: color 150ms ease; }
-  .thinking-links :is(a, button):hover { color: var(--accent); }
-
-  /* Reads as the next row of the list rather than as a control beside it. */
-  .thinking-more {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.95rem 0;
-    border-bottom: 1px solid var(--rule-2);
-    color: var(--ink-2);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 160ms ease;
-  }
-
-  .thinking-more:hover { color: var(--accent); }
-  .thinking-more span { font-size: 0.9rem; }
 
   /*
     ── Guestbook ──────────────────────────────────────────────────────────────
@@ -1227,14 +940,6 @@
     .ship-when { text-align: right; }
   }
 
-  .ship-note {
-    max-width: 34rem;
-    margin-top: 0.9rem;
-    color: var(--ink-3);
-    font-size: 0.82rem;
-    line-height: 1.6;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ship-pulse::after { animation: none; }
   }
@@ -1269,13 +974,12 @@
   .decision-demo-toggle button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-wash); color: var(--ink); }
 
   @media (min-width: 48rem) {
-    .thinking-intro { grid-template-columns: minmax(0, 1fr) 18rem; }
     .thinking-trigger { grid-template-columns: 3.2rem 10rem minmax(0, 1fr) 9rem 1.5rem; gap: 1rem; padding-block: 1.3rem; }
     .thinking-domain { grid-column: 2; }
     .thinking-title { grid-column: 3; }
-    .thinking-source { display: block; grid-column: 4; justify-self: end; text-align: right; }
     .thinking-toggle { grid-column: 5; grid-row: auto; }
-    .thinking-flow, .thinking-links, .decision-demo { margin-left: 14.2rem; }
+        .thinking-flow,
+    .decision-demo { margin-left: 14.2rem; }
     .thinking-flow { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 0.9fr); }
     .thinking-step { border-top: 0; border-left: 1px solid var(--rule); }
     .thinking-step:first-child { border-left: 0; }
@@ -1325,39 +1029,6 @@
   }
 
   /*
-    The portrait is the one circle in a document made of rectangles, so it is
-    treated as a plate: the image inside a hairline, a thin annotation ring
-    struck around it, and a faint warm ground behind. Deliberately not a glow —
-    the ring is drawn, not lit.
-  */
-  .portrait {
-    position: relative;
-    display: block;
-    border-radius: 50%;
-    padding: 0.45rem;
-    background: radial-gradient(circle at 50% 45%, var(--accent-wash), transparent 72%);
-  }
-
-  .portrait::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
-    pointer-events: none;
-  }
-
-  .portrait img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    border: 1px solid var(--rule-2);
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  /*
     Disclosure panels settle their height in a single frame and animate only
     their contents. Animating the height would drag every row below past the
     pointer for the length of the transition, which is the exact problem the
@@ -1373,9 +1044,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .thinking-panel-frame, .thinking-panel, .decision-budget-fill, .decision-chart-forecast, .magnetic-link { transition: none; }
-    .hero-reveal { opacity: 1; transform: none; }
-    .hero-stage.is-revealed .hero-reveal { animation: none; }
+        .thinking-panel-frame,
+    .thinking-panel,
+    .decision-budget-fill,
+    .decision-chart-forecast { transition: none; }
   }
 
   /*

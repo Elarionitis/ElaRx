@@ -52,10 +52,6 @@ export async function ShipLog() {
         ))}
       </ul>
 
-      <p className="ship-note">
-        Read from GitHub when this page was last built. The newest commit in each repository, not a
-        summary written for this page.
-      </p>
     </section>
   );
 }

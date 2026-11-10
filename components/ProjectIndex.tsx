@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Decisions } from "@/components/Decisions";
 import { hasPoster, ProjectPoster } from "@/components/ProjectPoster";
 import type { Decision } from "@/lib/data/decisions";
 import type { Project } from "@/lib/data/projects";
@@ -250,20 +250,11 @@ export function ProjectIndex({
 
             {activeDecisions.length > 0 ? (
               <div className="mt-7">
-                <p className="label">Decisions from this project</p>
-                <ul className="mt-3 grid gap-2.5">
-                  {activeDecisions.map((decision) => (
-                    <li className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-3" key={decision.id}>
-                      <span className="ref pt-0.5">{decision.id}</span>
-                      <Link
-                        className="focus-ring tlink text-[0.95rem] leading-[1.5] text-ink"
-                        href={`/#${decision.id}`}
-                      >
-                        {decision.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <p className="label">Why it is built this way</p>
+                {/* Keyed, so moving to another project closes whatever was open. */}
+                <div className="mt-3">
+                  <Decisions items={activeDecisions} key={active.slug} />
+                </div>
               </div>
             ) : (
               <p className="measure mt-7 text-[0.9rem] leading-[1.6] text-ink-3">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { Decisions } from "@/components/Decisions";
+import { decisions } from "@/lib/data/decisions";
 import { experience } from "@/lib/data/experience";
 import { siteConfig } from "@/lib/data/site";
 
@@ -129,6 +131,9 @@ export default function AboutPage() {
                 <div className="measure">
                   <p className="text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[0]}</p>
                   <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[1]}</p>
+                  <div className="mt-5">
+                    <Decisions items={decisions.filter((decision) => decision.source === item.org)} />
+                  </div>
                 </div>
               </div>
             </li>

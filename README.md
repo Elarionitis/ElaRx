@@ -36,7 +36,7 @@ slash). It overrides everything above.
 
 | Route | Purpose |
 | --- | --- |
-| `/` | The decision log, plus selected work, writing and background. |
+| `/` | An introduction: one sentence about me, the projects with a line each, the guestbook. |
 | `/projects` | Every project. One filterable index that expands in place. |
 | `/writing` | Post index. Returns 404 until `content/blog/` has a post. |
 | `/writing/[slug]` | Article. Its own measure and type scale. |
@@ -92,17 +92,27 @@ See [.env.example](.env.example). `lib/guestbook.ts` holds the shared types and
 limits, `lib/guestbook-store.ts` the storage, and `app/api/guestbook/route.ts`
 the validation.
 
-## The decision log
+## The homepage
 
-The spine of the site is `lib/data/decisions.ts`. Each entry is a real
-constraint from real work and the choice that resolved it, with a stable
-reference (`D-01`) printed in the margin.
+The homepage introduces a person and nothing else. Figures, architecture and
+reasoning live on `/projects`, under the project they belong to; putting them
+on the front page made it read as documentation for the projects.
 
-Decisions and projects share a `domain` vocabulary, which is what lets the
-projects page filter by the kind of problem rather than by language, and what
-connects a project to the decisions it produced and an article back to both.
+There is one interaction and it is used everywhere: point at a project's name
+— in the opening sentence or in the list — and its poster comes up beside the
+cursor on springs. `components/PosterCard.tsx` holds the provider, the physics
+and `PosterLink`; `components/ProjectPoster.tsx` holds the seven posters, drawn
+in SVG. A new project needs a poster added there and an `intro` in
+`lib/data/projects.ts`: one sentence a stranger would understand, no figures.
 
-**Never renumber a published decision.** The id is a permalink.
+## Decisions
+
+`lib/data/decisions.ts` holds the reasoning behind the work: each entry is a
+real constraint and the choice that resolved it, with a stable reference
+(`D-01`). They render as an accordion inside the project they came from on
+`/projects`, or under the job they came from on `/about`, matched by `source`.
+
+**Never renumber a published decision.**
 
 ## Command palette
 
@@ -127,13 +137,12 @@ of these:
 ### Adding work
 
 A project needs a `domain` and belongs in one of three categories. Case-study
-fields (`problem`, `approach`, `architecture`, `decisions`, `challenges`,
-`results`) are all optional and render only when present, so a thin project
+fields (`problem`, `approach`, `architecture`, `results`) are all optional and render only when present, so a thin project
 reads as brief rather than unfinished.
 
 If a project produced a decision worth writing down, add it to
-`decisions.ts` with `source` set to the project slug. If it did not, it
-belongs on `/projects` and not on the homepage.
+`decisions.ts` with `source` set to the project slug, and it appears in that
+project's case study.
 
 Adding a project is one object appended to `lib/data/projects.ts`. Adding a
 post is one file in `content/blog/` — see [WRITING.md](WRITING.md).

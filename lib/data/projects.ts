@@ -32,7 +32,13 @@ export type Metric = {
 export type Project = {
   slug: string;
   name: string;
-  /** One line, shown under the name on cards. */
+  /*
+    What the thing is, in one sentence a stranger would understand. This is
+    all the homepage says about a project, so it carries no figures and no
+    vocabulary that needs the case study to decode.
+  */
+  intro: string;
+  /** One line, used as the hint in the command palette. */
   tagline: string;
   /** Two lines maximum. Card body and case-study intro. */
   summary: string;
@@ -56,6 +62,7 @@ export const projects: Project[] = [
   {
     slug: "orbit",
     name: "Orbit",
+    intro: "A real-time chat server written from the socket up, where everyone in a room sees the same messages in the same order.",
     tagline: "A sharded, durable chat server written from the socket up",
     summary:
       "A real-time chat server in modern C++ with its own event loop, wire protocol and write-ahead log. Every member of a room sees the same messages in the same order, and an acknowledged message survives kill -9.",
@@ -93,6 +100,7 @@ export const projects: Project[] = [
   {
     slug: "signease",
     name: "SignEase",
+    intro: "Sign language recognition in the browser: record a sign with your webcam and it reads it back.",
     tagline: "Sign language recognition that runs the hard part in your browser",
     summary:
       "Record a sign with a webcam and read it back. Landmark tracking happens client-side on every frame, so the model sees the full frame rate and the server does almost no work.",
@@ -130,6 +138,7 @@ export const projects: Project[] = [
   {
     slug: "tradstrat",
     name: "TradStrat",
+    intro: "A backtester for trading strategies, built to tell you when not to believe the result.",
     tagline: "A backtester that tries to prove your strategy wrong",
     summary:
       "Most backtesters tell you what a strategy would have made. This one asks whether you should believe it: parameters tuned without hindsight, confidence intervals on the result, and a correction for how many configurations you tried.",
@@ -167,6 +176,7 @@ export const projects: Project[] = [
   {
     slug: "carequeue",
     name: "CareQueue",
+    intro: "A triage assistant for emergency rooms that keeps watching the people who are still waiting.",
     tagline: "Continuous triage and queue surveillance for emergency departments",
     summary:
       "A triage assistant built around the patients who are missed rather than the ones who are obvious: it scores risk from outcomes instead of from assigned levels, and keeps watching everyone in the waiting room for deterioration.",
@@ -188,6 +198,7 @@ export const projects: Project[] = [
   {
     slug: "spendly",
     name: "Spendly",
+    intro: "A shared expense app where several people can edit the same ledger at once without conflicts.",
     tagline: "Event-sourced shared expense ledger",
     summary:
       "A group expense tracker built as an append-only ledger, so concurrent edits from several people cannot conflict, and a settlement algorithm that minimises the number of payments.",
@@ -220,6 +231,7 @@ export const projects: Project[] = [
   {
     slug: "aeris",
     name: "Aeris",
+    intro: "Air-quality forecasting for a city, ward by ward, with a read on where the pollution is coming from.",
     tagline: "Air-quality intelligence platform",
     summary:
       "Ward-level AQI forecasting with source attribution and inspection ranking, served by a FastAPI backend behind a React dashboard.",
@@ -233,6 +245,7 @@ export const projects: Project[] = [
   {
     slug: "repo-context-mcp",
     name: "Repo Context MCP",
+    intro: "A small server that hands a coding agent what it needs to know about a repository.",
     tagline: "Repository context server for coding agents",
     summary:
       "An MCP server that hands a coding agent repository metadata, README content and stack signals as structured data, instead of making it ask.",
