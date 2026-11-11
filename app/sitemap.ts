@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getAllPosts, hasPosts } from "@/lib/blog";
+import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -14,14 +15,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const routes = ["/projects", ...(writingIsPublic ? ["/writing"] : []), "/about", "/resume"].map(
-    (route) => ({
+  const routes = [
+    "/projects",
+    ...projects.map((project) => `/projects/${project.slug}`),
+    ...(writingIsPublic ? ["/writing"] : []), "/about",
+    "/resume",
+  ].map((route) => ({
       url: `${siteConfig.url}${route}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,
-    }),
-  );
+  }));
 
   return [
     { url: siteConfig.url, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },

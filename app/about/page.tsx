@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Decisions } from "@/components/Decisions";
+import { Underlined } from "@/components/Ink";
 import { decisions } from "@/lib/data/decisions";
 import { experience } from "@/lib/data/experience";
 import { siteConfig } from "@/lib/data/site";
@@ -14,13 +15,11 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="sheet pb-4">
-      <header className="grid max-w-[54rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-14" data-reveal>
+      <header className="grid gap-10 pt-14 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-16" data-reveal>
         <div className="min-w-0">
-          <h1 className="page-title">
-            About
-          </h1>
-          <div className="measure mt-7 flex flex-col gap-5 text-[1.05rem] leading-[1.7] text-ink-2">
-            <p className="text-ink">
+          <h1 className="page-title">About</h1>
+          <div className="about-prose">
+            <p>
               I came to computer science expecting to like the theory, and ended up liking the failure modes
               more.
             </p>
@@ -43,54 +42,45 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/*
-          The sidebar carries the facts someone might want to grab without
-          reading four paragraphs. It exists so the column has something in it
-          the whole height of the prose — a portrait alone left a void beside
-          the text, which is what made this page look unfinished.
-        */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <dl className="grid gap-5">
+        {/* The facts someone might want without reading four paragraphs. */}
+        <aside className="lg:sticky lg:top-24 lg:self-start lg:pt-3">
+          <dl className="facts">
             <div>
-              <dt className="label">Based in</dt>
-              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+              <dt>Based in</dt>
+              <dd>
                 Jodhpur, Rajasthan
-                <br />
-                <span className="text-ink-3">from {siteConfig.hometown}</span>
+                <span>from {siteConfig.hometown}</span>
               </dd>
             </div>
             <div>
-              <dt className="label">Studying</dt>
-              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+              <dt>Studying</dt>
+              <dd>
                 B.Tech Computer Science
-                <br />
-                <span className="text-ink-3">IIT Jodhpur, class of 2028</span>
+                <span>IIT Jodhpur, class of 2028</span>
               </dd>
             </div>
             <div>
-              <dt className="label">Currently</dt>
-              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
+              <dt>Currently</dt>
+              <dd>
                 Overall Coordinator
-                <br />
-                <span className="text-ink-3">Anand Rathi Tinkerers&rsquo; Lab</span>
+                <span>Anand Rathi Tinkerers&rsquo; Lab</span>
               </dd>
             </div>
             {/*
-              The JEE figure is a category rank, so it is stated as one, here,
-              with its category beside it. It used to sit on the homepage as a
-              bare "AIR 397", which a reader takes for the common rank list.
+              Each exam is its own fact. The JEE figure is a category rank, so
+              the category is part of the line rather than a footnote to it.
             */}
             <div>
-              <dt className="label">Entrance exams</dt>
-              <dd className="mt-1.5 text-[0.95rem] text-ink-2">
-                GUJCET 2024 &middot; state rank 3
-                <br />
-                <span className="text-ink-3">JEE Advanced 2024 &middot; GEN-EWS rank 397</span>
-              </dd>
+              <dt>GUJCET 2024</dt>
+              <dd>State rank 3</dd>
             </div>
             <div>
-              <dt className="label">Find me</dt>
-              <dd className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[0.95rem]">
+              <dt>JEE Advanced 2024</dt>
+              <dd>Rank 397, GEN-EWS category</dd>
+            </div>
+            <div>
+              <dt>Find me</dt>
+              <dd className="facts-links">
                 {[
                   siteConfig.links.github,
                   siteConfig.links.linkedin,
@@ -98,13 +88,7 @@ export default function AboutPage() {
                   siteConfig.links.leetcode,
                   siteConfig.links.codeforces,
                 ].map((link) => (
-                  <a
-                    className="focus-ring tlink text-ink-2"
-                    href={link.url}
-                    key={link.url}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
+                  <a className="focus-ring tlink" href={link.url} key={link.url} rel="noreferrer" target="_blank">
                     {link.label}
                   </a>
                 ))}
@@ -115,34 +99,38 @@ export default function AboutPage() {
       </header>
 
       {/* Decisions that came out of a job link straight to this section. */}
-      <section className="scroll-mt-24 pt-16" data-reveal id="experience">
-        <h2 className="clause label">Experience</h2>
-        <ul className="mt-8 border-b border-rule">
-          {experience.map((item) => (
-            <li className="border-t border-rule first:border-t-0" key={item.org}>
-              <div className="grid gap-x-5 gap-y-3 py-7 sm:grid-cols-[13rem_minmax(0,1fr)]">
-                <div>
-                  <p className="text-[1.05rem] leading-tight tracking-[-0.015em] text-ink">{item.org}</p>
-                  <p className="label mt-1.5">{item.role}</p>
-                  <p className="label mt-1">
-                    <span className="num">{item.dates}</span>
-                  </p>
-                </div>
-                <div className="measure">
-                  <p className="text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[0]}</p>
-                  <p className="mt-3 text-[0.95rem] leading-[1.65] text-ink-2">{item.highlights[1]}</p>
-                  <div className="mt-5">
-                    <Decisions items={decisions.filter((decision) => decision.source === item.org)} />
+      <section className="about-section scroll-mt-24" id="experience">
+        <h2 className="section-title" data-reveal>
+          <Underlined>Where I have worked</Underlined>
+        </h2>
+        <div className="mt-8">
+          {experience.map((item) => {
+            const notes = decisions.filter((decision) => decision.source === item.org);
+
+            return (
+              <article className="job" data-reveal key={item.org}>
+                <h3 className="job-org">{item.org}</h3>
+                <p className="job-role">
+                  {item.role}, {item.dates}
+                </p>
+                <p className="job-text">{item.highlights[0]}</p>
+                <p className="job-text">{item.highlights[1]}</p>
+                {notes.length > 0 ? (
+                  <div className="job-notes">
+                    <p className="job-notes-title">Decisions I had to make there</p>
+                    <Decisions items={notes} />
                   </div>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
       </section>
 
-      <section className="pt-16" data-reveal>
-        <h2 className="clause label">Why I build</h2>
+      <section className="about-section" data-reveal>
+        <h2 className="section-title">
+          <Underlined>Why I build</Underlined>
+        </h2>
         {/*
           This was a dashed box reading "campus photo placeholder", which is
           the one thing a published page should never say about itself. The
@@ -168,7 +156,7 @@ export default function AboutPage() {
         rather than as a person to be met. One line is enough to say where
         the full record lives.
       */}
-      <p className="measure clause pt-16 text-[0.9rem] leading-[1.6] text-ink-3">
+      <p className="measure mt-16 text-[1rem] leading-[1.6] text-ink-2">
         Every position, result and date is on the{" "}
         <a className="tlink text-ink-2" href="/resume">
           resume

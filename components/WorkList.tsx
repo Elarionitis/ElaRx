@@ -32,7 +32,7 @@ export function WorkList({ projects }: { projects: Project[] }) {
         >
           <Link
             className={`work-row focus-ring ${active === project.slug ? "is-active" : ""}`}
-            href={`/projects#${project.slug}`}
+            href={`/projects/${project.slug}`}
             {...bind(project.slug)}
           >
             <span aria-hidden="true" className="work-thumb">

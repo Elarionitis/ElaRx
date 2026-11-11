@@ -249,7 +249,7 @@ export function PosterLink({ children, slug }: { children: React.ReactNode; slug
   return (
     <Link
       className={`poster-link focus-ring ${active === slug ? "is-active" : ""}`}
-      href={`/projects#${slug}`}
+      href={`/projects/${slug}`}
       {...bind(slug)}
     >
       {children}

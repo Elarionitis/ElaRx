@@ -101,14 +101,14 @@ function buildCommandItems(): CommandItem[] {
       // Searching "locking" or "cache" should find the decision about it.
       keywords: `${decision.constraint} ${decision.reasoning} ${decision.domain} ${decision.sourceLabel}`,
       // A decision is read inside the project or job it came from.
-      href: decision.sourceHref ?? `/projects#${decision.source}`,
+      href: decision.sourceHref ?? `/projects/${decision.source}#decisions`,
     })),
     ...projects.map((project) => ({
       group: "Projects",
       label: project.name,
       hint: project.tagline,
       keywords: `${project.summary} ${project.domain} ${project.stack.join(" ")}`,
-      href: `/projects#${project.slug}`,
+      href: `/projects/${project.slug}`,
     })),
     ...(writingIsPublic
       ? getAllPosts().map((post) => ({
@@ -123,7 +123,7 @@ function buildCommandItems(): CommandItem[] {
       : []),
     { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
     { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
-    { group: "Actions", label: "Surprise me", hint: "Open a project", action: "surprise" as const, href: "/projects#tradstrat" },
+    { group: "Actions", label: "Surprise me", hint: "Open a project", action: "surprise" as const, href: "/projects/tradstrat" },
     { group: "Actions", label: "Download resume", hint: "PDF", href: siteConfig.resumePath },
     { group: "Elsewhere", label: "GitHub", href: siteConfig.links.github.url },
     { group: "Elsewhere", label: "LinkedIn", href: siteConfig.links.linkedin.url },

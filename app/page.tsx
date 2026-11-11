@@ -36,6 +36,8 @@ const elsewhere = [
 ];
 
 export default function Home() {
+  const featured = projects.filter((project) => project.category === "featured");
+
   return (
     <PosterProvider slugs={projects.map((project) => project.slug)}>
       <div className="sheet pb-4">
@@ -44,12 +46,12 @@ export default function Home() {
             <div className="hero-portrait">
               <Image
                 alt={siteConfig.name}
-                height={160}
+                height={320}
                 priority
                 quality={90}
-                sizes="60px"
+                sizes="128px"
                 src={siteConfig.profileImage}
-                width={160}
+                width={320}
               />
             </div>
             <Pen>
@@ -112,10 +114,10 @@ export default function Home() {
               <Underlined>Things I&rsquo;ve built</Underlined>
             </h2>
             <Link className="focus-ring tlink text-ink-2" href="/projects">
-              Read how each one works
+              See all {projects.length}
             </Link>
           </div>
-          <WorkList projects={projects} />
+          <WorkList projects={featured} />
         </section>
 
         {/* Live, and the only thing here that is true this week. */}

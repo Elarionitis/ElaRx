@@ -72,7 +72,7 @@ export default async function PostPage({ params }: PageProps) {
             <p className="label">Related project</p>
             <Link
               className="focus-ring group mt-4 block"
-              href={`/projects#${project.slug}`}
+              href={`/projects/${project.slug}`}
             >
               <span className="block text-[1.05rem] leading-tight tracking-[-0.015em] text-ink transition-colors group-hover:text-accent">
                 {project.name}

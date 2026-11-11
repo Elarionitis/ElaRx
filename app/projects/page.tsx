@@ -1,31 +1,35 @@
 import type { Metadata } from "next";
 
-import { ProjectIndex } from "@/components/ProjectIndex";
-import { decisions } from "@/lib/data/decisions";
+import { LegacyProjectHash } from "@/components/LegacyProjectHash";
+import { PosterProvider } from "@/components/PosterCard";
+import { WorkList } from "@/components/WorkList";
 import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Full-stack products, intelligent systems, and engineering experiments built by Suhan Ramani.",
+  description: "Things Suhan Ramani has built, each with what it is, how it works and why it is built that way.",
   alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {
-  return (
-    <div className="sheet pb-4">
-      <header className="pt-16 sm:pt-20" data-reveal>
-        <h1 className="page-title">
-          Projects
-        </h1>
-        <p className="measure mt-5 text-[1.05rem] leading-[1.6] text-ink-2">
-          Pick one to read what it is, what was hard about it, and the decisions it produced. Filter by the
-          kind of problem rather than the language.
-        </p>
-      </header>
+  const slugs = projects.map((project) => project.slug);
 
-      <div className="mt-12" data-reveal>
-        <ProjectIndex decisions={decisions} projects={projects} />
+  return (
+    <PosterProvider slugs={slugs}>
+      <LegacyProjectHash slugs={slugs} />
+      <div className="sheet pb-4">
+        <header className="pt-14 sm:pt-20" data-reveal>
+          <h1 className="page-title">Projects</h1>
+          <p className="page-lead">
+            Everything I have built that is worth showing. Each one opens on its own page: what it is, how it
+            works, and the decisions I had to make along the way.
+          </p>
+        </header>
+
+        <div className="mt-10">
+          <WorkList projects={projects} />
+        </div>
       </div>
-    </div>
+    </PosterProvider>
   );
 }
