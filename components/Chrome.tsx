@@ -24,7 +24,7 @@ function active(pathname: string, href: string) {
 export function Chrome({ routes }: { routes: Route[] }) {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
-  const mobileRoutes = [...routes, { label: "Contact", href: `mailto:${siteConfig.email}` }];
+  const mobileRoutes = [...routes, { label: "Email", href: `mailto:${siteConfig.email}` }];
   const themeButtonRef = useRef<HTMLButtonElement>(null);
   const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
@@ -127,6 +127,10 @@ export function Chrome({ routes }: { routes: Route[] }) {
             Search <span className="kbd">&#8984;K</span>
           </button>
 
+          <div className="lg:hidden">
+            <LiveHere compact />
+          </div>
+
           <button
             aria-label="Toggle theme"
             className="focus-ring grid size-7 place-items-center text-ink-3 transition-colors hover:text-ink"
@@ -176,9 +180,6 @@ export function Chrome({ routes }: { routes: Route[] }) {
               )}
             </li>
           ))}
-          <li className="ml-auto">
-            <LiveHere compact />
-          </li>
         </ul>
       </nav>
 

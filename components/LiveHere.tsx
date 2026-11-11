@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 /*
-  One live line: where I am, what time it is there, and what the air is doing.
+  One short live line: where I am, the time there, and the temperature.
 
   It is the cheapest way to say there is a person at the other end of this
-  page, in a real place, who may well be asleep. The time is worked out in the
+  page, in a real place. The time is worked out in the
   visitor's browser and kept current; the temperature comes from /api/here.
 
   Nothing renders until the browser has mounted it. The server does not know
@@ -23,23 +23,6 @@ function clock(now: Date) {
   return new Intl.DateTimeFormat("en-IN", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: ZONE })
     .format(now)
     .toLowerCase();
-}
-
-function hourThere(now: Date) {
-  return Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: ZONE }).format(now)) % 24;
-}
-
-/** How far Jodhpur is from the reader's own clock, in words. */
-function gap(now: Date): string {
-  // India is UTC+5:30 all year; getTimezoneOffset is minutes behind UTC.
-  const minutes = 330 + now.getTimezoneOffset();
-  if (minutes === 0) return "same time as you";
-
-  const size = Math.abs(minutes);
-  const hours = Math.floor(size / 60);
-  const rest = size % 60;
-  const amount = [hours ? `${hours}h` : "", rest ? `${rest}m` : ""].filter(Boolean).join(" ");
-  return `${amount} ${minutes > 0 ? "ahead of" : "behind"} you`;
 }
 
 export function LiveHere({ compact = false }: { compact?: boolean }) {
@@ -68,29 +51,14 @@ export function LiveHere({ compact = false }: { compact?: boolean }) {
 
   if (!now) return null;
 
-  const hour = hourThere(now);
-  const asleep = hour >= 2 && hour < 7;
   const degrees = typeof weather.temperature === "number" ? `${weather.temperature}°C` : null;
 
-  if (compact) {
-    return (
-      <p className="live-here">
-        <span aria-hidden="true" className="live-dot" />
-        Jodhpur {clock(now)}
-        {degrees ? `, ${degrees}` : ""}
-      </p>
-    );
-  }
-
   return (
-    <p className="live-here">
+    <p className="live-here" title={weather.sky ? `Jodhpur right now: ${weather.sky}` : "Jodhpur right now"}>
       <span aria-hidden="true" className="live-dot" />
-      <span>
-        Jodhpur, {clock(now)}
-        {degrees ? `, ${degrees}` : ""}
-        {weather.sky ? ` and ${weather.sky}` : ""}
-      </span>
-      <span className="live-note">{asleep ? "I am probably asleep" : gap(now)}</span>
+      {compact ? null : <span>Jodhpur</span>}
+      <span>{clock(now)}</span>
+      {degrees ? <span>{degrees}</span> : null}
     </p>
   );
 }

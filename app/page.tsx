@@ -32,7 +32,6 @@ const elsewhere = [
   siteConfig.links.x,
   siteConfig.links.linkedin,
   { label: "Email", url: `mailto:${siteConfig.email}` },
-  { label: "Resume", url: "/resume" },
 ];
 
 export default function Home() {
@@ -42,27 +41,29 @@ export default function Home() {
     <PosterProvider slugs={projects.map((project) => project.slug)}>
       <div className="sheet pb-4">
         <section className="hero">
-          <div className="hero-id" data-reveal>
-            <div className="hero-portrait">
-              <Image
-                alt={siteConfig.name}
-                height={320}
-                priority
-                quality={90}
-                sizes="128px"
-                src={siteConfig.profileImage}
-                width={320}
-              />
-            </div>
-            <Pen>
-              <PenArrow flip />
-              that&rsquo;s me, Suhan
-            </Pen>
-          </div>
+          <div className="hero-top">
+            <h1 className="hero-line" data-reveal>
+              I build things, then I try to <Circled delay={350}>break</Circled> them.
+            </h1>
 
-          <h1 className="hero-line" data-reveal style={{ "--reveal-delay": "70ms" } as React.CSSProperties}>
-            I build things, then I try to <Circled delay={350}>break</Circled> them.
-          </h1>
+            <div className="hero-id" data-reveal style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
+              <div className="hero-portrait">
+                <Image
+                  alt={siteConfig.name}
+                  height={640}
+                  priority
+                  quality={90}
+                  sizes="(min-width: 56rem) 20rem, 11rem"
+                  src={siteConfig.profileImage}
+                  width={640}
+                />
+              </div>
+              <Pen>
+                <PenArrow flip />
+                that&rsquo;s me, Suhan
+              </Pen>
+            </div>
+          </div>
 
           <div className="hero-body" data-reveal style={{ "--reveal-delay": "150ms" } as React.CSSProperties}>
             <p className="hero-about">
@@ -96,11 +97,6 @@ export default function Home() {
                   </a>
                 </li>
               ))}
-              <li>
-                <Link className="focus-ring tlink" href="/about">
-                  About
-                </Link>
-              </li>
             </ul>
             <a className="stamp focus-ring" href={`mailto:${siteConfig.email}`}>
               Open to internships

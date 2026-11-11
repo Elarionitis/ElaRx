@@ -26,9 +26,10 @@ const description = siteConfig.tagline;
 const writingIsPublic = hasPosts();
 
 const routes: Route[] = [
-  { label: "Work", href: "/projects" },
+  { label: "Projects", href: "/projects" },
   ...(writingIsPublic ? [{ label: "Writing", href: "/writing" }] : []),
   { label: "About", href: "/about" },
+  { label: "Resume", href: "/resume" },
 ];
 
 export const metadata: Metadata = {
