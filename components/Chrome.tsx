@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
 import { OPEN_PALETTE_EVENT } from "@/components/CommandPalette";
+import { LiveHere } from "@/components/LiveHere";
 import { siteConfig } from "@/lib/data/site";
 
 export type Route = { label: string; href: string };
@@ -83,6 +84,11 @@ export function Chrome({ routes }: { routes: Route[] }) {
         <Link className="focus-ring flex items-baseline gap-2.5" href="/">
           <span className="display whitespace-nowrap text-[1.35rem] text-ink">{siteConfig.name}</span>
         </Link>
+
+        {/* Live, and only where there is room for a whole sentence. */}
+        <div className="mr-auto hidden pl-3 lg:block">
+          <LiveHere />
+        </div>
 
         <div className="flex items-center gap-4">
           {/* Below sm the routes move to their own row; four of them plus a
@@ -170,6 +176,9 @@ export function Chrome({ routes }: { routes: Route[] }) {
               )}
             </li>
           ))}
+          <li className="ml-auto">
+            <LiveHere compact />
+          </li>
         </ul>
       </nav>
 

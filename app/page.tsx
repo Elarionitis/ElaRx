@@ -66,8 +66,8 @@ export default function Home() {
 
           <div className="hero-body" data-reveal style={{ "--reveal-delay": "150ms" } as React.CSSProperties}>
             <p className="hero-about">
-              I&rsquo;m a computer science undergrad at <strong>IIT Jodhpur</strong>. I like writing software from
-              the layer underneath, and I don&rsquo;t trust any of it until I have tried to prove it wrong.
+              I&rsquo;m a third-year computer science student at <strong>IIT Jodhpur</strong>. I like building
+              tools that are really useful to other people, and I like doing that work in the open.
             </p>
             <div>
               <p className="hero-proof">

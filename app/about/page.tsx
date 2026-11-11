@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 
-import { Decisions } from "@/components/Decisions";
 import { Underlined } from "@/components/Ink";
-import { decisions } from "@/lib/data/decisions";
 import { experience } from "@/lib/data/experience";
 import { siteConfig } from "@/lib/data/site";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Background, what I work on, and how I got here.",
+  description: "Who I am, what I like building, and where to find me.",
   alternates: { canonical: "/about" },
 };
 
@@ -20,24 +18,21 @@ export default function AboutPage() {
           <h1 className="page-title">About</h1>
           <div className="about-prose">
             <p>
-              I came to computer science expecting to like the theory, and ended up liking the failure modes
-              more.
+              I&rsquo;m a third-year computer science student at IIT Jodhpur, and I like building tools that
+              are really useful to other people.
             </p>
             <p>
-              What happens to a system when the network partitions. When four writers hit the same record.
-              When a query that was fine at a thousand rows stops being fine at a million. Those are the
-              questions I keep coming back to, and they are why almost everything I have built ends up being
-              about coordination rather than features.
+              That is the whole test for me. Not whether something is clever, but whether someone else can
+              pick it up and it makes their day a little easier.
             </p>
             <p>
-              In practice that has been a retrieval pipeline with half a second to respond, an expense
-              ledger where the real problem turned out to be concurrency wearing a consumer-app costume, and
-              an internship where the fix for a slow page was almost never the thing anyone suggested first.
+              I like open-source work for the same reason. The code sits where anyone can read it, use it,
+              and tell me what is wrong with it.
             </p>
+            <p>I work hard, and I believe in hard work. Most of what I am good at, I got good at slowly.</p>
             <p>
-              Away from all of it I coordinate the Tinkerers&rsquo; Lab, the 3,000 sq. ft. makerspace on
-              campus, play badminton, cycle, and set contest problems for the programming society — which is
-              a good weekly reminder that a problem is only as good as its edge cases.
+              Away from the screen I coordinate the Tinkerers&rsquo; Lab, the 3,000 sq. ft. makerspace on
+              campus, play badminton, cycle, and set contest problems for the programming society.
             </p>
           </div>
         </div>
@@ -55,7 +50,7 @@ export default function AboutPage() {
             <div>
               <dt>Studying</dt>
               <dd>
-                B.Tech Computer Science
+                B.Tech Computer Science, third year
                 <span>IIT Jodhpur, class of 2028</span>
               </dd>
             </div>
@@ -98,33 +93,25 @@ export default function AboutPage() {
         </aside>
       </header>
 
-      {/* Decisions that came out of a job link straight to this section. */}
-      <section className="about-section scroll-mt-24" id="experience">
-        <h2 className="section-title" data-reveal>
+      {/*
+        A line per job and no more. What I built there, and why, belongs with
+        the work; this page is about the person.
+      */}
+      <section className="about-section scroll-mt-24" data-reveal id="experience">
+        <h2 className="section-title">
           <Underlined>Where I have worked</Underlined>
         </h2>
-        <div className="mt-8">
-          {experience.map((item) => {
-            const notes = decisions.filter((decision) => decision.source === item.org);
-
-            return (
-              <article className="job" data-reveal key={item.org}>
-                <h3 className="job-org">{item.org}</h3>
-                <p className="job-role">
-                  {item.role}, {item.dates}
-                </p>
-                <p className="job-text">{item.highlights[0]}</p>
-                <p className="job-text">{item.highlights[1]}</p>
-                {notes.length > 0 ? (
-                  <div className="job-notes">
-                    <p className="job-notes-title">Decisions I had to make there</p>
-                    <Decisions items={notes} />
-                  </div>
-                ) : null}
-              </article>
-            );
-          })}
-        </div>
+        <ul className="jobs">
+          {experience.map((item) => (
+            <li key={item.org}>
+              <p className="job-org">{item.org}</p>
+              <p className="job-role">{item.role}</p>
+              <p className="job-role">
+                {item.context}, {item.dates}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="about-section" data-reveal>

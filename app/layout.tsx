@@ -3,6 +3,7 @@ import Script from "next/script";
 
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome, type Route } from "@/components/Chrome";
+import { Doodle } from "@/components/Doodle";
 import { Colophon } from "@/components/Colophon";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -94,14 +95,15 @@ function buildCommandItems(): CommandItem[] {
     ...(writingIsPublic ? [{ group: "Pages", label: "Writing", href: "/writing" }] : []),
     { group: "Pages", label: "About", href: "/about" },
     { group: "Pages", label: "Resume", href: "/resume" },
-    ...decisions.map((decision) => ({
+    // Only the ones that are written up on a project's page.
+    ...decisions.filter((decision) => !decision.sourceHref).map((decision) => ({
       group: "Decisions",
       label: decision.title,
       hint: decision.id,
       // Searching "locking" or "cache" should find the decision about it.
       keywords: `${decision.constraint} ${decision.reasoning} ${decision.domain} ${decision.sourceLabel}`,
       // A decision is read inside the project or job it came from.
-      href: decision.sourceHref ?? `/projects/${decision.source}#decisions`,
+      href: `/projects/${decision.source}#decisions`,
     })),
     ...projects.map((project) => ({
       group: "Projects",
@@ -177,6 +179,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               {children}
             </main>
             <Colophon showFeed={writingIsPublic} />
+            <Doodle />
           </div>
         </ThemeProvider>
         <script
