@@ -16,7 +16,7 @@ export default function AboutPage() {
     <div className="sheet pb-4">
       <header className="grid max-w-[54rem] gap-10 pt-16 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-14" data-reveal>
         <div className="min-w-0">
-          <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+          <h1 className="page-title">
             About
           </h1>
           <div className="measure mt-7 flex flex-col gap-5 text-[1.05rem] leading-[1.7] text-ink-2">

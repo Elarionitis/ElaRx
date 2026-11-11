@@ -24,7 +24,7 @@ export default function WritingPage() {
   return (
     <div className="sheet pb-4">
       <header className="pt-16 sm:pt-20" data-reveal>
-        <h1 className="text-[clamp(1.85rem,4.4vw,2.75rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+        <h1 className="page-title">
           Writing
         </h1>
         <p className="measure mt-5 text-[1.05rem] leading-[1.6] text-ink-2">

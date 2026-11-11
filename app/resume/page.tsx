@@ -15,7 +15,7 @@ export default function ResumePage() {
       {/* Compact on purpose: every row here is a row the document loses. */}
       <header className="flex flex-col gap-3 pt-10 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 sm:pt-12">
         <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-          <h1 className="text-[clamp(1.6rem,3.4vw,2.1rem)] font-medium leading-[1.1] tracking-[-0.035em] text-ink">
+          <h1 className="page-title">
             Resume
           </h1>
           <p className="text-[0.95rem] text-ink-2">

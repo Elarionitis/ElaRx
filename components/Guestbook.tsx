@@ -154,7 +154,7 @@ export function Guestbook() {
                   event.currentTarget.form?.requestSubmit();
                 }
               }}
-              placeholder="Say hello, or tell me what you are building."
+              placeholder="Say hello, or tell me what you are building"
               rows={2}
               value={message}
             />

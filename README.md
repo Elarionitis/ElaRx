@@ -169,12 +169,17 @@ assets/                        Instrument Serif, vendored for OG rendering
 
 ## How it is built
 
-- **Paper, ink, and one annotation colour.** The reference object is a printed
-  technical specification: warm paper, black ink, hairline rules, 2px corners,
-  no shadows, and a vermillion used the way a red pen is used in a margin.
-- **Light is primary.** Dark mode is warm charcoal, never near-black.
-- **Archivo for text, IBM Plex Mono for apparatus.** Mono sets decision
-  references, labels, dates and code — never running prose.
+- **An engineer's notebook.** The page is gridded paper with type printed on
+  it and marks made on top by hand: a word circled, a note in the margin, a
+  stamp, sticky notes in the guestbook.
+- **Print and pen never swap jobs.** Printed matter is Bricolage Grotesque in
+  ink, set condensed and heavy for headlines. Anything added afterwards —
+  emphasis, asides, what visitors write — is Reenie Beanie in the pen's
+  colour. IBM Plex Mono is for code and the small print on the posters.
+- **The second theme is a blueprint, not an inversion.** Cobalt sheet, white
+  line, yellow chalk for the pen.
+- **Hand-drawn marks are SVG paths** in `components/Ink.tsx`, roughened by one
+  shared `#rough` filter defined in the layout and drawn in on arrival.
 - **Base styles live in `@layer base`.** Unlayered CSS beats every cascade
   layer, so an unlayered `a { color: inherit }` silently overrides any
   component rule that colours an anchor.
@@ -182,8 +187,8 @@ assets/                        Instrument Serif, vendored for OG rendering
   highlighted with Shiki at build time, so no highlighter ships to the browser.
 - **Link previews are generated.** `next/og` draws a PNG per route, including
   one per post carrying its title and date.
-- **No animation library.** Transitions are CSS, and
-  `prefers-reduced-motion` turns them off.
+- **No animation library.** Transitions are CSS and the poster card is a few
+  springs in `requestAnimationFrame`; `prefers-reduced-motion` turns them off.
 
 ## Deploying
 

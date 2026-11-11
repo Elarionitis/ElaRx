@@ -81,10 +81,7 @@ export function Chrome({ routes }: { routes: Route[] }) {
     >
       <div className="sheet flex h-14 items-center justify-between gap-4">
         <Link className="focus-ring flex items-baseline gap-2.5" href="/">
-          <span className="whitespace-nowrap text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
-            {siteConfig.name}
-          </span>
-          <span className="label hidden sm:inline">Software Engineer</span>
+          <span className="display whitespace-nowrap text-[1.35rem] text-ink">{siteConfig.name}</span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -127,8 +124,6 @@ export function Chrome({ routes }: { routes: Route[] }) {
           <button
             aria-label="Toggle theme"
             className="focus-ring grid size-7 place-items-center text-ink-3 transition-colors hover:text-ink"
-            onPointerEnter={() => { document.documentElement.dataset.lensFocus = "theme"; }}
-            onPointerLeave={() => { delete document.documentElement.dataset.lensFocus; }}
             onClick={toggleTheme}
             ref={themeButtonRef}
             type="button"

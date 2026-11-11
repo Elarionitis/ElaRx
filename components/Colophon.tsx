@@ -60,7 +60,7 @@ export function Colophon({ showFeed }: { showFeed: boolean }) {
           <p className="label flex flex-wrap gap-x-2 md:justify-end">
             <span className="num">{new Date().getFullYear()}</span>
             <span aria-hidden="true">&middot;</span>
-            <span>Set in Archivo and IBM Plex Mono</span>
+            <span>Set in Bricolage Grotesque, annotated in Reenie Beanie</span>
           </p>
         </div>
       </div>

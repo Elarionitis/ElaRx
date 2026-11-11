@@ -4,7 +4,6 @@ import Script from "next/script";
 import { CommandPalette, type CommandItem } from "@/components/CommandPalette";
 import { Chrome, type Route } from "@/components/Chrome";
 import { Colophon } from "@/components/Colophon";
-import { CursorLens } from "@/components/CursorLens";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { getAllPosts, hasPosts } from "@/lib/blog";
@@ -13,7 +12,7 @@ import { decisions } from "@/lib/data/decisions";
 import { projects } from "@/lib/data/projects";
 import { siteConfig } from "@/lib/data/site";
 
-import { body, display, mono } from "./fonts";
+import { body, hand, mono } from "./fonts";
 import "./globals.css";
 
 const description = siteConfig.tagline;
@@ -69,8 +68,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#10131a" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f0e6" },
+    { media: "(prefers-color-scheme: dark)", color: "#16329a" },
   ],
 };
 
@@ -137,7 +136,7 @@ function buildCommandItems(): CommandItem[] {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      className={`${display.variable} ${body.variable} ${mono.variable}`}
+      className={`${body.variable} ${hand.variable} ${mono.variable}`}
       lang="en"
       suppressHydrationWarning
     >
@@ -152,7 +151,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {'try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.revealReady="true"}catch(e){}'}
         </Script>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableSystem>
-          <CursorLens />
+          {/*
+            One filter, referenced by everything drawn by hand. It displaces
+            a stroke by a little noise, which is the difference between a
+            vector path and a line someone drew. Zero-sized rather than
+            display:none, because a filter inside a hidden svg does not apply.
+          */}
+          <svg aria-hidden="true" height="0" style={{ position: "absolute" }} width="0">
+            <filter id="rough">
+              <feTurbulence baseFrequency="0.04" numOctaves="2" result="noise" seed="4" type="fractalNoise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4" />
+            </filter>
+          </svg>
           <ScrollReveal />
           <a
             className="focus-ring sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:border focus:border-rule-2 focus:bg-paper-2 focus:px-4 focus:py-2 focus:text-sm"

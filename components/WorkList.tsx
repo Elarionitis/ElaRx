@@ -38,7 +38,11 @@ export function WorkList({ projects }: { projects: Project[] }) {
             <span aria-hidden="true" className="work-thumb">
               <ProjectPoster slug={project.slug} />
             </span>
-            <span className="work-name">{project.name}</span>
+            <span aria-hidden="true" className="pen work-no">{index + 1}.</span>
+            <span className="work-name">
+              {project.name}
+              {project.links.live ? <span className="pen work-live">it&rsquo;s live, try it</span> : null}
+            </span>
             <span className="work-intro">{project.intro}</span>
             <span aria-hidden="true" className="work-arrow">→</span>
           </Link>

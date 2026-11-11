@@ -1,5 +1,5 @@
+import { Pen, Underlined } from "@/components/Ink";
 import { getShipLog } from "@/lib/ship-log";
-import { siteConfig } from "@/lib/data/site";
 
 /*
   Dates are deliberately coarse. The page is regenerated hourly, so anything
@@ -22,23 +22,15 @@ export async function ShipLog() {
   if (pushes.length === 0) return null;
 
   return (
-    <section className="scroll-mt-24 pt-14 sm:pt-20" data-reveal id="lately">
-      <div className="clause flex items-baseline justify-between gap-4">
-        <h2 className="label flex items-center gap-2.5">
-          <span aria-hidden="true" className="ship-pulse" />
-          Lately
+    <section className="section scroll-mt-24" data-reveal id="lately">
+      <div className="section-head">
+        <h2 className="section-title">
+          <Underlined>Lately</Underlined>
         </h2>
-        <a
-          className="focus-ring tlink shrink-0 text-sm text-ink-2"
-          href={siteConfig.links.github.url}
-          rel="noreferrer"
-          target="_blank"
-        >
-          All activity
-        </a>
+        <Pen className="ship-aside">straight from GitHub, I don&rsquo;t type these</Pen>
       </div>
 
-      <ul className="ship-log mt-8">
+      <ul className="ship-log">
         {pushes.map((push) => (
           <li key={push.url}>
             <a className="focus-ring ship-row" href={push.url} rel="noreferrer" target="_blank">

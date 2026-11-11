@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Guestbook } from "@/components/Guestbook";
+import { Circled, Pen, PenArrow, Underlined } from "@/components/Ink";
 import { PosterLink, PosterProvider } from "@/components/PosterCard";
 import { ShipLog } from "@/components/ShipLog";
 import { WorkList } from "@/components/WorkList";
@@ -12,16 +13,18 @@ import { siteConfig } from "@/lib/data/site";
 /*
   The homepage introduces a person. That is all it is for.
 
-  It used to carry a statistics strip, a diagram panel and a twenty-entry
-  decision log, and the effect was a front page that read as documentation
-  for the projects. Those things still exist — on /projects, under the
-  project they belong to — and what is left here is three short sections:
-  who I am, what I have made, and somewhere to answer.
+  One printed sentence carries it: I build things, then I try to break them.
+  It is the honest summary of the work — a chat server that is killed
+  mid-write to see what it loses, a backtester whose job is to disprove the
+  strategy, a model that had to be re-taught what a webcam does — and it is a
+  claim a reader can check against the three projects named directly under it.
 
-  There is one interaction, and it is the same one everywhere: point at a
-  project's name, in the opening sentence or in the list, and its poster
-  comes up beside the cursor. The first screen behaves the way the rest of
-  the page does.
+  Everything that explains those projects lives on /projects. What is left
+  here is who I am, what I have made, and somewhere to answer.
+
+  There is one interaction and it is the same one everywhere: point at a
+  project's name, in the sentence or in the list, and its poster comes up
+  beside the cursor.
 */
 
 const elsewhere = [
@@ -32,61 +35,54 @@ const elsewhere = [
   { label: "Resume", url: "/resume" },
 ];
 
-function SectionHeading({ children, more, moreHref }: { children: string; more?: string; moreHref?: string }) {
-  return (
-    <div className="clause flex items-baseline justify-between gap-4">
-      <h2 className="label">{children}</h2>
-      {more && moreHref ? (
-        <Link className="focus-ring tlink shrink-0 text-sm text-ink-2" href={moreHref}>
-          {more}
-        </Link>
-      ) : null}
-    </div>
-  );
-}
-
 export default function Home() {
   return (
     <PosterProvider slugs={projects.map((project) => project.slug)}>
       <div className="sheet pb-4">
-        <section className="intro">
-          <div className="intro-id" data-reveal>
-            <div className="intro-portrait">
+        <section className="hero">
+          <div className="hero-id" data-reveal>
+            <div className="hero-portrait">
               <Image
                 alt={siteConfig.name}
                 height={160}
                 priority
                 quality={90}
-                sizes="72px"
+                sizes="60px"
                 src={siteConfig.profileImage}
                 width={160}
               />
             </div>
+            <Pen>
+              <PenArrow flip />
+              that&rsquo;s me, Suhan
+            </Pen>
+          </div>
+
+          <h1 className="hero-line" data-reveal style={{ "--reveal-delay": "70ms" } as React.CSSProperties}>
+            I build things, then I try to <Circled delay={350}>break</Circled> them.
+          </h1>
+
+          <div className="hero-body" data-reveal style={{ "--reveal-delay": "150ms" } as React.CSSProperties}>
+            <p className="hero-about">
+              I&rsquo;m a computer science undergrad at <strong>IIT Jodhpur</strong>. I like writing software from
+              the layer underneath, and I don&rsquo;t trust any of it until I have tried to prove it wrong.
+            </p>
             <div>
-              <p className="intro-name">{siteConfig.name}</p>
-              <p className="label mt-1.5">Software engineer &middot; {siteConfig.location}</p>
+              <p className="hero-proof">
+                <PosterLink slug="orbit">Orbit</PosterLink> gets <code>kill -9</code>&rsquo;d mid-write to see what it
+                loses. <PosterLink slug="tradstrat">TradStrat</PosterLink> told me the strategies I tested do not beat
+                just holding. <PosterLink slug="signease">SignEase</PosterLink> had to learn what a laptop webcam does
+                to a hand.
+              </p>
+              <p className="hero-hint">
+                <PenArrow />
+                <Pen>hover the underlined ones</Pen>
+              </p>
             </div>
           </div>
 
-          <h1 className="intro-statement" data-reveal style={{ "--reveal-delay": "80ms" } as React.CSSProperties}>
-            I like building software from the layer underneath.{" "}
-            <span className="intro-quiet">Lately that has been</span> <PosterLink slug="orbit">Orbit</PosterLink>
-            <span className="intro-quiet">, a chat server written from the socket up;</span>{" "}
-            <PosterLink slug="signease">SignEase</PosterLink>
-            <span className="intro-quiet">, which reads sign language off a webcam; and</span>{" "}
-            <PosterLink slug="tradstrat">TradStrat</PosterLink>
-            <span className="intro-quiet">, a backtester that tries to prove your strategy wrong.</span>
-          </h1>
-
-          <div className="intro-foot" data-reveal style={{ "--reveal-delay": "160ms" } as React.CSSProperties}>
-            <p className="intro-now">
-              <span aria-hidden="true" className="ship-pulse" />
-              CS undergrad at IIT Jodhpur. {siteConfig.contact}{" "}
-              <Link className="focus-ring tlink text-ink" href="/about">
-                More about me
-              </Link>
-            </p>
-            <ul className="intro-links">
+          <div className="hero-foot" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
+            <ul className="hero-links">
               {elsewhere.map((link) => (
                 <li key={link.url}>
                   <a
@@ -98,19 +94,28 @@ export default function Home() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link className="focus-ring tlink" href="/about">
+                  About
+                </Link>
+              </li>
             </ul>
+            <a className="stamp focus-ring" href={`mailto:${siteConfig.email}`}>
+              Open to internships
+            </a>
           </div>
         </section>
 
-        <section className="scroll-mt-24 pt-14 sm:pt-20" id="work">
-          <div data-reveal>
-            <SectionHeading more="Read the case studies" moreHref="/projects">
-              Things I have built
-            </SectionHeading>
+        <section className="section scroll-mt-24" id="work">
+          <div className="section-head" data-reveal>
+            <h2 className="section-title">
+              <Underlined>Things I&rsquo;ve built</Underlined>
+            </h2>
+            <Link className="focus-ring tlink text-ink-2" href="/projects">
+              Read how each one works
+            </Link>
           </div>
-          <div className="mt-2">
-            <WorkList projects={projects} />
-          </div>
+          <WorkList projects={projects} />
         </section>
 
         {/* Live, and the only thing here that is true this week. */}
@@ -122,15 +127,14 @@ export default function Home() {
           worse than no sign-in box.
         */}
         {guestbookIsConfigured ? (
-          <section className="scroll-mt-24 pt-14 sm:pt-20" data-reveal id="guestbook">
-            <SectionHeading>Guestbook</SectionHeading>
-            <p className="guestbook-invite">
-              You have read mine. Say something back.{" "}
-              <span>No account, no email — a name and a line.</span>
-            </p>
-            <div className="mt-6">
-              <Guestbook />
+          <section className="section scroll-mt-24" data-reveal id="guestbook">
+            <div className="section-head">
+              <h2 className="section-title">
+                <Underlined>Leave a note</Underlined>
+              </h2>
+              <p className="text-ink-2">No account, no email. A name and a line.</p>
             </div>
+            <Guestbook />
           </section>
         ) : null}
       </div>
