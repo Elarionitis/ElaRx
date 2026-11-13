@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Guestbook } from "@/components/Guestbook";
+import { Noughts } from "@/components/Noughts";
 import { Circled, Pen, PenArrow, Underlined } from "@/components/Ink";
 import { PosterLink, PosterProvider } from "@/components/PosterCard";
 import { ShipLog } from "@/components/ShipLog";
@@ -118,6 +119,16 @@ export default function Home() {
 
         {/* Live, and the only thing here that is true this week. */}
         <ShipLog />
+
+        <section className="section scroll-mt-24" data-reveal id="play">
+          <div className="section-head">
+            <h2 className="section-title">
+              <Underlined>Your turn</Underlined>
+            </h2>
+            <Pen className="ship-aside">try to beat it</Pen>
+          </div>
+          <Noughts />
+        </section>
 
         {/*
           Rendered only where there is somewhere to put what people write — see

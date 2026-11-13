@@ -1610,6 +1610,51 @@
   /* Playback: each stroke is redrawn in turn, in the order it was made. */
   .doodle-surface path.is-replaying { stroke-dasharray: 1; animation: ink-draw 400ms var(--ease-in-out) both; }
 
+  /* Noughts and crosses */
+  .noughts {
+    display: grid;
+    gap: 1.5rem 3rem;
+    align-items: center;
+    margin-top: 1.75rem;
+    border-top: 2px solid var(--ink);
+    padding-top: 2rem;
+  }
+
+  @media (min-width: 40rem) {
+    .noughts { grid-template-columns: 16rem minmax(0, 1fr); }
+  }
+
+  .noughts-board { position: relative; width: min(16rem, 100%); aspect-ratio: 1; }
+
+  .noughts-board svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    filter: url(#rough);
+    stroke: var(--ink);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3px;
+  }
+
+  .noughts-x path, .noughts-o path, .noughts-strike {
+    stroke-dasharray: 1;
+    stroke-width: 5px;
+    animation: ink-draw 260ms var(--ease-in-out) both;
+  }
+
+  .noughts-x { stroke: var(--accent); }
+  .noughts-x path + path { animation-delay: 160ms; }
+  .noughts-o { stroke: var(--accent-2); }
+  .noughts-strike { animation-delay: 300ms; }
+
+  .noughts-cells { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .noughts-cells button:enabled { cursor: pointer; }
+
+  .noughts-side { display: grid; gap: 0.6rem; justify-items: start; }
+  .noughts-status { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.015em; }
+
   @media (prefers-reduced-motion: reduce) {
     .live-dot, .live-here { animation: none; }
     .doodle-button { transition: none; }
