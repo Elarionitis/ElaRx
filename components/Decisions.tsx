@@ -25,7 +25,7 @@ export function Decisions({ items }: { items: Decision[] }) {
           <p className="why-reason">{decision.reasoning}</p>
           {decision.outcome ? (
             <p className="why-outcome">
-              <span className="why-outcome-mark">What it got me</span>
+              <span className="why-outcome-mark">Result</span>
               {decision.outcome}
             </p>
           ) : null}

@@ -8,6 +8,7 @@ export type ExperienceItem = {
   highlights: string[];
 };
 
+// Newest first.
 export const experience: ExperienceItem[] = [
   {
     role: "Software Development Engineer Intern",
@@ -16,9 +17,9 @@ export const experience: ExperienceItem[] = [
     dates: "May – Jun 2026",
     stack: ["PHP", "MySQL", "JavaScript", "HTML5/CSS3", "Shopify"],
     highlights: [
-      "Shipped features across 5+ production web apps in PHP and JavaScript, reusing existing modules across similar client requirements rather than rebuilding cart and checkout flows from scratch.",
-      "Reindexed MySQL and cleared N+1 queries from the hot endpoints. Read latency down ~35%.",
-      "Root-cause analysis on production incidents, plus the instrumentation we had been missing.",
+      "Built features for more than five live client websites in PHP and JavaScript, reusing existing cart and checkout code where clients needed the same thing.",
+      "Made the busiest pages load data about 35% faster by fixing the MySQL indexes and removing repeated queries.",
+      "Found the root cause of problems on live sites, and added the logging that was missing.",
     ],
   },
   {
@@ -28,9 +29,9 @@ export const experience: ExperienceItem[] = [
     dates: "Dec 2025 – Apr 2026",
     stack: ["Python", "FastAPI", "Qdrant", "Gemini API"],
     highlights: [
-      "RAG pipeline on Gemini and Qdrant, with prompt engineering and LLM context management. 500+ documents indexed, sub-500ms end-to-end retrieval across three engineering workflows.",
-      "Async FastAPI layer so four ingestion streams run in parallel without blocking.",
-      "Validation pipelines that eliminated every embedding failure observed in testing, so bad documents fail loudly instead of quietly degrading retrieval.",
+      "Built the search behind the AI answers with Gemini and Qdrant. It covers more than 500 documents and finds what it needs in under half a second.",
+      "Made four document-loading jobs run at the same time with async FastAPI, so one does not wait for another.",
+      "Added checks so a document that fails to load is reported straight away, not silently skipped.",
     ],
   },
 ];

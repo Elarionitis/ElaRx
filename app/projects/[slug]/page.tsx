@@ -8,17 +8,6 @@ import { hasPoster, ProjectPoster } from "@/components/ProjectPoster";
 import { decisions } from "@/lib/data/decisions";
 import { getProject, projects } from "@/lib/data/projects";
 
-/*
-  One project, one page, read top to bottom.
-
-  Projects used to share a single page: a list on the left that swapped the
-  detail on the right as the pointer moved over it. Arriving from the homepage
-  meant the pointer was already resting on some row of that list, so the page
-  opened on the project you clicked and immediately switched to whichever one
-  happened to be under the cursor. A page per project has no state to get
-  wrong, and gives every project an address that can be sent to someone.
-*/
-
 type Params = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
@@ -85,9 +74,25 @@ export default async function ProjectPage({ params }: Params) {
       </header>
 
       <div className="project-body">
+        <section className="project-part" data-reveal>
+          <h2 className="project-part-title">About this project</h2>
+          {project.about.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </section>
+
+        <section className="project-part" data-reveal>
+          <h2 className="project-part-title">What it can do</h2>
+          <ul className="project-features">
+            {project.features.map((feature) => (
+              <li key={feature}>{feature}</li>
+            ))}
+          </ul>
+        </section>
+
         {project.results && project.results.length > 0 ? (
           <section className="project-part" data-reveal>
-            <h2 className="project-part-title">What I measured</h2>
+            <h2 className="project-part-title">In numbers</h2>
             <dl className="project-results">
               {project.results.map((result) => (
                 <div key={result.label}>
@@ -109,7 +114,7 @@ export default async function ProjectPage({ params }: Params) {
             <Longer>
               {project.problem ? (
                 <section className="longer-part">
-                  <h2 className="project-part-title">The problem</h2>
+                  <h2 className="project-part-title">The hard part</h2>
                   <p>{project.problem}</p>
                 </section>
               ) : null}

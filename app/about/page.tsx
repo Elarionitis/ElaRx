@@ -32,7 +32,7 @@ export default function AboutPage() {
             <p>I work hard, and I believe in hard work. Most of what I am good at, I got good at slowly.</p>
             <p>
               Away from the screen I coordinate the Tinkerers&rsquo; Lab, the 3,000 sq. ft. makerspace on
-              campus, play badminton, cycle, and set contest problems for the programming society.
+              campus, play badminton, cycle, and solve DSA questions.
             </p>
           </div>
         </div>
@@ -93,10 +93,6 @@ export default function AboutPage() {
         </aside>
       </header>
 
-      {/*
-        A line per job and no more. What I built there, and why, belongs with
-        the work; this page is about the person.
-      */}
       <section className="about-section scroll-mt-24" data-reveal id="experience">
         <h2 className="section-title">
           <Underlined>Where I have worked</Underlined>
@@ -109,6 +105,11 @@ export default function AboutPage() {
               <p className="job-role">
                 {item.context}, {item.dates}
               </p>
+              <ul className="job-did">
+                {item.highlights.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>

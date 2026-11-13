@@ -7,7 +7,7 @@ import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Things Suhan Ramani has built, each with what it is, how it works and why it is built that way.",
+  description: "Things Suhan Ramani has built, each with what it is, what it can do and how it works.",
   alternates: { canonical: "/projects" },
 };
 
@@ -21,8 +21,7 @@ export default function ProjectsPage() {
         <header className="pt-14 sm:pt-20" data-reveal>
           <h1 className="page-title">Projects</h1>
           <p className="page-lead">
-            Everything I have built that is worth showing. Each one opens on its own page: what it is, how it
-            works, and the decisions I had to make along the way.
+            Each project has its own page: what it is, who it is for, what it can do and how it works.
           </p>
         </header>
 

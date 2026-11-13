@@ -1,20 +1,4 @@
-/*
-  The spine of the site.
-
-  Every entry is a real constraint from real work and the choice that resolved
-  it. Nothing here is aspirational or invented — each one traces to a project
-  in projects.ts or a role in experience.ts, and the `source` field is what
-  links a decision back to its evidence.
-
-  Adding work means adding decisions. A project with no decision worth writing
-  down does not belong on the homepage.
-
-  An entry is rewritten when the system it describes changes, which is why
-  D-01 to D-03 and D-15 no longer match what they said in earlier versions:
-  SignEase moved its landmark tracking into the browser, and Orbit was rebuilt
-  as a sharded server. A decision that documents deleted code is worse than no
-  decision at all.
-*/
+// The choices behind each project and job. Each one links back to its source.
 
 export type DecisionDemo =
   | {
@@ -60,45 +44,50 @@ export type Decision = {
 export const decisions: Decision[] = [
   {
     id: "D-01",
-    title: "Move landmark tracking into the browser",
+    title: "Move hand tracking into the browser",
     constraint:
-      "Extracting hand landmarks on the server meant a shared CPU had to sample a few frames per clip to avoid timing out.",
+      "Tracking hands on the server was too slow on a shared CPU, so it could only look at a few frames of each clip.",
     reasoning:
-      "The obvious reading was that the model had got worse in production. It had not — it was being handed a sparse, stuttering version of the recording. Running MediaPipe client-side gives it the full frame rate, as it has locally, and what crosses the network is 94 rows of coordinates rather than video. The server stops doing the expensive part, which is also the part it was worst at.",
-    outcome: "Confidence on the same sample went from 30% back to 74%, with roughly 6x less data uploaded.",
+      "It looked as if the model had got worse once it was online. It had not. It was only getting a few frames of each recording. Running MediaPipe in the browser gives it every frame, the same as on my own machine, and only the tracked points are uploaded, not the video.",
+    outcome:
+      "Confidence on the same sample went from 30% back to 74%, with about six times less data uploaded.",
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Real-time systems",
   },
   {
     id: "D-02",
-    title: "Re-express the webcam as the camera the model was trained on",
+    title: "Reshape the webcam picture to match the training videos",
     constraint:
-      "MediaPipe coordinates are fractions of the frame, and the training videos are portrait phone recordings at roughly 3:4.",
+      "The training videos are upright phone recordings, about 3:4. A laptop webcam is wide, 4:3.",
     reasoning:
-      "A 4:3 laptop webcam therefore squeezes every hand shape to about half its width before the model sees it — a mismatch that looks like a model problem and is entirely a recording problem. Rather than retrain on webcam video there is none of, the browser reports its aspect ratio and the backend re-expresses the landmarks in a 3:4 frame. Fixing the input is cheaper than teaching the model a second geometry.",
+      "MediaPipe gives positions as a fraction of the frame, so a wide webcam makes every hand look about half as wide as it should. That looks like a model problem, but it is a recording problem. The browser sends the camera's shape, and the backend converts the points to a 3:4 frame before the model sees them.",
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Model behaviour",
   },
   {
     id: "D-03",
-    title: "Show calibrated confidence, not the model's score",
+    title: "Show a confidence number that can be trusted",
     constraint:
-      "The model was trained with smoothed labels, so its raw score rarely passes about 75% even when the prediction is right.",
+      "Because of how the model was trained, its raw score rarely goes above about 75%, even when it is right.",
     reasoning:
-      "A confidence that never reaches certainty teaches people to ignore it, which quietly removes the one signal telling them when to trust the answer. Temperature scaling, fitted on held-out video, makes the displayed number mean what it says: 60% confident should be right about 60% of the time. The scaling is refitted whenever the model changes, because a calibration from an older model is a lie with a decimal point.",
+      "If the number never gets high, people stop looking at it. So the score is adjusted using real webcam recordings from signers the models never saw, until the number on screen matches how often the answer is right. It is refitted every time the model changes.",
+    outcome:
+      "Answers shown at 90% or more are right 96% of the time.",
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Model behaviour",
   },
   {
     id: "D-04",
-    title: "Model shared state as an event log",
-    constraint: "Several people editing one shared ledger at once, on mobile clients that may be offline mid-edit.",
+    title: "Store expenses as a list that only grows",
+    constraint:
+      "Several people edit one shared group at the same time, on phones that may lose connection halfway.",
     reasoning:
-      "Mutable balances need locking, and locking assumes connectivity and a coordinator — neither of which a phone reliably has. Storing every expense as an immutable event and folding the log into a balance removes the race condition rather than defending against it. There is nothing to contend over, so there is nothing to lock.",
-    outcome: "Zero data conflicts in testing across 5+ concurrent users per session.",
+      "If the app stored one balance and changed it, two edits at once could overwrite each other, and locking does not work well on a phone with a bad connection. So every expense is saved as a new record that is never edited, and balances are worked out from the list. There is nothing for two people to fight over.",
+    outcome:
+      "No conflicts in testing, with five or more people editing at once.",
     source: "spendly",
     sourceLabel: "Spendly",
     domain: "Distributed state",
@@ -111,22 +100,26 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-05",
-    title: "Settle net positions, not individual debts",
-    constraint: "Settling a shared ledger pairwise generates far more transfers than the group actually needs.",
+    title: "Settle the totals, not every single debt",
+    constraint:
+      "Paying back every debt one by one means far more payments than a group needs.",
     reasoning:
-      "Who owes whom is a graph problem, not an accounting one. A minimum cash flow pass runs in O(n log n) and reduces any group of n people to at most n-1 transactions, which is the floor. The naive pairwise version is correct and asks people to make payments that cancel each other out.",
-    outcome: "Up to 70% fewer payments than settling pairwise.",
+      "Many of those payments cancel each other out. The app first works out what each person owes or is owed overall, then matches people up. A group of n people never needs more than n-1 payments.",
+    outcome:
+      "Up to 70% fewer payments than settling each debt one by one.",
     source: "spendly",
     sourceLabel: "Spendly",
     domain: "Distributed state",
   },
   {
     id: "D-06",
-    title: "Repair the read path before adding a cache",
-    constraint: "High-traffic endpoints were slow and a cache was the obvious first move.",
+    title: "Fix the slow queries before adding a cache",
+    constraint:
+      "The busiest pages were slow, and a cache looked like the quick fix.",
     reasoning:
-      "A cache in front of an N+1 query hides the problem and adds an invalidation bug to maintain. Restructuring the indexes and eliminating the N+1 patterns made the underlying reads fast, which is a smaller system to reason about than the same reads plus a cache layer.",
-    outcome: "Around 35% lower data-retrieval latency.",
+      "A cache would have hidden the real problem and added one more thing to keep correct. The reads were slow because of missing indexes and the same query being run again and again. Fixing those made the pages fast without a cache.",
+    outcome:
+      "Data loads about 35% faster.",
     source: "Webify Design",
     sourceLabel: "Webify Design",
     sourceHref: "/about#experience",
@@ -134,10 +127,11 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-07",
-    title: "Make I/O-bound ingestion concurrent",
-    constraint: "Four parallel document-ingestion streams were serialising behind synchronous I/O.",
+    title: "Let the loading jobs wait at the same time",
+    constraint:
+      "Four document-loading jobs were running one after another.",
     reasoning:
-      "The work was almost entirely waiting — on the embedding API and on the vector store — so threads were sitting idle rather than computing. Async I/O in FastAPI let the streams interleave their waiting, which is where the bottleneck actually was.",
+      "Almost all of their time was spent waiting, on the embedding API and on the vector store. With async FastAPI the four jobs wait at the same time and none of them blocks the others.",
     source: "SQORA",
     sourceLabel: "SQORA",
     sourceHref: "/about#experience",
@@ -145,11 +139,13 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-08",
-    title: "Turn partial ingestion into an explicit failure",
-    constraint: "A document that fails to embed still leaves the pipeline running, just with worse retrieval.",
+    title: "Report a failed document straight away",
+    constraint:
+      "When a document failed to load, the system kept running, with worse answers.",
     reasoning:
-      "Silent degradation is the worst failure mode in a retrieval system: nothing errors, results simply get less relevant, and you find out weeks later from a user. Validating at ingestion turns an invisible quality problem into a visible failure someone can fix.",
-    outcome: "Every observed embedding failure eliminated in testing.",
+      "Nothing showed an error. The answers only got a little less useful, and nobody would notice for weeks. Checking each document as it comes in turns that into an error someone can see and fix.",
+    outcome:
+      "Every loading failure seen in testing was caught.",
     source: "SQORA",
     sourceLabel: "SQORA",
     sourceHref: "/about#experience",
@@ -157,55 +153,59 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-09",
-    title: "Design triage as a continuous monitoring system",
+    title: "Keep watching patients after the first check",
     constraint:
-      "A model trained to agree with the triage nurse learns to reproduce the nurse's misses, and in the 2022 NHAMCS data 45.8% of critical outcomes came from patients triaged level 3, 4 or 5.",
+      "In the 2022 data, 45.8% of critical outcomes came from patients who had been marked level 3, 4 or 5.",
     reasoning:
-      "Optimising for agreement optimises for the wrong target. The engine is trained on outcomes rather than on assigned levels, and it keeps watching patients while they wait — because triage is a moment and deterioration is a process. Repeat observations re-run the assessment and escalate on their own.",
+      "A tool trained to agree with the nurse will miss the same patients the nurse missed. So the model learns from what actually happened to each patient. It also keeps watching people while they wait, and a new reading runs the check again.",
     outcome:
-      "56.7% of critical outcomes placed at level 1-2 against 39.0% for the recorded triage level, at the same share of arrivals.",
+      "56.7% of critical patients placed at level 1 or 2, against 39.0% for the level recorded at the time, with the same share of arrivals.",
     source: "carequeue",
     sourceLabel: "CareQueue",
     domain: "Decision systems",
   },
   {
     id: "D-10",
-    title: "Make the escalation policy an explicit cost function",
-    constraint: "Under-triage and over-triage are not equally bad, but taking the most likely level treats them as if they are.",
+    title: "Treat a missed patient as worse than a false alarm",
+    constraint:
+      "Marking a sick patient as fine and marking a well patient as urgent are not equally bad.",
     reasoning:
-      "Missing a critical patient can kill them; escalating a well one costs a bed and some attention. So the level is chosen from the probability distribution with an explicitly asymmetric loss function rather than by argmax. The price of that choice is stated rather than hidden, because a triage assistant that over-triages everything gets worked around within a week.",
+      "Missing a critical patient can cost a life. Raising the level of a well patient costs a bed and some attention. So the level is chosen with those two costs written down, not by taking the most likely level. The cost of a false alarm is set per hospital, because a tool that raises everything gets ignored within a week.",
     outcome:
-      "50.6% of under-triaged critical patients rescued, for 18.9% of non-critical patients escalated.",
+      "42 of 83 critical patients who had been marked less urgent were caught.",
     source: "carequeue",
     sourceLabel: "CareQueue",
     domain: "Decision systems",
   },
   {
     id: "D-11",
-    title: "Normalize signals against age-aware baselines",
-    constraint: "A heart rate of 152 is unremarkable in a one-year-old and an emergency in a seventy-year-old.",
+    title: "Compare vital signs with what is normal at that age",
+    constraint:
+      "A heart rate of 152 is normal for a one-year-old and an emergency for a seventy-year-old.",
     reasoning:
-      "Passing age in as one more column asks the model to learn that relationship from scarce paediatric data. Instead vital signs enter as deviations from ten age bands, estimated from the survey's own low-acuity discharged population so the reference describes well physiology at that age rather than the ED case-mix. Where a band is too thin to estimate the artifact records that it fell back to published values, and the assistant lowers its own confidence there.",
+      "Giving the model age as one more number asks it to learn this from very little data on children. So each reading goes in as how far it is from normal for that age, across ten age groups. Where there is too little data for a group, the tool uses published values and lowers its own confidence.",
     source: "carequeue",
     sourceLabel: "CareQueue",
     domain: "Decision systems",
   },
   {
     id: "D-12",
-    title: "Constrain attribution to actionable outputs",
-    constraint: "An attribution model is free to report that traffic contributed negatively to the air quality in a ward, which means nothing to the person deciding where to send an inspector.",
+    title: "Only allow sources to add pollution, never remove it",
+    constraint:
+      "A normal model can report that traffic made the air in a ward cleaner, which means nothing to someone deciding where to send an inspector.",
     reasoning:
-      "Ordinary least squares will happily produce that, and it fits better for it. Non-negative least squares constrains every coefficient at or above zero, so the breakdown stays physically interpretable and can be defended when it sends someone somewhere. Fit quality is worth less here than being able to explain the answer.",
+      "The fit is a little better that way, but the answer cannot be explained. So every source is limited to zero or more. The breakdown stays something a person can read and defend.",
     source: "aeris",
     sourceLabel: "Aeris",
     domain: "Model behaviour",
   },
   {
     id: "D-13",
-    title: "Make the baseline a deployment gate",
-    constraint: "A forecast can look impressive in isolation and still be worse than assuming the next hour looks like this one.",
+    title: "The forecast has to beat the simplest guess",
+    constraint:
+      "A forecast can look good and still be worse than assuming the next hour will be like this one.",
     reasoning:
-      "Persistence is the honest baseline for anything time-series, so it is in the test suite: mean RMSE has to come in at least 10% under it or the build fails. The evaluation report leads with the caveat that the holdout is synthetic rather than with the headline improvement, because a number nobody qualified is a number that will be quoted back wrongly.",
+      "That simple guess is in the tests. The forecast's error has to be at least 10% lower, or the build fails. The report also says first that the test data is simulated.",
     source: "aeris",
     sourceLabel: "Aeris",
     domain: "Honest measurement",
@@ -217,10 +217,11 @@ export const decisions: Decision[] = [
   },
   {
     id: "D-14",
-    title: "Separate protocol traffic from observability",
-    constraint: "An MCP server speaks JSON-RPC over stdio, so a single stray print statement corrupts the stream and the client disconnects.",
+    title: "Keep debug messages out of the channel the assistant reads",
+    constraint:
+      "An MCP server talks to the assistant over standard output, so one stray print breaks the connection.",
     reasoning:
-      "There is no way to have both a debug log and a working server on the same channel. Every diagnostic goes to stderr, which the host shows and the parser never reads. The README is also truncated to 2,000 characters before it is returned — context is the scarce resource for an agent, and spending it on the back half of a readme leaves less for the task.",
+      "Every debug message goes to standard error, which the assistant never reads. The README is also cut to 2,000 characters before it is returned, so it does not use up the space the assistant needs for the actual task.",
     source: "repo-context-mcp",
     sourceLabel: "Repo Context MCP",
     domain: "Service reliability",
@@ -228,74 +229,82 @@ export const decisions: Decision[] = [
   {
     id: "D-15",
     title: "Give every room exactly one writer",
-    constraint: "Members of a chat room have to agree on the order of messages, and a mutex around the room makes that a runtime property you have to keep getting right.",
+    constraint:
+      "Everyone in a room has to agree on the order of messages. A lock around the room works, but it is easy to get wrong and it is slow.",
     reasoning:
-      "Rooms are hashed onto threads, and a thread owns the rooms that land on it; everything crossing threads travels through FIFO queues. Two members cannot disagree about the order because there is no second writer to disagree with — ordering stops being something the code defends and becomes something the structure guarantees. Joining travels the same queues, which is what makes the handover from replayed history to the live stream exact. The price is that one very hot room cannot spread across cores.",
-    outcome: "A total order per room with no locks on the message path, and 17.4M deliveries/s peak fan-out over loopback.",
+      "Each room belongs to one thread, and anything passing between threads goes through queues. Two members cannot disagree about the order, because only one thread ever writes it. The cost is that one very busy room cannot be spread over several cores.",
+    outcome:
+      "The same order for everyone with no locks, and 17.4 million deliveries per second at peak.",
     source: "orbit",
     sourceLabel: "Orbit",
     domain: "Distributed state",
   },
   {
     id: "D-16",
-    title: "Cut the stalled client instead of buffering it",
-    constraint: "A client that stops reading does not stop the server from having messages to send it.",
+    title: "Disconnect a stuck client",
+    constraint:
+      "A client that stops reading still has messages waiting to be sent to it.",
     reasoning:
-      "Buffering without a bound lets one dead connection consume the memory of every connection sharing its thread, so a single bad client becomes everyone's outage. Output queues are bounded and an over-full one is disconnected. One reader loses its session, which is a cost paid by the party that caused it, and nobody else notices.",
+      "Holding those messages without a limit lets one dead connection use up memory that everyone else on that thread needs. So each client has a limit, and a client that goes over it is disconnected. One person has to reconnect, and nobody else notices.",
     source: "orbit",
     sourceLabel: "Orbit",
     domain: "Service reliability",
   },
   {
     id: "D-17",
-    title: "Benchmark open-loop, so a stall cannot hide",
-    constraint: "A load generator that waits for the server before sending the next request lowers its own offered load whenever the server slows down.",
+    title: "Keep sending at a fixed rate when measuring speed",
+    constraint:
+      "A test tool that waits for the server before sending the next message slows down whenever the server does.",
     reasoning:
-      "That is coordinated omission, and it is why so many benchmarks report a good p99 for a server that periodically stops answering: the stall never appears, because during it nothing was being measured. Given a rate the generator keeps to it regardless, so a pause shows up as latency where it belongs. Every run also audits sequence numbers and delivery counts, and exits non-zero if a message went missing — a throughput figure from a run that lost messages is not a throughput figure.",
-    outcome: "p50 0.08ms and p99 0.20ms at 1,000 clients and 200k deliveries/s, with zero messages lost.",
+      "That hides every pause, because nothing is being measured while the server is stuck. My load generator keeps to its rate no matter what, so a pause shows up as slow messages. Every run also checks that no message went missing, and fails if one did.",
+    outcome:
+      "Half of all messages arrive within 0.08 ms and 99% within 0.20 ms, at 1,000 clients, with none lost.",
     source: "orbit",
     sourceLabel: "Orbit",
     domain: "Honest measurement",
   },
   {
     id: "D-18",
-    title: "Measure a strategy against buy and hold, not against zero",
-    constraint: "A long-only strategy spends most of its time owning a market that trends upward, so beating zero is not evidence that the strategy does anything.",
+    title: "Compare a strategy with buy and hold, not with zero",
+    constraint:
+      "A strategy that only buys spends most of its time holding a market that goes up anyway.",
     reasoning:
-      "On ten years of SPY the best moving-average crossover reaches a deflated Sharpe of 98.4% against zero, which reads as a discovery worth trading. Against buy and hold the same result is 2.5%. The first number measures the market; only the second measures the strategy. So the benchmark runs through the same simulator and pays the same commission and slippage, and the significance that gets reported is the one against it.",
-    outcome: "Across 5 strategies and 6 ETFs from 2007 to 2025: 0 of 30 runs significant against buy and hold.",
+      "On ten years of SPY, the best moving-average strategy looks 98.4% certain to be better than nothing. Compared with buy and hold, that drops to 2.5%. The first number measures the market, and only the second measures the strategy. So buy and hold runs through the same engine, pays the same costs, and is what every result is compared with.",
     source: "tradstrat",
     sourceLabel: "TradStrat",
     domain: "Honest measurement",
   },
   {
     id: "D-19",
-    title: "Make look-ahead bias a property test",
-    constraint: "Look-ahead bias is a class of bug, not a bug — there is a new way to introduce it in every strategy anyone adds.",
+    title: "Test every strategy for using future prices",
+    constraint:
+      "Using a price from the future by accident is easy, and every new strategy is a new chance to do it.",
     reasoning:
-      "Reviewing each strategy for it by hand works until the reviewer is tired. Instead a property-based test runs against every registered strategy and asserts that signals computed on a truncated history match the full-history signals exactly, and other tests rewrite a bar's high, low and close and assert that what was bought at its open does not change. Writing a new strategy gets that coverage without asking for it, so the honest version is the default rather than the disciplined one.",
+      "Checking by hand works until you are tired. So a test runs on every strategy: it cuts the history short and checks that the signals up to that point stay the same. Other tests change a day's later prices and check that the order at that day's open does not change. A new strategy gets these tests without any extra work.",
     source: "tradstrat",
     sourceLabel: "TradStrat",
     domain: "Honest measurement",
   },
   {
     id: "D-20",
-    title: "Check that the test suite is able to fail",
-    constraint: "A green suite over code the tests never actually exercise is indistinguishable from a green suite over correct code.",
+    title: "Check that the tests can fail",
+    constraint:
+      "Tests that pass tell you nothing if they never touch the code that matters.",
     reasoning:
-      "That is the most expensive kind of false confidence, because it is the kind you act on. A script injects 20 realistic bugs — an off-by-one in a fill, a leaked future price, a sign flip in the accounting — and confirms the suite catches each one. The result is evidence about the tests rather than about the code, which is the thing a backtester most needs and almost never has.",
+      "A script puts 20 realistic bugs into the code, one at a time, such as an order filled one day early or a sign flipped in the accounts. It then checks that the tests catch each one.",
     source: "tradstrat",
     sourceLabel: "TradStrat",
     domain: "Honest measurement",
   },
   {
     id: "D-21",
-    title: "Pick the signing hand by confidence, not by frame count",
-    constraint: "The model reads one hand, and the obvious choice — the hand tracked in more frames — is in a two-handed sign often the still base hand.",
+    title: "Choose the signing hand by confidence",
+    constraint:
+      "Each model mainly follows one hand. In a two-handed sign, the hand seen in the most frames is often the one that stays still.",
     reasoning:
-      "Tracking quality and relevance are not the same signal, and the first was standing in for the second. When both hands are tracked the backend now scores each on its own and keeps the more confident result. The guard against fooling myself was holding back video: the change was tuned on 120 dictionary clips and then checked on 127 added later, which it had never seen.",
+      "When both hands are tracked, the backend now scores each hand by itself and keeps the more confident answer. I tuned this on 120 dictionary videos, then checked it on 127 more that it had never seen.",
     outcome:
-      "6 predictions fixed and none broken on the tuning set, and the same shape on the unseen set — 6 fixed, none broken.",
+      "Six predictions fixed and none broken on the first set, and the same on the second.",
     source: "signease",
     sourceLabel: "SignEase",
     domain: "Model behaviour",
