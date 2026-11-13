@@ -719,35 +719,6 @@
     .work-row::after { transition: none; }
   }
 
-  /* One statement, set at the size it deserves, with its own note beside it. */
-  .why-build {
-    display: grid;
-    gap: 1.75rem;
-    padding: 1.75rem 0 0;
-  }
-
-  .why-build-statement {
-    position: relative;
-    max-width: 30rem;
-    color: var(--ink);
-    font-size: clamp(1.35rem, 2.9vw, 1.95rem);
-    letter-spacing: -0.03em;
-    line-height: 1.18;
-    text-wrap: pretty;
-  }
-
-  .why-build-note {
-    max-width: 22rem;
-    color: var(--ink-2);
-    font-size: 0.95rem;
-    line-height: 1.65;
-  }
-
-  @media (min-width: 48rem) {
-    .why-build { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 3rem; }
-    .why-build-note { padding-top: 0.4rem; }
-  }
-
   /*
     ── Decision notes ─────────────────────────────────────────────────────────
     A heading and two paragraphs each, in one column. The situation is set in

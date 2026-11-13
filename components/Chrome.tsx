@@ -26,7 +26,6 @@ export function Chrome({ routes }: { routes: Route[] }) {
   const { resolvedTheme, setTheme } = useTheme();
   const mobileRoutes = [...routes, { label: "Email", href: `mailto:${siteConfig.email}` }];
   const themeButtonRef = useRef<HTMLButtonElement>(null);
-  const [progress, setProgress] = useState(0);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -34,8 +33,6 @@ export function Chrome({ routes }: { routes: Route[] }) {
     function update() {
       frame = 0;
       setScrolled(window.scrollY > 12);
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0);
     }
     function onScroll() {
       if (!frame) frame = window.requestAnimationFrame(update);
@@ -182,12 +179,6 @@ export function Chrome({ routes }: { routes: Route[] }) {
           ))}
         </ul>
       </nav>
-
-      <div
-        aria-hidden="true"
-        className="scroll-progress absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
-        style={{ transform: `scaleX(${progress})` }}
-      />
     </header>
   );
 }

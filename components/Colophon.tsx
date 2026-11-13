@@ -57,11 +57,7 @@ export function Colophon({ showFeed }: { showFeed: boolean }) {
             </ul>
           </div>
           <BackToTop />
-          <p className="label flex flex-wrap gap-x-2 md:justify-end">
-            <span className="num">{new Date().getFullYear()}</span>
-            <span aria-hidden="true">&middot;</span>
-            <span>Set in Bricolage Grotesque, annotated in Reenie Beanie</span>
-          </p>
+          <p className="label num">{new Date().getFullYear()}</p>
         </div>
       </div>
     </footer>

@@ -126,7 +126,6 @@ function buildCommandItems(): CommandItem[] {
       : []),
     { group: "Actions", label: "Copy email address", hint: siteConfig.email, action: "copy-email" as const },
     { group: "Actions", label: "Toggle theme", action: "toggle-theme" as const },
-    { group: "Actions", label: "Surprise me", hint: "Open a project", action: "surprise" as const, href: "/projects/tradstrat" },
     { group: "Actions", label: "Download resume", hint: "PDF", href: siteConfig.resumePath },
     { group: "Elsewhere", label: "GitHub", href: siteConfig.links.github.url },
     { group: "Elsewhere", label: "LinkedIn", href: siteConfig.links.linkedin.url },

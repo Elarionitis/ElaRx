@@ -114,35 +114,6 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="about-section" data-reveal>
-        <h2 className="section-title">
-          <Underlined>Why I build</Underlined>
-        </h2>
-        {/*
-          This was a dashed box reading "campus photo placeholder", which is
-          the one thing a published page should never say about itself. The
-          statement is strong enough to be the whole block, so it is set as
-          one, with the second paragraph as its annotation.
-        */}
-        <div className="why-build mt-8">
-          <p className="why-build-statement">
-            I like building because it turns a vague, shared frustration into something another person can
-            actually use.
-          </p>
-          <p className="why-build-note">
-            The best part is usually the moment a rough idea stops being a conversation and becomes a tool:
-            a person tries it, something unexpected happens, and the next useful question appears.
-          </p>
-        </div>
-      </section>
-
-      {/*
-        The page used to end with two more tables — education, then every
-        society position with its dates. Both are on the resume, and
-        reprinting them here made this read as a document to be processed
-        rather than as a person to be met. One line is enough to say where
-        the full record lives.
-      */}
       <p className="measure mt-16 text-[1rem] leading-[1.6] text-ink-2">
         Every position, result and date is on the{" "}
         <a className="tlink text-ink-2" href="/resume">
