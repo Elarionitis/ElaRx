@@ -923,6 +923,22 @@
 
   .note-name::before { content: "— "; }
 
+  .guestbook-all { margin: 0.9rem 0 0; font-weight: 600; text-align: right; }
+
+  /* /notes: the same sticky notes, laid out as a grid that does not move. */
+  .all-notes { display: grid; gap: 1.5rem; justify-items: start; margin-top: 2.5rem; }
+  .all-notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+    gap: 1rem 1.25rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .all-notes-grid .note { width: auto; }
+  .note-date { display: block; margin-top: 0.15rem; font-family: var(--font-sans, inherit); font-size: 0.7rem; letter-spacing: 0.02em; }
+
   /*
     Without motion the wall is a wall: the notes wrap into a static grid and
     the duplicate copy, which only exists to close the loop, is not shown.

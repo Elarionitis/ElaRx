@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { MAX_MESSAGE, MAX_NAME, type Entry } from "@/lib/guestbook";
@@ -67,6 +68,7 @@ type Status = "loading" | "ready" | "sending" | "unreachable";
 
 export function Guestbook() {
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [total, setTotal] = useState(0);
   const [status, setStatus] = useState<Status>("loading");
   const [error, setError] = useState<string | null>(null);
   const [signed, setSigned] = useState(false);
@@ -77,9 +79,10 @@ export function Guestbook() {
     let cancelled = false;
     fetch("/api/guestbook")
       .then((response) => response.json())
-      .then((data: { entries?: Entry[] }) => {
+      .then((data: { entries?: Entry[]; total?: number }) => {
         if (cancelled) return;
         setEntries(data.entries ?? []);
+        setTotal(data.total ?? data.entries?.length ?? 0);
         setStatus("ready");
       })
       .catch(() => {
@@ -115,6 +118,7 @@ export function Guestbook() {
         }
 
         setEntries((current) => [data.entry!, ...current]);
+        setTotal((count) => count + 1);
         setMessage("");
         setSigned(true);
         setStatus("ready");
@@ -218,6 +222,15 @@ export function Guestbook() {
           )}
         </div>
       )}
+
+      {/* The wall only carries the newest notes; the rest are one click away. */}
+      {total > entries.length ? (
+        <p className="guestbook-all">
+          <Link className="focus-ring tlink" href="/notes">
+            See all <span className="num">{total}</span> notes
+          </Link>
+        </p>
+      ) : null}
     </div>
   );
 }

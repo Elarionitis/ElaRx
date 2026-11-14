@@ -18,3 +18,7 @@ export type Entry = {
 
 export const MAX_NAME = 32;
 export const MAX_MESSAGE = 180;
+
+/** How many notes the homepage wall shows, and how many /notes loads at a time. */
+export const WALL_SIZE = 50;
+export const PAGE_SIZE = 60;

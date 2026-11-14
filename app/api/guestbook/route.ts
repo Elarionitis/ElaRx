@@ -1,5 +1,5 @@
-import { MAX_MESSAGE, MAX_NAME } from "@/lib/guestbook";
-import { addEntry, guestbookIsConfigured, isRateLimited, readEntries } from "@/lib/guestbook-store";
+import { MAX_MESSAGE, MAX_NAME, PAGE_SIZE, WALL_SIZE } from "@/lib/guestbook";
+import { addEntry, countEntries, guestbookIsConfigured, isRateLimited, readEntries } from "@/lib/guestbook-store";
 
 /*
   The guestbook is written to and read from at request time, so the route opts
@@ -39,14 +39,27 @@ function visitorAddress(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
-export async function GET() {
-  if (!guestbookIsConfigured) return json({ entries: [] });
+function whole(value: string | null, fallback: number, max: number): number {
+  const parsed = Number.parseInt(value ?? "", 10);
+  if (!Number.isFinite(parsed) || parsed < 0) return fallback;
+  return Math.min(parsed, max);
+}
+
+// ?offset= and ?limit= page through the notes, newest first. With neither,
+// it returns what the homepage wall shows.
+export async function GET(request: Request) {
+  if (!guestbookIsConfigured) return json({ entries: [], total: 0 });
+
+  const params = new URL(request.url).searchParams;
+  const offset = whole(params.get("offset"), 0, Number.MAX_SAFE_INTEGER);
+  const limit = whole(params.get("limit"), WALL_SIZE, PAGE_SIZE) || WALL_SIZE;
 
   try {
-    return json({ entries: await readEntries() });
+    const [entries, total] = await Promise.all([readEntries(limit, offset), countEntries()]);
+    return json({ entries, total });
   } catch {
     // A storage outage should cost the page its guestbook, not its homepage.
-    return json({ entries: [], error: "The guestbook is not reachable right now." }, 503);
+    return json({ entries: [], total: 0, error: "The guestbook is not reachable right now." }, 503);
   }
 }
 
