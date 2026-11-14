@@ -51,19 +51,19 @@
 .dark {
   color-scheme: dark;
 
-  --paper: #16329a;
-  --paper-2: #122a86;
-  --paper-3: #0f2373;
-  --ink: #f4f6ff;
-  --ink-2: #dbe1fb;
-  --ink-3: #b3bff0;
-  --rule: #2d4ab0;
-  --rule-2: #4c68cb;
+  --paper: #2449c6;
+  --paper-2: #1f40b4;
+  --paper-3: #1b38a2;
+  --ink: #f6f8ff;
+  --ink-2: #e1e6fc;
+  --ink-3: #c2ccf5;
+  --rule: #3d60d6;
+  --rule-2: #6282e6;
   /* Chalk yellow. */
   --accent: #ffd84d;
-  --accent-2: #ff8f76;
-  --accent-wash: #2a4bc9;
-  --on-accent: #16329a;
+  --accent-2: #ffa28c;
+  --accent-wash: #3a63e2;
+  --on-accent: #2449c6;
   --grid: rgb(255 255 255 / 0.07);
 }
 
@@ -1610,7 +1610,8 @@
     pointer-events: none;
     transform: rotate(-3deg);
   }
-  .doodle-note .pen { font-size: 1.5rem; }
+  /* The note stays while scrolling, so it carries its own scrap of paper. */
+  .doodle-note .pen { border-radius: 0.4rem; background: var(--paper); padding: 0 0.4rem; font-size: 1.5rem; }
   .doodle-note .pen-arrow { width: 2.2rem; height: 1.5rem; margin-bottom: -0.9rem; transform: rotate(58deg); }
 
   @media (max-width: 40rem) {
@@ -1636,7 +1637,7 @@
   }
 
   @media (min-width: 40rem) {
-    .noughts { grid-template-columns: 16rem minmax(0, 1fr); }
+    .noughts { grid-template-columns: 16rem auto; justify-content: center; }
   }
 
   .noughts-board { position: relative; width: min(16rem, 100%); aspect-ratio: 1; }
