@@ -130,16 +130,16 @@ export function Chrome({ routes }: { routes: Route[] }) {
 
           <button
             aria-label="Toggle theme"
-            className="focus-ring grid size-7 place-items-center text-ink-3 transition-colors hover:text-ink"
+            className="focus-ring grid size-9 place-items-center text-ink-2 transition-colors hover:text-ink"
             onClick={toggleTheme}
             ref={themeButtonRef}
             type="button"
           >
-            <svg aria-hidden="true" className="hidden size-4 dark:block" fill="none" stroke="currentColor" strokeWidth="1.4" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="hidden size-[1.4rem] dark:block" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="4" />
               <path d="M12 3v2M12 19v2M21 12h-2M5 12H3M18.4 5.6 17 7M7 17l-1.4 1.4M18.4 18.4 17 17M7 7 5.6 5.6" strokeLinecap="round" />
             </svg>
-            <svg aria-hidden="true" className="size-4 dark:hidden" fill="none" stroke="currentColor" strokeWidth="1.4" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="size-[1.4rem] dark:hidden" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z" strokeLinejoin="round" />
             </svg>
           </button>

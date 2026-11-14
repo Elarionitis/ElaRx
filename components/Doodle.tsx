@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Pen, PenArrow } from "@/components/Ink";
+
 /*
   The page is a notebook, so a visitor can write in it.
 
@@ -145,6 +147,14 @@ export function Doodle() {
 
   const hasStrokes = strokes.length > 0;
 
+  // The note is only for the top of the page; it would sit over the text lower down.
+  const [atTop, setAtTop] = useState(true);
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 120);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       <svg
@@ -169,6 +179,13 @@ export function Doodle() {
           ))}
         </svg>
       </svg>
+
+      {atTop && !drawing && !hasStrokes ? (
+        <p aria-hidden="true" className="doodle-note">
+          <Pen>want to draw something? click here</Pen>
+          <PenArrow />
+        </p>
+      ) : null}
 
       <div className="doodle-tools">
         {drawing ? (

@@ -950,6 +950,21 @@
 
   .ship-aside { transform: rotate(-1.5deg); }
 
+  /* Contribution calendar: squares of the grid paper filled in with the pen. */
+  .contrib { display: grid; gap: 0.7rem; margin-top: 1.75rem; }
+  .contrib-grid { display: flex; gap: 3px; }
+  .contrib-week { display: grid; flex: 1 1 0; gap: 3px; min-width: 0; }
+  .contrib-week span { aspect-ratio: 1; border-radius: 2px; background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .contrib-week span[data-level="1"] { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+  .contrib-week span[data-level="2"] { background: color-mix(in srgb, var(--accent) 52%, transparent); }
+  .contrib-week span[data-level="3"] { background: color-mix(in srgb, var(--accent) 76%, transparent); }
+  .contrib-week span[data-level="4"] { background: var(--accent); }
+  .contrib:hover .label { color: var(--accent); }
+
+  @media (max-width: 40rem) {
+    .contrib-week:nth-child(-n + 27) { display: none; }
+  }
+
   .ship-log li { border-top: 1px solid var(--rule); }
   .ship-log li:first-child { border-top: 0; }
 
@@ -1580,6 +1595,27 @@
   .doodle-button:hover { transform: translateY(-2px) rotate(-1.5deg); }
   .doodle-button:active { transform: translateY(1px); box-shadow: 0 1px 0 var(--ink); }
   .doodle-pen.is-on { background: var(--accent-wash); }
+  .doodle-pen { padding: 0.45rem 1.1rem 0.55rem; font-size: 1.65rem; }
+  .doodle-pen svg { width: 1.25rem; height: 1.25rem; }
+
+  .doodle-note {
+    position: fixed;
+    z-index: 34;
+    right: 3.5rem;
+    bottom: 4.1rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.2rem;
+    margin: 0;
+    pointer-events: none;
+    transform: rotate(-3deg);
+  }
+  .doodle-note .pen { font-size: 1.5rem; }
+  .doodle-note .pen-arrow { width: 2.2rem; height: 1.5rem; margin-bottom: -0.9rem; transform: rotate(58deg); }
+
+  @media (max-width: 40rem) {
+    .doodle-note { display: none; }
+  }
 
   .doodle-tools { flex-wrap: wrap; justify-content: flex-end; max-width: calc(100vw - 2rem); }
   .doodle-colors { display: flex; gap: 0.35rem; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); padding: 0.3rem 0.45rem; box-shadow: 2px 3px 0 var(--ink); }

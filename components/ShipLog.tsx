@@ -1,5 +1,7 @@
 import { Pen, Underlined } from "@/components/Ink";
+import { getContributions } from "@/lib/contributions";
 import { getShipLog } from "@/lib/ship-log";
+import { siteConfig } from "@/lib/data/site";
 
 /*
   Dates are deliberately coarse. The page is regenerated hourly, so anything
@@ -17,7 +19,7 @@ function when(iso: string): string {
 }
 
 export async function ShipLog() {
-  const pushes = await getShipLog();
+  const [pushes, contributions] = await Promise.all([getShipLog(), getContributions()]);
   // GitHub unreachable, rate limited, or nothing to report: say nothing.
   if (pushes.length === 0) return null;
 
@@ -29,6 +31,27 @@ export async function ShipLog() {
         </h2>
         <Pen className="ship-aside">straight from GitHub, I don&rsquo;t type these</Pen>
       </div>
+
+      {contributions ? (
+        <a
+          aria-label={`${contributions.total} contributions on GitHub in the last year`}
+          className="contrib focus-ring"
+          href={siteConfig.links.github.url}
+          rel="noreferrer"
+          target="_blank"
+        >
+          <span aria-hidden="true" className="contrib-grid">
+            {contributions.weeks.map((week, index) => (
+              <span className="contrib-week" key={index}>
+                {week.map((level, day) => (
+                  <span data-level={level} key={day} />
+                ))}
+              </span>
+            ))}
+          </span>
+          <span className="label">{contributions.total} contributions on GitHub in the last year</span>
+        </a>
+      ) : null}
 
       <ul className="ship-log">
         {pushes.map((push) => (
