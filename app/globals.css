@@ -1624,7 +1624,7 @@
   .doodle-color[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 2px; transform: scale(0.85); }
 
   /* Playback: each stroke is redrawn in turn, in the order it was made. */
-  .doodle-surface path.is-replaying { stroke-dasharray: 1; animation: ink-draw 400ms var(--ease-in-out) both; }
+  .doodle-surface path.is-replaying { stroke-dasharray: 1; animation: ink-draw 800ms var(--ease-in-out) both; }
 
   /* Noughts and crosses */
   .noughts {

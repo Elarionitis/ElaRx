@@ -32,7 +32,7 @@ const COLORS = [
   { name: "Ink", value: "var(--ink)" },
 ];
 
-const STEP_MS = 420;
+const STEP_MS = 850;
 
 function storageKey(pathname: string) {
   return `elarx:doodle:${pathname}`;
@@ -104,7 +104,7 @@ export function Doodle() {
   // Playback ends by itself once the last stroke has been redrawn.
   useEffect(() => {
     if (!replay) return;
-    const timer = window.setTimeout(() => setReplay(0), strokes.length * STEP_MS + 400);
+    const timer = window.setTimeout(() => setReplay(0), strokes.length * STEP_MS + 800);
     return () => window.clearTimeout(timer);
   }, [replay, strokes.length]);
 
