@@ -223,11 +223,11 @@ export function Guestbook() {
         </div>
       )}
 
-      {/* The wall only carries the newest notes; the rest are one click away. */}
-      {total > entries.length ? (
+      {/* The wall only carries the newest notes; the page behind this has all of them. */}
+      {total > 0 ? (
         <p className="guestbook-all">
           <Link className="focus-ring tlink" href="/notes">
-            See all <span className="num">{total}</span> notes
+            See all notes
           </Link>
         </p>
       ) : null}
