@@ -114,6 +114,15 @@ export function Noughts() {
     setStarter((who) => (who === "x" ? "o" : "x"));
   }
 
+  function reset() {
+    setBoard(EMPTY);
+    setStarter("x");
+    setTally(null);
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+  }
+
   const status = line
     ? board[line[0]] === "x"
       ? "You won."
@@ -185,10 +194,17 @@ export function Noughts() {
         ) : (
           <p className="label">You are X.</p>
         )}
-        {over ? (
-          <button className="doodle-button focus-ring" onClick={again} type="button">
-            again
-          </button>
+        {over || tally || open.length < 9 ? (
+          <div className="noughts-buttons">
+            {over ? (
+              <button className="doodle-button focus-ring" onClick={again} type="button">
+                again
+              </button>
+            ) : null}
+            <button className="doodle-button focus-ring" onClick={reset} type="button">
+              reset
+            </button>
+          </div>
         ) : null}
       </div>
     </div>

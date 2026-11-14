@@ -1669,6 +1669,7 @@
   .noughts-cells button:enabled { cursor: pointer; }
 
   .noughts-side { display: grid; gap: 0.6rem; justify-items: start; }
+  .noughts-buttons { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .noughts-status { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.015em; }
 
   @media (prefers-reduced-motion: reduce) {
