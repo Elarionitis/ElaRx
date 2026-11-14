@@ -123,9 +123,9 @@ export default function Home() {
         <section className="section scroll-mt-24" data-reveal id="play">
           <div className="section-head">
             <h2 className="section-title">
-              <Underlined>You can&apos;t win this</Underlined>
+              <Underlined>Play a quick game</Underlined>
             </h2>
-            <Pen className="ship-aside">go on, prove me wrong</Pen>
+            <Pen className="ship-aside">just for fun</Pen>
           </div>
           <Noughts />
         </section>
