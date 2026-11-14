@@ -196,21 +196,21 @@ export function Doodle() {
               ))}
             </div>
             {hasStrokes ? (
-              <>
-                <button className="doodle-button focus-ring" onClick={() => update(strokes.slice(0, -1))} type="button">
-                  undo
-                </button>
-                <button className="doodle-button focus-ring" onClick={() => update([])} type="button">
-                  rub it out
-                </button>
-              </>
+              <button className="doodle-button focus-ring" onClick={() => update(strokes.slice(0, -1))} type="button">
+                undo
+              </button>
             ) : null}
           </>
         ) : null}
         {hasStrokes ? (
-          <button className="doodle-button focus-ring" onClick={() => setReplay((count) => count + 1)} type="button">
-            play it back
-          </button>
+          <>
+            <button className="doodle-button focus-ring" onClick={() => update([])} type="button">
+              rub it out
+            </button>
+            <button className="doodle-button focus-ring" onClick={() => setReplay((count) => count + 1)} type="button">
+              play it back
+            </button>
+          </>
         ) : null}
         <button
           aria-pressed={drawing}

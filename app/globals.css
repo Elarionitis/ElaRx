@@ -1637,7 +1637,8 @@
   }
 
   @media (min-width: 40rem) {
-    .noughts { grid-template-columns: 16rem auto; justify-content: center; }
+    /* Both columns are fixed so the board stays put when the status text changes. */
+    .noughts { grid-template-columns: 16rem 13rem; justify-content: center; }
   }
 
   .noughts-board { position: relative; width: min(16rem, 100%); aspect-ratio: 1; }
